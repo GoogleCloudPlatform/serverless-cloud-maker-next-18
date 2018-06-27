@@ -175,9 +175,10 @@ const assignParameters = (name, parameters = {}) => {
 }
 
 const handler = (request, response) => {
-    const outputBucketName = 'cloud-maker-outputs-final'
+    
 
     // console.log('Starting handler')
+
     // first, make sure that
     // the request is valid
     try {
@@ -191,6 +192,8 @@ const handler = (request, response) => {
         // stop execution of the function
         return
     }
+
+    const outputBucketName = request.body.outputBucketName || 'cloud-maker-outputs-final'
 
     // convert the json in the
     // request to the objects
