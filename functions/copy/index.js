@@ -17,21 +17,36 @@ Duplicates an image and uploads the result to the output bucket
  */
 
 const StorageApi = require('@google-cloud/storage');
-
 const storage = new StorageApi();
 
+// creates a the name of the file to be used for the
+// result of the function. Must be distrinct from the
+// input file name
 const createOutputFileName = (prefix = "", fileName) => 
     prefix
+    // if a prefix was specified use that
     ? `${prefix}-${path.parse(fileName).base}`
+    // else, append .out
     : `${path.parse(fileName).base}.out`
 
+/*
+Create a copy of an image and upload the result to an
+output bucket
+ */
 const copyImage = (file, parameters) => {
+    // extract the output bucket from the paramters
     const outputBucketName = parameters.outputBucketName
+    // use the output prefix to create eh name of the output file
     const outputFileName = createOutputFileName(parameters.outputPrefix, file.name)
+    //  construct the output file using the GCS client library
     const outputFile = storage.bucket(outputBucketName).file(outputFileName)
+
+    // use the GCS client library's "copy" method to
+    // upload to the output bucket.
     return file
         .copy(outputFile)
         .catch(console.error)
+        // resolve with the outputfile
         .then(() => outputFile)
 }
 
