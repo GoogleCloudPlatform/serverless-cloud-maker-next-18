@@ -14,7 +14,12 @@
 
 
 const copyImage = require('./index.js')
-// jest.mock("@google-cloud/storage")
+const StorageAPI = require("@google-cloud/storage")
+jest.mock("@google-cloud/storage")
+
+StorageAPI.prototype.bucket.mockReturnValue(new StorageAPI())
+StorageAPI.prototype.file = jest.fn(() => new StorageAPI())
+
 
 // TODO: write a mock of the cloud storage api to enable testing the
 // function itself.
@@ -31,6 +36,20 @@ describe('when copyImage is called', () => {
     it('should accept any output bucket name or prefix', () => {
         expect(copyImage.parameters.outputBucketName.validate()).toBe(true)
         expect(copyImage.parameters.outputPrefix.validate()).toBe(true)
+    });
+
+    it('should call cloud storage', () => {
+        const file = {
+            // bucket: ,
+            name: "asdf",
+        }    
+        const parameters = {
+            outputBucketName: "1234",
+            outputPrefix: "fdsa",
+        }
+        const result = copyImage(file, parameters)
+        expect(StorageAPI.prototype.bucket).toHaveBeenCalled()
+
     });
 
 });
