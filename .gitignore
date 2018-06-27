@@ -1,0 +1,6 @@
+node_modules/**
+.DS_Store
+img/**
+coverage/**
+deprecated/**
+sftp-config.json
