@@ -20,6 +20,7 @@ it to a different bucket.
 
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
+const path = require("path");
 
 // creates a the name of the file to be used for the
 // result of the function. Must be distrinct from the
