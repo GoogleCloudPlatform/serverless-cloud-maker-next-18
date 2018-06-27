@@ -14,15 +14,25 @@
 
 
 const copyImage = require('./index.js')
-const StorageAPI = require("@google-cloud/storage")
+
 jest.mock("@google-cloud/storage")
+const StorageAPI = require("@google-cloud/storage")
 
+
+const copySpy = jest.fn(() => Promise.resolve())
+
+const mockFile = {
+    name: "foo.png",
+    copy: copySpy,
+}
+
+// mock the bucket method to enable us to chain with it
 StorageAPI.prototype.bucket.mockReturnValue(new StorageAPI())
-StorageAPI.prototype.file = jest.fn(() => new StorageAPI())
 
+// create a mock file method for chaining that just returns
+// our mock file
+StorageAPI.prototype.file = jest.fn(() => mockFile)
 
-// TODO: write a mock of the cloud storage api to enable testing the
-// function itself.
 
 describe('when copyImage is called', () => {
     it('should not break', () => {
@@ -38,17 +48,20 @@ describe('when copyImage is called', () => {
         expect(copyImage.parameters.outputPrefix.validate()).toBe(true)
     });
 
-    it('should call cloud storage', () => {
-        const file = {
-            // bucket: ,
-            name: "asdf",
-        }    
+    it('should call copy the file to the cloud storage output bucket', () => {
+
         const parameters = {
-            outputBucketName: "1234",
-            outputPrefix: "fdsa",
+            outputBucketName: "output-bucket",
+            outputPrefix: "output",
         }
-        const result = copyImage(file, parameters)
-        expect(StorageAPI.prototype.bucket).toHaveBeenCalled()
+
+        const result = copyImage(mockFile, parameters)
+        expect(StorageAPI.prototype.bucket).toHaveBeenCalledWith(parameters.outputBucketName)
+        expect(copySpy).toHaveBeenCalled()
+        
+        return result.then((outputFile) => {
+            expect(outputFile).toEqual(mockFile)
+        }) 
 
     });
 
