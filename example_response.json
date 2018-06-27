@@ -1,0 +1,24 @@
+{
+  "bucket": {
+    "name": "outputs",
+    "storage": {},
+    "acl": {
+      "owners": {},
+      "readers": {},
+      "writers": {},
+      "pathPrefix": "/acl",
+      "default": {}
+    },
+    "iam": {
+      "resourceId_": "buckets/outputs"
+    }
+  },
+  "storage": {},
+  "name": "copied-image1.jpg",
+  "acl": {
+    "owners": {},
+    "readers": {},
+    "writers": {},
+    "pathPrefix": "/acl"
+  }
+}
