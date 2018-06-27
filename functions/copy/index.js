@@ -13,7 +13,9 @@
 // limitations under the License.
 
 /*
-Duplicates an image and uploads the result to the output bucket
+This file contains a function that duplicates the input image 
+by using the storage client library's .copy method to upload
+it to a different bucket.
  */
 
 const StorageApi = require('@google-cloud/storage');

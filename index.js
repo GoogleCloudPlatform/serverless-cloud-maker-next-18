@@ -30,18 +30,13 @@ const functions = require('./functions')
 
 const validateData = (data) => {
 /*
-Confirms that the "data" parameter of a
-request that specifies the input file
-conains the required information. Should
-be of the form
+Confirms that the "data" parameter of a request that specifies the input
+file conains the required information. Should be of the form
 {
     gcsSourceUri,
     name,
     bucket
 }
-
-The source uri isn't actually used so I
-should probably just get rid of it
  */
     if (data.constructor == Array) {
         throw 'Data should be a single object, not an array'
@@ -62,29 +57,26 @@ should probably just get rid of it
 }
 
 /*
-Conforms that the "parameters" passed to a function
-as part of a given request are structured correctly and
-valid according to the validation fucntion provided
+Conforms that the "parameters" passed to a function as part of a given request
+are structured correctly and valid according to the validation fucntion
+provided
  */
 
 const validateParameters = (name, parameters={}) => {
-    // grab the defaul values from the master dictionary
+    // grab the default values from the master dictionary
     const defaults = functions[name].parameters
     // generate the set of acceptable parameters
     const defaultKeys = Object.keys(defaults)
     // generate the set of keys specified by the user
     const inputKeys = Object.keys(parameters)
 
-     // for each of the keys that were passed
     inputKeys.forEach(
         (key) => {
             if (defaultKeys.includes(key)) {
-                // exract the specified value
                 const value = parameters[key]
-                // run the validator function to make sure
-                // it's an acceptable value
                 if (defaults[key].validate(value)) {
-                    // set it in the result
+                    // returning without throwing will cause this=
+                    // value to be set in the result.
                     return
                 } else {
                     throw `Parameter ${key} with value ${value} was rejected by ${name}`
@@ -103,7 +95,6 @@ Confirms that each entry of the "function" parameter of a request
 specifies the name of a function that exists in this file
  */
 const validateFunction = (func) => {
-   
     if (!func.name) {
         throw 'No function name specified'
     }
@@ -175,8 +166,6 @@ const assignParameters = (name, parameters = {}) => {
 }
 
 const handler = (request, response) => {
-    
-
     // console.log('Starting handler')
 
     // first, make sure that
