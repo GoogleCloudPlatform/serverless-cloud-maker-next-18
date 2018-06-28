@@ -47,9 +47,15 @@ const faceAnnotationToBoundingPoly = (faceAnnotation) => {
     return vertices.map(({x, y}) => [x, y].join(",")).join(" ")
 }
 
+
+// creates a the name of the file to be used for the
+// result of the function. Must be distrinct from the
+// input file name
 const createOutputFileName = (prefix = "", fileName) => 
     prefix
+    // if a prefix was specified use that
     ? `${prefix}-${path.parse(fileName).base}`
+    // otherwise append .out
     : `${path.parse(fileName).base}.out`
 
 const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
