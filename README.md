@@ -42,3 +42,6 @@ It contains a handler function that can be deployed as a service to enable users
 - Deploy the handler (1-2m): `gcloud functions deploy handler --trigger-http`
 - Call the handler: `gcloud functions call handler --data=$(cat request.json)`
 - Read the logs: `gcloud functions logs read --limit=10`
+
+## Creating buckets
+- Run `node createBuckets.js` to create all of the buckets that functions will upload results to by default.
