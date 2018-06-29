@@ -1,6 +1,8 @@
 # Cloud Maker Functions and Parameters
 This document contains the final list of Cloud Maker functions and all of the parameters they accept.
 
+__DISCLAIMER__: This is not an official Google Product.
+
 # Functions
 
 ## copyImage
@@ -135,7 +137,7 @@ These parameters are accepted by all functions.
     "bucket": "inputs",
     "name": "image1.jpg"
   },
-  "outpubBucketName": "outputs",
+  "outputBucketName": "outputs",
   "functions": [
     {
       "name": "copyImage",

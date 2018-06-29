@@ -6,6 +6,8 @@ on Node.js to implement a set of image transformation functions that combine the
 
 It contains a handler function that can be deployed as a service to enable users to specify arbitrary combinations of functions to be applied to arbitrary image data.
 
+The inventory of functions is available in [FUNCTIONS.md](https://github.com/GoogleCloudPlatform/serverless-cloud-maker-next-18/blob/handler/FUNCTIONS.md).
+
 ## Setup
 
 ### Install Google Cloud SDK
@@ -13,7 +15,7 @@ It contains a handler function that can be deployed as a service to enable users
 - Install the functions local emulator [here](https://cloud.google.com/functions/docs/emulator) to enable local testing
 
 ### Install global requirements
-- Intsall ImageMagick: `brew install imagemagick`
+- Install ImageMagick: `brew install imagemagick`
 
 ### Install npm dependencies
 - `cd serverless-cloud-maker-next-18 && npm install`
