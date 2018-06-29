@@ -30,13 +30,10 @@ describe('when createOutputFileName is called', () => {
     });
 
     it('should pass these base cases', () => {
-        expect(helpers.createOutputFileName("foo", "bar.png")).toBe("foo-bar.png")
-        expect(helpers.createOutputFileName("", "bar.png")).toBe("bar.png.out")
-    
+        expect(helpers.createOutputFileName('foo', 'bar.png')).toBe('foo-bar.png')
+        expect(helpers.createOutputFileName('', 'bar.png')).toBe('bar.png.out')
     });
 });
-
-
 
 describe(' when cropHintsToGeometry is called', () => {
     const testResponseFactory = (vertices) => ({
@@ -108,5 +105,32 @@ describe('when createTempFileName and createOutputFileName are used together', (
                 helpers.createOutputFileName('cropped', 'img1.js')
                 )
             ).toBe('/tmp/cropped-img1.js')
+    });
+});
+
+describe('when resolveImageMagickCommand is used', () => {
+    it('should call the passed function on the inputs', () => {
+        const cmd = jest.fn()
+        const args = []
+        helpers.resolveImageMagickCommand(cmd, args)
+        expect(cmd).toHaveBeenCalled()
+    });
+
+    it('should reject if the command throws', () => {
+        const result = 'result'
+        const goodCmd = jest.fn((a, cb) => cb(false, result))
+        const args = []
+        helpers
+            .resolveImageMagickCommand(goodCmd, args)
+            .then((r) => expect(r).toBe(result))
+    });
+
+    it('should resolve if the command succeeds', () => {
+        const err = 'err'
+        const badCmd = jest.fn((a, cb) => cb(err, false))
+        const args = []
+        helpers
+            .resolveImageMagickCommand(badCmd, args)
+            .catch((e) => expect(e).toBe(err))
     });
 });
