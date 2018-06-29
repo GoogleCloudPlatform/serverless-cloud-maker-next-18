@@ -166,8 +166,6 @@ const assignParameters = (name, parameters = {}) => {
 }
 
 const handler = (request, response) => {
-    // console.log('Starting handler')
-
     // first, make sure that
     // the request is valid
     try {
