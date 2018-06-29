@@ -31,7 +31,7 @@ const functions = require('./functions')
 const validateData = (data) => {
 /*
 Confirms that the "data" parameter of a request that specifies the input
-file conains the required information. Should be of the form
+file contains the required information. Should be of the form
 {
     gcsSourceUri,
     name,
