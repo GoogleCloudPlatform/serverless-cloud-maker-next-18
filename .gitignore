@@ -4,3 +4,5 @@ img/**
 coverage/**
 deprecated/**
 sftp-config.json
+request.json
+outputFileName
