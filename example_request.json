@@ -4,7 +4,7 @@
     "bucket": "inputs",
     "name": "image1.jpg"
   },
-  "outpubBucketName": "outputs",
+  "outputBucketName": "outputs",
   "functions": [
     {
       "name": "copyImage",
