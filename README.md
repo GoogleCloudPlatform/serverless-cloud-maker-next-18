@@ -8,6 +8,8 @@ It contains a handler function that can be deployed as a service to enable users
 
 The inventory of functions is available in [FUNCTIONS.md](https://github.com/GoogleCloudPlatform/serverless-cloud-maker-next-18/blob/handler/FUNCTIONS.md).
 
+__DISCLAIMER__: This is not an official Google product.
+
 ## Setup
 
 ### Install Google Cloud SDK
