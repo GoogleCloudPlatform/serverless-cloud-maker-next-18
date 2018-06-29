@@ -11,15 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// This file defines a function that rotates an image
+// by a specified number of degrees
 const helpers = require("../helpers")
 const decorator = require("../decorator")
 
-
-// defines a function that rotates an image
-// by a specified number of degrees
-
-// define a function with the signature expected
-// by the decorator
+// use the signature expected by the decorator
 const applyRotate = (inFile, outFile, {degrees}) =>
     helpers.resolveImageMagickConvert([
         inFile,
