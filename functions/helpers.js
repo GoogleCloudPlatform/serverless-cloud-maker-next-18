@@ -88,8 +88,6 @@ const resolveImageMagickIdentify = args => resolveImageMagickCommand(im.identify
 
 const resolveImageMagickConvert = (args) => resolveImageMagickCommand(im.convert, args)
 
-
-
 module.exports = {
 
     // imageMagickConvert,
