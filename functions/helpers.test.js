@@ -13,7 +13,6 @@
 // limitations under the License.
 const helpers = require('./helpers')
 
-
 describe('when createOutputFileName is called', () => {
     const filename = 'filename.png'
     const filenamedotout = filename + '.out'
@@ -96,7 +95,7 @@ describe('when createOutputFileName is called', () => {
     });
 });
 
-describe('when createTempFileNAme is called', () => {
+describe('when createTempFileName is called', () => {
     it('should just prepend /tmp/', () => {
         expect(helpers.createTempFileName('test2.js')).toBe('/tmp/test2.js')
     });
@@ -111,8 +110,3 @@ describe('when createTempFileName and createOutputFileName are used together', (
             ).toBe('/tmp/cropped-img1.js')
     });
 });
-
-// list of functions
-// types of inputs
-// what the configurables eg languages
-// run one image

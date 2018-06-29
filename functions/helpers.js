@@ -44,14 +44,14 @@ const faceAnnotationToBoundingPoly = (faceAnnotation) => {
     const boundingPoly = faceAnnotation.boundingPoly
     const vertices = boundingPoly.vertices
 
-    return vertices.map(({x, y}) => [x, y].join(",")).join(" ")
+    return vertices.map(({x, y}) => [x, y].join(',')).join(' ')
 }
 
 
 // creates a the name of the file to be used for the
 // result of the function. Must be distrinct from the
 // input file name
-const createOutputFileName = (prefix = "", fileName) => 
+const createOutputFileName = (prefix = '', fileName) =>
     prefix
     // if a prefix was specified use that
     ? `${prefix}-${path.parse(fileName).base}`
@@ -67,24 +67,22 @@ a promise the resolves when the
 transformation is complete.
 This should be a helper...
  */
-
-
 const resolveImageMagickCommand = (cmd, args) =>
     new Promise(
         (resolve, reject) =>
-            cmd(args, (err, result) => { 
+            cmd(args, (err, result) => {
                 if (err) {
                     console.error('ImageMagick command failed for arguments', args, err);
                     reject(err);
                     return
-                } else { 
+                } else {
                     console.log('ImageMagick command was successful.', args)
                     resolve(result)
                 }
             })
     )
 
-const resolveImageMagickIdentify = args => resolveImageMagickCommand(im.identify, args)
+const resolveImageMagickIdentify = (args) => resolveImageMagickCommand(im.identify, args)
 
 const resolveImageMagickConvert = (args) => resolveImageMagickCommand(im.convert, args)
 
