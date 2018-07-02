@@ -19,6 +19,7 @@ const convertRasterFormat = require('./convertRasterFormat')
 const transformApplyResize = require('./resize')
 const transformApplyRotate = require('./rotate')
 const transformApplyReflect = require('./reflect')
+const transformApplyFilter = require('./filter')
 
 module.exports = {
 	// basic functions
@@ -28,4 +29,5 @@ module.exports = {
     transformApplyResize,
     transformApplyRotate,
     transformApplyReflect,
+    transformApplyFilter,
 }
