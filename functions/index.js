@@ -20,6 +20,7 @@ const transformApplyResize = require('./resize')
 const transformApplyRotate = require('./rotate')
 const transformApplyReflect = require('./reflect')
 const transformApplyFilter = require('./filter')
+const transformApplyBorder = require('./border')
 
 module.exports = {
 	// basic functions
@@ -30,4 +31,5 @@ module.exports = {
     transformApplyRotate,
     transformApplyReflect,
     transformApplyFilter,
+    transformApplyBorder,
 }
