@@ -12,44 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-const StorageApi = require('@google-cloud/storage');
 const helpers = require('../helpers');
-const storage = new StorageApi();
-const fs = require('fs')
+const decorator = require('../decorator')
 
 /*
 Converts images between png, jpg, gif
  */
 
-const convertRasterFormat = (file, parameters) => {
-    const outputBucketName = parameters.outputBucketName
-    const outputFileName = helpers.changeExtension(
-        helpers.createOutputFileName(parameters.outputPrefix, file.name),
-        parameters.extension.toLowerCase()
-    )
-    const tempLocalFileName = helpers.createTempFileName(file.name)
-    const tempLocalOutputFileName = helpers.createTempFileName(outputFileName)
-    return (
-        // if the file has already been downloaded
-        fs.existsSync(tempLocalFileName)
-        // skip to the next step
-        ? Promise.resolve()
-        // otherwise, download it to the temp location
-        : file.download({destination: tempLocalFileName})
-    )
-    // then, convert the file format
-    .then(() => helpers.resolveImageMagickConvert([tempLocalFileName, tempLocalOutputFileName]))
-    // write errors in the transform to the console
-    .catch(console.error)
-    .then(() =>
-        // upload it to the desired output bucket    
-        storage
-            .bucket(outputBucketName)
-            .upload(tempLocalOutputFileName, {destination: outputFileName})
-            .then(() => storage.bucket(outputBucketName).file(outputFileName))
-    )
-}
+const applyChangeFormat = (inFile, outFile, parameters) =>
+    helpers.resolveImageMagickConvert([
+        helpers.createTempFileName(inFile),
+        helpers.createTempFileName(outFile),
+    ])
+
+const convertRasterFormat = decorator(applyChangeFormat);
 
 convertRasterFormat.parameters = {
     outputBucketName: {
@@ -65,5 +41,7 @@ convertRasterFormat.parameters = {
         validate: (v) => ['.jpg', '.png', '.gif'].includes(v.toLowerCase()),
     },
 }
+
+convertRasterFormat.applyChangeFormat = applyChangeFormat
 
 module.exports = convertRasterFormat

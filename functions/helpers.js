@@ -49,12 +49,15 @@ const faceAnnotationToBoundingPoly = (faceAnnotation) => {
 // creates a the name of the file to be used for the
 // result of the function. Must be distrinct from the
 // input file name
-const createOutputFileName = (prefix = '', fileName) =>
-    prefix
-    // if a prefix was specified use that
-    ? `${prefix}-${path.parse(fileName).base}`
-    // otherwise append .out
-    : `${path.parse(fileName).base}.out`
+const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>
+    changeExtension(
+        outputPrefix
+            // if a prefix was specified use that
+            ? `${outputPrefix}-${path.parse(fileName).base}`
+            // otherwise append .out
+            : `${path.parse(fileName).base}.out`
+        , extension
+    )
 
 const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
 
@@ -81,7 +84,9 @@ const resolveImageMagickConvert = (args) => resolveImageMagickCommand(im.convert
 
 
 const changeExtension = (fileName, extension) =>
-    fileName.substr(0, fileName.lastIndexOf('.')) + extension
+    extension
+    ? fileName.substr(0, fileName.lastIndexOf('.')) + extension
+    : fileName
 
 module.exports = {
     // imageMagickConvert,

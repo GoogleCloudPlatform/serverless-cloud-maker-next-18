@@ -32,7 +32,7 @@ const createImageMagickTransform = (transform) =>
 
  (file, parameters) => {
     const outputBucketName = parameters.outputBucketName
-    const outputFileName = helpers.createOutputFileName(parameters.outputPrefix, file.name)
+    const outputFileName = helpers.createOutputFileName(file.name, parameters)
     const tempLocalFileName = helpers.createTempFileName(file.name)
     const tempLocalOutputFileName = helpers.createTempFileName(outputFileName)
     return (

@@ -39,7 +39,7 @@ describe('when createImageMagickTransform is used', () => {
 
         helpers.createOutputFileName.mockReturnValue(outputFileName)
         decoratedTransform(file, parameters)
-        expect(helpers.createOutputFileName).toHaveBeenCalledWith(outputPrefix, name)
+        expect(helpers.createOutputFileName).toHaveBeenCalledWith(name, { outputPrefix, outputBucketName })
         expect(helpers.createTempFileName).toHaveBeenCalledWith(name)
         expect(helpers.createTempFileName).toHaveBeenCalledWith(outputFileName)
     });

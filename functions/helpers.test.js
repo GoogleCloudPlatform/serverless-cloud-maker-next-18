@@ -16,22 +16,22 @@ const helpers = require('./helpers')
 describe('when createOutputFileName is called', () => {
     const filename = 'filename.png'
     const filenamedotout = filename + '.out'
-    const prefix = 'prefix'
-    const prefixfilename = prefix + '-' + filename
+    const outputPrefix = 'prefix'
+    const prefixfilename = outputPrefix + '-' + filename
 
     it('should append .out if the prefix coerces to false', () => {
-        expect(helpers.createOutputFileName('', filename)).toBe(filenamedotout)
-        expect(helpers.createOutputFileName(false, filename)).toBe(filenamedotout)
-        expect(helpers.createOutputFileName(null, filename)).toBe(filenamedotout)
+        expect(helpers.createOutputFileName(filename)).toBe(filenamedotout)
+        expect(helpers.createOutputFileName(filename, {})).toBe(filenamedotout)
+        expect(helpers.createOutputFileName(filename, {outputPrefix: false})).toBe(filenamedotout)
     });
 
     it('should add the passed prefix', () => {
-        expect(helpers.createOutputFileName(prefix, filename)).toBe(prefixfilename)
+        expect(helpers.createOutputFileName(filename, {outputPrefix})).toBe(prefixfilename)
     });
 
     it('should pass these base cases', () => {
-        expect(helpers.createOutputFileName('foo', 'bar.png')).toBe('foo-bar.png')
-        expect(helpers.createOutputFileName('', 'bar.png')).toBe('bar.png.out')
+        expect(helpers.createOutputFileName('bar.png', {outputPrefix: 'foo'})).toBe('foo-bar.png')
+        expect(helpers.createOutputFileName('bar.png', {outputPrefix: ''})).toBe('bar.png.out')
     });
 });
 
@@ -88,7 +88,7 @@ describe('when faceAnnotationToBoundingPoly is called', () => {
 
 describe('when createOutputFileName is called', () => {
     it('should join the prefix to the previous file name and store it in temp', () => {
-        expect(helpers.createOutputFileName('blurred', 'foo.js')).toBe('blurred-foo.js')
+        expect(helpers.createOutputFileName('foo.js', {outputPrefix: 'blurred'})).toBe('blurred-foo.js')
     });
 });
 
@@ -102,7 +102,7 @@ describe('when createTempFileName and createOutputFileName are used together', (
     it('should work nicely', () => {
         expect(
             helpers.createTempFileName(
-                helpers.createOutputFileName('cropped', 'img1.js')
+                helpers.createOutputFileName('img1.js', {outputPrefix: 'cropped'})
                 )
             ).toBe('/tmp/cropped-img1.js')
     });
@@ -135,12 +135,12 @@ describe('when resolveImageMagickCommand is used', () => {
     });
 });
 
-
 describe('when changeExtension is called', () => {
     it('should change extensions as expected', () => {
-        expect(helpers.changeExtension("test.png", ".jpg")).toBe("test.jpg")
-        expect(helpers.changeExtension("test.jpg", ".png")).toBe("test.png")
-        expect(helpers.changeExtension("test.png", ".gif")).toBe("test.gif")
+        expect(helpers.changeExtension('test.png', '.jpg')).toBe('test.jpg')
+        expect(helpers.changeExtension('test.jpg', '.png')).toBe('test.png')
+        expect(helpers.changeExtension('test.png', '.gif')).toBe('test.gif')
+        expect(helpers.changeExtension('test.png', '')).toBe('test.png')
+        expect(helpers.changeExtension('test.png')).toBe('test.png')
     });
-
 });
