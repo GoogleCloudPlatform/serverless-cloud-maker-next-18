@@ -88,6 +88,33 @@ const changeExtension = (fileName, extension) =>
     ? fileName.substr(0, fileName.lastIndexOf('.')) + extension
     : fileName
 
+// blur all of the polygons in an image
+const blurPolygons = (inFile, outFile, {polygons}) =>
+    resolveImageMagickConvert([
+        inFile,
+        '\(',
+        '-clone', '0', '-fill', 'white', '-colorize', '100', '-fill', 'black',
+        '-draw', polygons,
+        '-alpha', 'off', '-write', 'mpr:mask', '+delete',
+        '\)',
+        '-mask', 'mpr:mask', '-blur', '0x5', '+mask', outFile,
+    ])
+
+// blur all of the polygons in an image and soften the edges
+const softBlurPolygons = (inFile, outFile, {polygons}) =>
+    resolveImageMagickConvert([
+        inFile,
+        '\(',
+        '-clone', '0', '-fill', 'white', '-colorize', '100', '-fill', 'black',
+        '-draw', polygons,
+        '-alpha', 'off',
+            // adding these two flags softens the edges
+            '-blur', '0x5',
+        '-write', 'mpr:mask', '+delete',
+        '\)',
+        '-mask', 'mpr:mask', '-blur', '0x5', '+mask', outFile,
+    ])
+
 module.exports = {
     // imageMagickConvert,
     resolveImageMagickConvert,
@@ -99,6 +126,9 @@ module.exports = {
     createTempFileName,
     faceAnnotationToBoundingPoly,
     changeExtension,
+    // blur polygons
+    blurPolygons,
+    softBlurPolygons,
 }
 
 
