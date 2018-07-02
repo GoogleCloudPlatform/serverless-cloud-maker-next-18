@@ -15,9 +15,15 @@
 // assemple all of the functions built in this director into a single export
 
 const copyImage = require('./copy')
+const convertRasterFormat = require('./convertRasterFormat')
+const transformApplyResize = require("./resize")
 const transformApplyRotate = require("./rotate")
 
 module.exports = {
+	// basic functions
     copyImage,
+    convertRasterFormat,
+    // basic transformations
+    transformApplyResize,
     transformApplyRotate,
 }
