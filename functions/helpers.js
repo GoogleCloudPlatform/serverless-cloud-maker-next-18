@@ -86,6 +86,10 @@ const resolveImageMagickIdentify = (args) => resolveImageMagickCommand(im.identi
 
 const resolveImageMagickConvert = (args) => resolveImageMagickCommand(im.convert, args)
 
+
+const changeExtension = (fileName, extension) =>
+    fileName.substr(0, fileName.lastIndexOf('.')) + extension
+
 module.exports = {
 
     // imageMagickConvert,
@@ -97,6 +101,8 @@ module.exports = {
     createOutputFileName,
     createTempFileName,
     faceAnnotationToBoundingPoly,
+
+    changeExtension,
 }
 
 

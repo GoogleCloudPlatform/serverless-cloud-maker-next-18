@@ -15,14 +15,14 @@
 
 const copyImage = require('./index.js')
 
-jest.mock("@google-cloud/storage")
-const StorageAPI = require("@google-cloud/storage")
+jest.mock('@google-cloud/storage')
+const StorageAPI = require('@google-cloud/storage')
 
 
 const copySpy = jest.fn(() => Promise.resolve())
 
 const mockFile = {
-    name: "foo.png",
+    name: 'foo.png',
     copy: copySpy,
 }
 
@@ -49,20 +49,17 @@ describe('when copyImage is called', () => {
     });
 
     it('should call copy the file to the cloud storage output bucket', () => {
-
         const parameters = {
-            outputBucketName: "output-bucket",
-            outputPrefix: "output",
+            outputBucketName: 'output-bucket',
+            outputPrefix: 'output',
         }
 
         const result = copyImage(mockFile, parameters)
         expect(StorageAPI.prototype.bucket).toHaveBeenCalledWith(parameters.outputBucketName)
         expect(copySpy).toHaveBeenCalled()
-        
+
         return result.then((outputFile) => {
             expect(outputFile).toEqual(mockFile)
-        }) 
-
+        })
     });
-
 });

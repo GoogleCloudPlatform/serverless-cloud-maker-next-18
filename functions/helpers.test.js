@@ -134,3 +134,13 @@ describe('when resolveImageMagickCommand is used', () => {
             .catch((e) => expect(e).toBe(err))
     });
 });
+
+
+describe('when changeExtension is called', () => {
+    it('should change extensions as expected', () => {
+        expect(helpers.changeExtension("test.png", ".jpg")).toBe("test.jpg")
+        expect(helpers.changeExtension("test.jpg", ".png")).toBe("test.png")
+        expect(helpers.changeExtension("test.png", ".gif")).toBe("test.gif")
+    });
+
+});
