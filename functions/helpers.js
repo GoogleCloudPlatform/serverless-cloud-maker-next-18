@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*
-Contains helpful methods that are called
-used by various functions.
- */
+
+// Contains helpful methods that are called
+// used by various functions.
 
 
 const path = require('path');
@@ -47,7 +46,6 @@ const faceAnnotationToBoundingPoly = (faceAnnotation) => {
     return vertices.map(({x, y}) => [x, y].join(',')).join(' ')
 }
 
-
 // creates a the name of the file to be used for the
 // result of the function. Must be distrinct from the
 // input file name
@@ -60,13 +58,8 @@ const createOutputFileName = (prefix = '', fileName) =>
 
 const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
 
-/*
-Accept an array of arguments to be passed to
-imagemagick's convert method and return
-a promise the resolves when the
-transformation is complete.
-This should be a helper...
- */
+// Accept an array of arguments to be passed to imagemagick's convert method
+// and return a promise the resolves when the transformation is complete.
 const resolveImageMagickCommand = (cmd, args) =>
     new Promise(
         (resolve, reject) =>
@@ -87,7 +80,6 @@ const resolveImageMagickIdentify = (args) => resolveImageMagickCommand(im.identi
 const resolveImageMagickConvert = (args) => resolveImageMagickCommand(im.convert, args)
 
 module.exports = {
-
     // imageMagickConvert,
     resolveImageMagickConvert,
     resolveImageMagickIdentify,
