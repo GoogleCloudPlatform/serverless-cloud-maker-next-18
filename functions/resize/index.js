@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const helpers = require("../helpers")
-const createImageMagickTransform = require("../decorator")
+const decorator = require("../decorator")
 
 
 // resizes the infile to the specified width and height
@@ -25,7 +25,7 @@ const applyResize = (inFile, outFile, {width, height}) =>
         outFile,
     ])
 
-const transformApplyResize = createImageMagickTransform(applyResize)
+const transformApplyResize = decorator(applyResize)
 
 transformApplyResize.parameters = {
     outputBucketName: {

@@ -93,7 +93,6 @@ module.exports = {
     createOutputFileName,
     createTempFileName,
     faceAnnotationToBoundingPoly,
-
     changeExtension,
 }
 

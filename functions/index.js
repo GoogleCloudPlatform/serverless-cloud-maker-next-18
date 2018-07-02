@@ -16,8 +16,9 @@
 
 const copyImage = require('./copy')
 const convertRasterFormat = require('./convertRasterFormat')
-const transformApplyResize = require("./resize")
-const transformApplyRotate = require("./rotate")
+const transformApplyResize = require('./resize')
+const transformApplyRotate = require('./rotate')
+const transformApplyReflect = require('./reflect')
 
 module.exports = {
 	// basic functions
@@ -26,4 +27,5 @@ module.exports = {
     // basic transformations
     transformApplyResize,
     transformApplyRotate,
+    transformApplyReflect,
 }
