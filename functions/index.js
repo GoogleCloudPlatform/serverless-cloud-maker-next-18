@@ -21,6 +21,7 @@ const transformApplyRotate = require('./rotate')
 const transformApplyReflect = require('./reflect')
 const transformApplyFilter = require('./filter')
 const transformApplyBorder = require('./border')
+const transformApplyCaption = require('./caption')
 
 module.exports = {
 	// basic functions
@@ -32,4 +33,7 @@ module.exports = {
     transformApplyReflect,
     transformApplyFilter,
     transformApplyBorder,
+    // vision transformations
+    transformApplyCaption,
+
 }
