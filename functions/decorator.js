@@ -17,18 +17,16 @@ const helpers = require('./helpers');
 const storage = new StorageApi();
 const fs = require('fs');
 
-/*
-Many of the desired functions will requires the same
-setup and teardown logic to interact with GCS and make sure
-that the image they work on is present on disk. This decorator
-extracts that into a single function for use in implementing
-others.
 
-Accepts a function transform that takes the infile, outfile and 
-the input parameters and returns a function that can be called by 
-the handler to execute that transform
- */
+// Many of the desired functions will requires the same
+// setup and teardown logic to interact with GCS and make sure
+// that the image they work on is present on disk. This decorator
+// extracts that into a single function for use in implementing
+// others.
 
+// Accepts a function transform that takes the infile, outfile and 
+// the input parameters and returns a function that can be called by 
+// the handler to execute that transform
 
 const createImageMagickTransform = (transform) =>
 
