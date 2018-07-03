@@ -36,7 +36,7 @@ const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
 
     if (shape == "square") {
         const difference = Math.abs(width - height)
-        const delta = Math.floor(difference / 2)
+        const delta = Math.round(difference / 2)
         if (width > height) {
             return `${width - difference}x${height}+${xMin + delta}+${yMin}`
         }
@@ -47,14 +47,13 @@ const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
     }
 
     if (shape == "circle") {
-
         const difference = Math.abs(width - height)
-        const delta = Math.floor(difference / 2)
+        const delta = Math.round(difference / 2)
         if (width > height) {
             const newWidth = width - difference
             const newXMin = xMin + delta
 
-            const radius = Math.floor(newWidth / 2)
+            const radius = Math.round(newWidth / 2)
 
             const centerX = newXMin + radius
             const centerY = yMin + radius
@@ -66,14 +65,13 @@ const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
             const newHeight = height - difference
             const newYMin = yMin + delta
 
-            const radius = Math.floor(newHeight / 2)
+            const radius = Math.round(newHeight / 2)
 
             const centerX = xMin + radius
             const centerY = newYMin + radius
 
             return `circle ${centerX},${centerY} ${xMin},${centerY}`
         }
-
     }
 
 

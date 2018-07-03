@@ -15,7 +15,6 @@
 
 const helpers = require('../helpers')
 const decorator = require('../decorator')
-const convertRasterFormat = require('../convertRasterFormat')
 
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();

@@ -66,38 +66,7 @@ describe(' when cropHintsToGeometry is called', () => {
         ])
         expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`90x85+10+15`)
     });
-});
-describe(' when cropHintsToGeometry is called', () => {
-    const testResponseFactory = (vertices) => ({
-        cropHints: [
-            {
-                boundingPoly: {
-                    vertices,
-                },
-            },
-        ],
 
-    })
-
-    it('should work', () => {
-        const testResponse = testResponseFactory([
-                        {x: 0, y: 0},
-                        {x: 100, y: 0},
-                        {x: 0, y: 100},
-                        {x: 100, y: 100},
-            ])
-        expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`100x100+0+0`)
-    });
-
-    it('should set offsets correctly', () => {
-        const testResponse = testResponseFactory([
-            {x: 10, y: 15},
-            {x: 100, y: 100},
-            {x: 100, y: 15},
-            {x: 10, y: 100},
-        ])
-        expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`90x85+10+15`)
-    });
 
     it('should create a square', () => {
         const testResponse = testResponseFactory([
@@ -106,7 +75,17 @@ describe(' when cropHintsToGeometry is called', () => {
             {x: 100, y: 15},
             {x: 10, y: 100},
         ])
-        expect(helpers.cropHintsToGeometry(testResponse, true)).toEqual(`85x85+12+15`)
+        expect(helpers.cropHintsToGeometry(testResponse, "square")).toEqual(`85x85+13+15`)
+    });
+    it('should create a circle', () => {
+        const testResponse = testResponseFactory([
+            {x: 10, y: 15},
+            {x: 100, y: 100},
+            {x: 100, y: 15},
+            {x: 10, y: 100},
+        ])
+        expect(helpers.cropHintsToGeometry(testResponse, "circle")).toEqual(`circle 56,58 13,58`)
+    
     });
 });
 
