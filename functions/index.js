@@ -30,6 +30,8 @@ const transformApplyBlurFaces = require('./faces')
 const transformApplyCropShape = require('./shape')
 const transformApplySafeSearch = require('./safeSearch')
 const transformApplyEmojify = require('./emojify')
+const transformApplyBlurLogos = require('./logo')
+const transformApplyLandmarks = require('./landmarks')
 
 module.exports = {
 	// basic functions
@@ -44,7 +46,9 @@ module.exports = {
     transformApplyBlur,
     // vision transformations
     transformApplyCaption,
+    transformApplyLandmarks,
     transformApplyBlurFaces,
+    transformApplyBlurLogos,
     transformApplyCropShape,
     transformApplySafeSearch,
     transformApplyEmojify,
