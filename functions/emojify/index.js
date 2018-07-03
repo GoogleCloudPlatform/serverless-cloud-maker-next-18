@@ -145,5 +145,6 @@ transformApplyEmojify.parameters = {
         },
     }
 
+transformApplyEmojify.emojis = emojis
 
 module.exports = transformApplyEmojify
