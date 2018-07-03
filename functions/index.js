@@ -28,6 +28,7 @@ const transformApplyBlur = require('./blur')
 const transformApplyCaption = require('./caption')
 const transformApplyBlurFaces = require('./faces')
 const transformApplyCropShape = require('./shape')
+const transformApplySafeSearch = require('./safe')
 
 module.exports = {
 	// basic functions
@@ -44,4 +45,5 @@ module.exports = {
     transformApplyCaption,
     transformApplyBlurFaces,
     transformApplyCropShape,
+    transformApplySafeSearch,
 }
