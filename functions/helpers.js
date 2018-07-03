@@ -20,7 +20,7 @@
 const path = require('path');
 const im = require('imagemagick')
 
-const cropHintsToGeometry = (cropHintsAnnotation) => {
+const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
     const vertices = cropHintsAnnotation.cropHints[0].boundingPoly.vertices
     const xValues = vertices.map((vertex) => vertex.x)
     const yValues = vertices.map((vertex) => vertex.y)
@@ -34,9 +34,50 @@ const cropHintsToGeometry = (cropHintsAnnotation) => {
     const width = xMax - xMin
     const height = yMax - yMin
 
-    return `${width}x${height}+${xMin}+${yMin}`
+    if (shape == "square") {
+        const difference = Math.abs(width - height)
+        const delta = Math.floor(difference / 2)
+        if (width > height) {
+            return `${width - difference}x${height}+${xMin + delta}+${yMin}`
+        }
 
-    return [xMin, xMax, yMin, yMax]
+        if (height > width) {
+            return `${width}x${height - difference}+${xMin}+${yMin + delta}`
+        }
+    }
+
+    if (shape == "circle") {
+
+        const difference = Math.abs(width - height)
+        const delta = Math.floor(difference / 2)
+        if (width > height) {
+            const newWidth = width - difference
+            const newXMin = xMin + delta
+
+            const radius = Math.floor(newWidth / 2)
+
+            const centerX = newXMin + radius
+            const centerY = yMin + radius
+
+            return `circle ${centerX},${centerY} ${newXMin},${centerY}`
+        }
+
+        if (height > width) {
+            const newHeight = height - difference
+            const newYMin = yMin + delta
+
+            const radius = Math.floor(newHeight / 2)
+
+            const centerX = xMin + radius
+            const centerY = newYMin + radius
+
+            return `circle ${centerX},${centerY} ${xMin},${centerY}`
+        }
+
+    }
+
+
+    return `${width}x${height}+${xMin}+${yMin}`
 }
 
 const faceAnnotationToBoundingPoly = (faceAnnotation) => {
