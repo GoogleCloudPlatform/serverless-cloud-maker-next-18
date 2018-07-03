@@ -21,7 +21,8 @@ const storage = new StorageApi();
 
 // IMPORTANT: To use emojify you'll need to upload
 // correctly named png files to a GCS bucket in accordance with
-// this mapping
+// this mapping, which you can do by running the 
+// upload emojis file
 const emojis = {
     joyLikelihood: 'joy.png',
     angerLikelihood: 'anger.png',
@@ -41,19 +42,24 @@ const downloadEmojis = () =>
                     .download({destination: `/tmp/${emojis[key]}`}))
     )
 
-const determineEmoji = (face) => {
-    console.log(face)
-    return emojis[Object.keys(emojis).reduce(
-        (emotion, nextEmotion) =>
-            ['VERY_LIKELY', 'LIKELY', 'POSSIBLE'].includes(face[nextEmotion])
-            ? nextEmotion
-            : emotion
-        , 'expressionless'
-    )]
-}
+// get the emoji that best matches this face's emotion.
+// If expressionless, return expressionless
+const determineEmoji = (face) =>
+    // index the result into the emojis object to return the
+    // file name
+    emojis[
+        // get the best emoji for this face
+        Object.keys(emojis).reduce(
+            (emotion, nextEmotion) =>
+                ['VERY_LIKELY', 'LIKELY', 'POSSIBLE'].includes(face[nextEmotion])
+                ? nextEmotion
+                : emotion
+            // default to expressionless
+            , 'expressionless'
+        )
+    ]
 
 const faceAnnotationToEmojiComposite = (faceAnnotation) => (
-
     [
         '\(',
         `/tmp/${determineEmoji(faceAnnotation)}`,
@@ -86,16 +92,17 @@ const transformApplyEmojify = (file, parameters) =>
         // send a remote url to the vision api
         vision.faceDetection(`gs://${file.bucket.name}/${file.name}`),
         // simultaneously download all of the necessary emojis
-        downloadEmojis(),
+        downloadEmojis(parameters),
     ])
 
         // convert the result to its most relevant emoji
         .then(([[{faceAnnotations}]]) =>
             faceAnnotations
                 .map(faceAnnotationToEmojiComposite)
+                // reduce the result to a single array of composites
                 .reduce((acc, nextComposite) => acc.concat(nextComposite), [])
         )
-
+        // apply those composites over the image
         .then((composites) => transformApplyComposites(file, Object.assign(parameters, {composites})))
 
 transformApplyEmojify.parameters = {
@@ -106,6 +113,10 @@ transformApplyEmojify.parameters = {
         outputBucketName: {
             defaultValue: 'cloud-maker-outputs-emojis',
             validate: () => true,
+        },
+        emojiSet: {
+            defaultValue: 'emojis-apple',
+            validate: (v) => ['emojis-apple', 'emojis-google'].contains(v)
         },
     }
 

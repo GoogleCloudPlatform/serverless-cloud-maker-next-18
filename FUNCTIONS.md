@@ -29,6 +29,12 @@ Detects all faces in the image using the Cloud Vision API and blurs them.
 ## transformApplyEmojify
 Detects all faces and their emotions in the image using the Cloud Vision API and replaces each face with its corresponding emoji.
 
+###emojiSet
+- Determines the set of emojis that are used in the transformation
+- Options: ['emojis-apple', 'emojis-google']
+- Default: ['emojis-apple']
+
+
 ## transformApplyBlurLogos
 Detects all logos using the Cloud Vision API and blurs them.
 
