@@ -29,7 +29,7 @@ Detects all faces in the image using the Cloud Vision API and blurs them.
 ## transformApplyEmojify
 Detects all faces and their emotions in the image using the Cloud Vision API and replaces each face with its corresponding emoji.
 
-## transformApplyLogo
+## transformApplyBlurLogos
 Detects all logos using the Cloud Vision API and blurs them.
 
 ## transformApplyLandmarks
@@ -58,9 +58,6 @@ Adds a caption to the image, either the one specified by the user or the one sug
 - Default: false 
 - Options: [false, any string]
 
-
-
-
 ## transformApplyFilter
 Applies a filter to the image, either sepia, grayscale, or a random tint (colorize)
 
@@ -68,7 +65,6 @@ Applies a filter to the image, either sepia, grayscale, or a random tint (colori
 - Determines the filter that will be applied to the image
 - Default: "sepia"
 - Options: ['sepia', 'grayscale', 'colorize']
-
 
 
 ## transformApplyResize
@@ -108,10 +104,6 @@ Crops the image into a circle, a square, or into the rectangle suggested by the 
 - Determines the shape to crop the image into. By default applies suggestions from the cropHints endpoint of the cloud vision api. Cropping into a circle requires converting to a PNG.
 - default: "suggested"
 - accepts: ["square", "circle", "suggested"]
-
-
-
-
 
 
 # Global Parameters

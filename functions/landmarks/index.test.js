@@ -11,14 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const transformApplyLandmark = require('./index.js')
+const transformApplyLandmarks = require('./index.js')
 jest.mock('../helpers.js')
 const helpers = require('../helpers')
 
-describe('when transformApplyLandmark is called', () => {
+describe('when transformApplyLandmarks is called', () => {
 
   it('should have default parameters', () => {
-    expect(transformApplyLandmark.parameters).not.toBeUndefined()
+    expect(transformApplyLandmarks.parameters).not.toBeUndefined()
   });
 
 });
