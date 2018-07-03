@@ -33,7 +33,7 @@ describe('when transformApplyBlurFaces is called', () => {
             bucket: {name: 'foo'},
         }
 
-        helpers.faceAnnotationToBoundingPoly.mockReturnValue(polygon)
+        helpers.annotationsToPolygons.mockReturnValue(polygon)
 
 
         VisionApi
@@ -44,8 +44,8 @@ describe('when transformApplyBlurFaces is called', () => {
 
 
         return transformApplyBlurFaces
-            .detectFacePolygons(file)
-            .then((polygons) => {
+            .detectFaces(file)
+            .then((annotations) => {
                 expect(
                     VisionApi
                         .ImageAnnotatorClient
@@ -53,7 +53,7 @@ describe('when transformApplyBlurFaces is called', () => {
                         .faceDetection
                     )
                     .toHaveBeenCalledWith(`gs://foo/bar.png`);
-                expect(polygons).toEqual('polygon polygon')
+                expect(annotations).toEqual(faceAnnotations)
             })
     });
 });

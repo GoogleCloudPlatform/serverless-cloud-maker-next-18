@@ -23,20 +23,16 @@ const transformApplyBlurPolygons = decorator(helpers.softBlurPolygons)
 
 // query the vision api to annotate  all of the faces in the image,
 // reducing the results to list of polygons that can be passed to
-const detectFacePolygons = (file) =>
+const detectFaces = (file) =>
     vision
         // send a remote url to the vision api
         .faceDetection(`gs://${file.bucket.name}/${file.name}`)
-        // convert the result a string usable by ImageMagick
-        .then(([{faceAnnotations}]) =>
-            faceAnnotations
-                .map(helpers.faceAnnotationToBoundingPoly)
-                .map((poly) => `polygon ${poly}`)
-                .join(' ')
-        )
+        .then(([{faceAnnotations}]) => faceAnnotations)
 
 const transformApplyBlurFaces = (file, parameters) =>
-    detectFacePolygons(file)
+    detectFaces(file)
+        // convert the result a string usable by ImageMagick
+        .then(helpers.annotationsToPolygons)
         // apply the imageMagick transformation to the input file
         .then(
             (polygons) =>
@@ -58,6 +54,6 @@ transformApplyBlurFaces.parameters = {
 }
 
 
-transformApplyBlurFaces.detectFacePolygons = detectFacePolygons
+transformApplyBlurFaces.detectFaces = detectFaces
 
 module.exports = transformApplyBlurFaces
