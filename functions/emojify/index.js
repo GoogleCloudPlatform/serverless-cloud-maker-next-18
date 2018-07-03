@@ -52,52 +52,16 @@ const determineEmoji = (face) => {
     )]
 }
 
-
-const faceAnnotationToCoordinate = (faceAnnotation) => {
-    const vertices = faceAnnotation.boundingPoly.vertices
-    const xValues = vertices.map((vertex) => vertex.x)
-    const yValues = vertices.map((vertex) => vertex.y)
-
-    const xMax = Math.max(...xValues)
-    const xMin = Math.min(...xValues)
-
-    const yMax = Math.max(...yValues)
-    const yMin = Math.min(...yValues)
-
-    const width = xMax - xMin
-    const height = yMax - yMin
-
-    return `+${xMin}+${yMin}`
-}
-
-const faceAnnotationToDimensions = (faceAnnotation) => {
-    const vertices = faceAnnotation.boundingPoly.vertices
-    const xValues = vertices.map((vertex) => vertex.x)
-    const yValues = vertices.map((vertex) => vertex.y)
-
-    const xMax = Math.max(...xValues)
-    const xMin = Math.min(...xValues)
-
-    const yMax = Math.max(...yValues)
-    const yMin = Math.min(...yValues)
-
-    const width = xMax - xMin
-    const height = yMax - yMin
-
-    return `${width}x${height}`
-}
-
-
 const faceAnnotationToEmojiComposite = (faceAnnotation) => (
 
     [
         '\(',
         `/tmp/${determineEmoji(faceAnnotation)}`,
         '-resize',
-        faceAnnotationToDimensions(faceAnnotation),
+        helpers.annotationToDimensions(faceAnnotation),
         '\)',
         '-geometry',
-        faceAnnotationToCoordinate(faceAnnotation),
+        helpers.annotationToCoordinate(faceAnnotation),
         '-composite',
     ]
 )

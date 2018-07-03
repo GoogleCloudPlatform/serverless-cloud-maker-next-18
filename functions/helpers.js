@@ -78,13 +78,6 @@ const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
     return `${width}x${height}+${xMin}+${yMin}`
 }
 
-const faceAnnotationToBoundingPoly = (faceAnnotation) => {
-    const boundingPoly = faceAnnotation.boundingPoly
-    const vertices = boundingPoly.vertices
-
-    return vertices.map(({x, y}) => [x, y].join(',')).join(' ')
-}
-
 const annotationToPolygon = (annotation) =>
     annotation
         .boundingPoly
@@ -97,6 +90,38 @@ const annotationsToPolygons = (annotations) =>
         .map(annotationToPolygon)
         .map(polygon => `polygon ${polygon}`)
         .join(' ')
+
+const annotationToCoordinate = (annotation) => {
+    const vertices = annotation.boundingPoly.vertices
+    const xValues = vertices.map((vertex) => vertex.x)
+    const yValues = vertices.map((vertex) => vertex.y)
+
+    const xMax = Math.max(...xValues)
+    const xMin = Math.min(...xValues)
+
+    const yMax = Math.max(...yValues)
+    const yMin = Math.min(...yValues)
+
+    return `+${xMin}+${yMin}`
+}
+
+const annotationToDimensions = (annotation) => {
+    const vertices = annotation.boundingPoly.vertices
+    const xValues = vertices.map((vertex) => vertex.x)
+    const yValues = vertices.map((vertex) => vertex.y)
+
+    const xMax = Math.max(...xValues)
+    const xMin = Math.min(...xValues)
+
+    const yMax = Math.max(...yValues)
+    const yMin = Math.min(...yValues)
+
+    const width = xMax - xMin
+    const height = yMax - yMin
+
+    return `${width}x${height}`
+}
+
 
 // creates a the name of the file to be used for the
 // result of the function. Must be distrinct from the
@@ -176,14 +201,16 @@ module.exports = {
     cropHintsToGeometry,
     createOutputFileName,
     createTempFileName,
-    faceAnnotationToBoundingPoly,
     changeExtension,
     // blur polygons
     blurPolygons,
     softBlurPolygons,
 
+    // helpers with annotatons from the vision apiu
     annotationToPolygon,
     annotationsToPolygons,
+    annotationToCoordinate, 
+    annotationToDimensions,
 }
 
 

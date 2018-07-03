@@ -90,21 +90,20 @@ describe(' when cropHintsToGeometry is called', () => {
 });
 
 
-describe('when faceAnnotationToBoundingPoly is called', () => {
-    const testAnnotationFactory = (vertices) => ({
+describe('when annotationsToPolygons is called', () => {
+    const testAnnotationsFactory = (vertices) => ([{
         boundingPoly: {
             vertices,
         },
-    })
+    }])
     it('should reduce the list of vertices to a string of tubles', () => {
-        const testAnnotation = testAnnotationFactory([
+        const testAnnotation = testAnnotationsFactory([
             {x: 1, y: 2},
             {x: 3, y: 4},
             {x: 5, y: 6},
             {x: 7, y: 8},
-
         ])
-        expect(helpers.faceAnnotationToBoundingPoly(testAnnotation)).toEqual('1,2 3,4 5,6 7,8')
+        expect(helpers.annotationsToPolygons(testAnnotation)).toEqual('polygon 1,2 3,4 5,6 7,8')
     });
 });
 
