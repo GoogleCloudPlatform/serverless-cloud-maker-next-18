@@ -51,7 +51,7 @@ describe('when transformApplyLandmarks is called', () => {
                     ],
                 }]
             ))
-        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, { caption: 'bestAnnotation'}))
+        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, {caption: 'bestAnnotation'}))
   });
 
   it('should not create a caption if none are detected', () => {
@@ -69,10 +69,10 @@ describe('when transformApplyLandmarks is called', () => {
             .landmarkDetection
             .mockReturnValue(Promise.resolve(
                 [{
-                    landmarkAnnotations: []
+                    landmarkAnnotations: [],
                 }]
             ))
-        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, { caption: 'No landmark found.'}))
+        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, {caption: 'No landmark found.'}))
   });
 });
 
@@ -103,5 +103,4 @@ describe('detectLandmark', () => {
             expect(description).toEqual('bestAnnotation')
         })
     });
-
 });

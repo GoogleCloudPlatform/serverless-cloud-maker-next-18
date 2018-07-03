@@ -19,7 +19,7 @@ const vision = new VisionApi.ImageAnnotatorClient();
 
 // because the helper function uses the correct signature, we can
 // use the decorator to convert it to a transformation
-const transformApplyPolygonBlurMask = decorator(helpers.softBlurPolygons)
+const transformApplyBlurPolygons = decorator(helpers.softBlurPolygons)
 
 // query the vision api to annotate  all of the faces in the image,
 // reducing the results to list of polygons that can be passed to
@@ -40,7 +40,7 @@ const transformApplyBlurFaces = (file, parameters) =>
         // apply the imageMagick transformation to the input file
         .then(
             (polygons) =>
-                transformApplyPolygonBlurMask(
+                transformApplyBlurPolygons(
                     file,
                     Object.assign(parameters, {polygons})
                 )

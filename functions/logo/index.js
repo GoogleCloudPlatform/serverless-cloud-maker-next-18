@@ -19,20 +19,16 @@ const vision = new VisionApi.ImageAnnotatorClient();
 
 const transformApplyBlurPolygons = decorator(helpers.blurPolygons)
 
-const transformApplyBlurLogos = (file, parameters) =>
+const detectLogos = (file) =>
     vision
         .logoDetection(`gs://${file.bucket.name}/${file.name}`)
-        .then(([{logoAnnotations}]) =>
-            // reduce the label annotations to the
-            // one with the most confidence
-            logoAnnotations
-                .map((annotation) => helpers.faceAnnotationToBoundingPoly(annotation))
-                .map((poly) => `polygon ${poly}`)
-                .join(' ')
-        )
+        .then(([{logoAnnotations}]) => logoAnnotations)
+
+const transformApplyBlurLogos = (file, parameters) =>
+    detectLogos(file)
+        .then(helpers.annotationsToPolygons)
         .then((polygons) => transformApplyBlurPolygons(file, Object.assign(parameters, {polygons})))
         .catch(console.error)
-
 
 transformApplyBlurLogos.parameters = {
     outputPrefix: {
@@ -44,6 +40,8 @@ transformApplyBlurLogos.parameters = {
         validate: () => true,
     },
 }
+
+transformApplyBlurLogos.detectLogos = detectLogos
 
 
 module.exports = transformApplyBlurLogos

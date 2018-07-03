@@ -85,6 +85,19 @@ const faceAnnotationToBoundingPoly = (faceAnnotation) => {
     return vertices.map(({x, y}) => [x, y].join(',')).join(' ')
 }
 
+const annotationToPolygon = (annotation) =>
+    annotation
+        .boundingPoly
+        .vertices
+        .map(({ x, y}) => [x, y].join(","))
+        .join(' ')
+
+const annotationsToPolygons = (annotations) =>
+    annotations
+        .map(annotationToPolygon)
+        .map(polygon => `polygon ${polygon}`)
+        .join(' ')
+
 // creates a the name of the file to be used for the
 // result of the function. Must be distrinct from the
 // input file name
@@ -168,6 +181,9 @@ module.exports = {
     // blur polygons
     blurPolygons,
     softBlurPolygons,
+
+    annotationToPolygon,
+    annotationsToPolygons,
 }
 
 
