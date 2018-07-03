@@ -11,41 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const helpers = require('../helpers')
-
-const decorator = require('../decorator')
-const im = require('imagemagick')
 
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
-const applyCaption = (inFile, outFile, {description}) =>
-    helpers
-        .resolveImageMagickCommand(im.identify, inFile)
-        .then(({format, width, height}) =>
-            helpers
-                .resolveImageMagickConvert([
-                     '-background',
-                     '#0008',
-                     '-fill',
-                     'white',
-                     '-gravity',
-                     'center',
-                     '-size',
-                     `${width}x30`,
-                     `caption: ${description}`,
-                     inFile,
-                     '+swap',
-                     '-gravity',
-                     'south',
-                     '-composite',
-                     outFile,
-                    ])
-            )
+const transformApplyCaption = require('../caption')
 
-const transformApplyAnnotationAsCaption = decorator(applyCaption)
-
-const transformApplyLandmarks = (file, parameters) =>
+// resolves with the best lamndmark annotation that the vision api
+// finds inside the image
+const detectLandmark = (file) =>
     vision
         .landmarkDetection(`gs://${file.bucket.name}/${file.name}`)
         .then(([{landmarkAnnotations}]) =>
@@ -54,12 +28,22 @@ const transformApplyLandmarks = (file, parameters) =>
                     nextAnnotation.score > bestAnnotation.score
                     ? nextAnnotation
                     : bestAnnotation
-                )
-
+                , { score: 0 })
         )
-        .then(({description}) => transformApplyAnnotationAsCaption(file, Object.assign(parameters, {description})))
-        .catch(console.error)
 
+const transformApplyLandmarks = (file, parameters) =>
+    detectLandmark(file)
+        .catch(console.error)
+        // extract the description from the
+        // returned landmark annotation
+        .then(({description}) =>
+            description
+            // if there was a landmark detected, add it to the image
+            ? transformApplyCaption(file, Object.assign(parameters, {caption: description}))
+            // otherise, add a caption that there was no landmark found
+            : transformApplyCaption(file, Object.assign(parameters, {caption: 'No landmark found.'}))
+        )
+        .catch(console.error)
 
 transformApplyLandmarks.parameters = {
     outputPrefix: {
@@ -72,5 +56,6 @@ transformApplyLandmarks.parameters = {
     },
 }
 
+transformApplyLandmarks.detectLandmark = detectLandmark
 
 module.exports = transformApplyLandmarks

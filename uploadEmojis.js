@@ -25,14 +25,18 @@ const emojis = emojify.emojis;
     storage
         .bucket(emojiSet)
         .exists()
+        // if the bucket does not exist, create it
         .then(([exists]) => exists ? Promise.resolve() : storage.bucket(emojiSet).create())
         .then(() =>
             Promise.all(
+                // for each emoji in this set
                 Object.keys(emojis).map((key) => {
+                    // get the name of the file from the dictionary
                     const fileName = emojis[key]
                     const filePath = `./assets/${emojiSet}/${fileName}`
                     return storage
                         .bucket(emojiSet)
+                        // upload it to the correct place in this bucket
                         .upload(filePath, {destination: fileName})
                         .then(() => console.log('Uploaded', fileName, 'to', emojiSet))
                 })
