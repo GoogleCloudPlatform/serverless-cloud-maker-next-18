@@ -25,7 +25,7 @@ const detectCropHints = (file) =>
         // apply the crophints annotation on the input image
         .cropHints(`gs://${file.bucket.name}/${file.name}`)
         // extract the results of the api call
-        .then(([{cropHintsAnnotation}]) => cropHintsAnnotation)
+        .then(([{cropHintsAnnotation}]) => cropHintsAnnotation.cropHints[0])
 
 // taking a shape and the correct geometry string for that shape
 // (rectangles wxh+x+y)
@@ -61,7 +61,7 @@ const transformApplyCropShape = (file, parameters) =>
     // detect the crop hints using the vision api
     detectCropHints(file)
         // use our helper function to convert the results of the api call to the wxh+x+y format
-        .then((cropHintsAnnotation) => helpers.cropHintsToGeometry(cropHintsAnnotation, parameters.shape))
+        .then((annotation) => helpers.annotationToShape(annotation, parameters.shape))
         // apply a crop
         .then((geometry) => transformApplyCropGeometry(file, Object.assign(parameters, {geometry})))
 

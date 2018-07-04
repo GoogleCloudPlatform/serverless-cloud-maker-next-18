@@ -13,15 +13,14 @@
 // limitations under the License.
 
 
-// Contains helpful methods that are called
-// used by various functions.
-
-
+// Contains helpful methods that are shared by various functions.
 const path = require('path');
 const im = require('imagemagick')
 
-const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
-    const vertices = cropHintsAnnotation.cropHints[0].boundingPoly.vertices
+
+const annotationToShape = (annotation, shape) => {
+    const vertices = annotation.boundingPoly.vertices  
+
     const xValues = vertices.map((vertex) => vertex.x)
     const yValues = vertices.map((vertex) => vertex.y)
 
@@ -34,7 +33,7 @@ const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
     const width = xMax - xMin
     const height = yMax - yMin
 
-    if (shape == "square") {
+    if (shape == 'square') {
         const difference = Math.abs(width - height)
         const delta = Math.round(difference / 2)
         if (width > height) {
@@ -46,7 +45,7 @@ const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
         }
     }
 
-    if (shape == "circle") {
+    if (shape == 'circle') {
         const difference = Math.abs(width - height)
         const delta = Math.round(difference / 2)
         if (width > height) {
@@ -74,7 +73,6 @@ const cropHintsToGeometry = (cropHintsAnnotation, shape) => {
         }
     }
 
-
     return `${width}x${height}+${xMin}+${yMin}`
 }
 
@@ -82,13 +80,13 @@ const annotationToPolygon = (annotation) =>
     annotation
         .boundingPoly
         .vertices
-        .map(({ x, y}) => [x, y].join(","))
+        .map(({x, y}) => [x, y].join(','))
         .join(' ')
 
 const annotationsToPolygons = (annotations) =>
     annotations
         .map(annotationToPolygon)
-        .map(polygon => `polygon ${polygon}`)
+        .map((polygon) => `polygon ${polygon}`)
         .join(' ')
 
 const annotationToCoordinate = (annotation) => {
@@ -138,6 +136,11 @@ const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}
 
 const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
 
+const changeExtension = (fileName, extension) =>
+    extension
+    ? fileName.substr(0, fileName.lastIndexOf('.')) + extension
+    : fileName
+
 // Accept an array of arguments to be passed to imagemagick's convert method
 // and return a promise the resolves when the transformation is complete.
 const resolveImageMagickCommand = (cmd, args) =>
@@ -155,15 +158,11 @@ const resolveImageMagickCommand = (cmd, args) =>
             })
     )
 
-const resolveImageMagickIdentify = (args) => resolveImageMagickCommand(im.identify, args)
+const resolveImageMagickIdentify = (args) =>
+    resolveImageMagickCommand(im.identify, args)
 
-const resolveImageMagickConvert = (args) => resolveImageMagickCommand(im.convert, args)
-
-
-const changeExtension = (fileName, extension) =>
-    extension
-    ? fileName.substr(0, fileName.lastIndexOf('.')) + extension
-    : fileName
+const resolveImageMagickConvert = (args) =>
+    resolveImageMagickCommand(im.convert, args)
 
 // blur all of the polygons in an image
 const blurPolygons = (inFile, outFile, {polygons}) =>
@@ -193,24 +192,26 @@ const softBlurPolygons = (inFile, outFile, {polygons}) =>
     ])
 
 module.exports = {
-    // imageMagickConvert,
+    // ImageMagick helpers
     resolveImageMagickConvert,
     resolveImageMagickIdentify,
     resolveImageMagickCommand,
-    // execImageMagickScript,
-    cropHintsToGeometry,
+
+    // ImageMagick commands to maniupulate polygons
+    blurPolygons,
+    softBlurPolygons,
+
+    // helpers to manipulate file names
     createOutputFileName,
     createTempFileName,
     changeExtension,
-    // blur polygons
-    blurPolygons,
-    softBlurPolygons,
 
     // helpers with annotatons from the vision apiu
     annotationToPolygon,
     annotationsToPolygons,
-    annotationToCoordinate, 
+    annotationToCoordinate,
     annotationToDimensions,
+    annotationToShape,
 }
 
 

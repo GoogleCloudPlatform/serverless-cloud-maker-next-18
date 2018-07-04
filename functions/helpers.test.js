@@ -13,6 +13,7 @@
 // limitations under the License.
 const helpers = require('./helpers')
 
+
 describe('when createOutputFileName is called', () => {
     const filename = 'filename.png'
     const filenamedotout = filename + '.out'
@@ -35,17 +36,13 @@ describe('when createOutputFileName is called', () => {
     });
 });
 
-describe(' when cropHintsToGeometry is called', () => {
-    const testResponseFactory = (vertices) => ({
-        cropHints: [
+describe(' when annotationToShape is called', () => {
+    const testResponseFactory = (vertices) => (
             {
                 boundingPoly: {
                     vertices,
                 },
-            },
-        ],
-
-    })
+            })
 
     it('should work', () => {
         const testResponse = testResponseFactory([
@@ -54,7 +51,7 @@ describe(' when cropHintsToGeometry is called', () => {
                         {x: 0, y: 100},
                         {x: 100, y: 100},
             ])
-        expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`100x100+0+0`)
+        expect(helpers.annotationToShape(testResponse)).toEqual(`100x100+0+0`)
     });
 
     it('should set offsets correctly', () => {
@@ -64,7 +61,7 @@ describe(' when cropHintsToGeometry is called', () => {
             {x: 100, y: 15},
             {x: 10, y: 100},
         ])
-        expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`90x85+10+15`)
+        expect(helpers.annotationToShape(testResponse)).toEqual(`90x85+10+15`)
     });
 
 
@@ -75,7 +72,7 @@ describe(' when cropHintsToGeometry is called', () => {
             {x: 100, y: 15},
             {x: 10, y: 100},
         ])
-        expect(helpers.cropHintsToGeometry(testResponse, "square")).toEqual(`85x85+13+15`)
+        expect(helpers.annotationToShape(testResponse, "square")).toEqual(`85x85+13+15`)
     });
     it('should create a circle', () => {
         const testResponse = testResponseFactory([
@@ -84,7 +81,7 @@ describe(' when cropHintsToGeometry is called', () => {
             {x: 100, y: 15},
             {x: 10, y: 100},
         ])
-        expect(helpers.cropHintsToGeometry(testResponse, "circle")).toEqual(`circle 56,58 13,58`)
+        expect(helpers.annotationToShape(testResponse, "circle")).toEqual(`circle 56,58 13,58`)
     
     });
 });
