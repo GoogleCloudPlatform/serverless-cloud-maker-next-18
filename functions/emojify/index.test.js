@@ -38,8 +38,8 @@ jest.mock('../helpers.js')
 const helpers = require('../helpers')
 
 const file = {
-	bucket: {name: 'foo'},
-	name: 'bar.png',
+    bucket: {name: 'foo'},
+    name: 'bar.png',
 }
 
 describe('when transformApplyEmojify is called', () => {
@@ -48,42 +48,42 @@ describe('when transformApplyEmojify is called', () => {
     });
 
     it(`should download ${Object.keys(transformApplyEmojify.emojis).length} emojis`, () => {
-    	transformApplyEmojify(file, {})
-    	expect(StorageAPI.prototype.download)
-    		.toHaveBeenCalledTimes(Object.keys(transformApplyEmojify.emojis).length)
+        transformApplyEmojify(file, {})
+        expect(StorageAPI.prototype.download)
+            .toHaveBeenCalledTimes(Object.keys(transformApplyEmojify.emojis).length)
     });
 
     it(`should call faceDetection with the file`, () => {
-    	transformApplyEmojify(file, {})
-    	expect(VisionAPI.ImageAnnotatorClient.prototype.faceDetection)
-    		.toHaveBeenCalledWith('gs://foo/bar.png')
+        transformApplyEmojify(file, {})
+        expect(VisionAPI.ImageAnnotatorClient.prototype.faceDetection)
+            .toHaveBeenCalledWith('gs://foo/bar.png')
     });
 
     it('should call transformApplyComposites', () => {
-    	spy.mockClear()
-    	transformApplyEmojify(file, {}).then(() =>
-    		expect(spy).toHaveBeenCalledWith(file, {composites: []})
-    		)
+        spy.mockClear()
+        transformApplyEmojify(file, {}).then(() =>
+            expect(spy).toHaveBeenCalledWith(file, {composites: []})
+            )
     });
 
     it('should apply composites correctly', () => {
-    	const response = [{faceAnnotations: [{joyLikelihood: 'VERY_LIKELY'}]}]
-    	helpers.annotationToDimensions.mockReturnValue('baz')
-    	helpers.annotationToCoordinate.mockReturnValue('quxx')
-		VisionAPI.ImageAnnotatorClient.prototype.faceDetection.mockReturnValue(Promise.resolve(response))
-    	spy.mockClear()
-    	transformApplyEmojify(file, {}).then(() =>
-    		expect(spy).toHaveBeenCalledWith(file, {composites: [
-    			'(',
-				'/tmp/joy.png',
-				'-resize',
-				'baz',
-				')',
-				'-geometry',
-				'quxx',
-				'-composite',
-    		]})
-    	)
+        const response = [{faceAnnotations: [{joyLikelihood: 'VERY_LIKELY'}]}]
+        helpers.annotationToDimensions.mockReturnValue('baz')
+        helpers.annotationToCoordinate.mockReturnValue('quxx')
+        VisionAPI.ImageAnnotatorClient.prototype.faceDetection.mockReturnValue(Promise.resolve(response))
+        spy.mockClear()
+        transformApplyEmojify(file, {}).then(() =>
+            expect(spy).toHaveBeenCalledWith(file, {composites: [
+                '(',
+                '/tmp/joy.png',
+                '-resize',
+                'baz',
+                ')',
+                '-geometry',
+                'quxx',
+                '-composite',
+            ]})
+        )
     });
 });
 

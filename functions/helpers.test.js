@@ -165,3 +165,37 @@ describe('when changeExtension is called', () => {
         expect(helpers.changeExtension('test.png')).toBe('test.png')
     });
 });
+
+describe('when annotationToDimensions is called', () => {
+    const testAnnotationFactory = (vertices) => ({
+        boundingPoly: {
+            vertices,
+        },
+    })
+    it('should reduce the list of vertices to a string of tubles', () => {
+        const testAnnotation = testAnnotationFactory([
+            {x: 1, y: 2},
+            {x: 3, y: 4},
+            {x: 5, y: 6},
+            {x: 7, y: 8},
+        ])
+        expect(helpers.annotationToDimensions(testAnnotation)).toEqual('6x6')
+    });
+});
+
+describe('when annotationToCoordinate is called', () => {
+    const testAnnotationFactory = (vertices) => ({
+        boundingPoly: {
+            vertices,
+        },
+    })
+    it('should reduce the list of vertices to a string of tubles', () => {
+        const testAnnotation = testAnnotationFactory([
+            {x: 1, y: 2},
+            {x: 3, y: 4},
+            {x: 5, y: 6},
+            {x: 7, y: 8},
+        ])
+        expect(helpers.annotationToCoordinate(testAnnotation)).toEqual('+1+2')
+    });
+});

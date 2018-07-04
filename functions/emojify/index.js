@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const helpers = require('../helpers')
-const decorator = require('../decorator')
+// module imports
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 
+// relative imports
+const helpers = require('../helpers')
+const decorator = require('../decorator')
+
+
 // IMPORTANT: To use emojify you'll need to upload
 // correctly named png files to a GCS bucket in accordance with
-// this mapping, which you can do by running the 
+// this mapping, which you can do by running the
 // upload emojis file
 const emojis = {
     joyLikelihood: 'joy.png',
@@ -116,7 +120,7 @@ transformApplyEmojify.parameters = {
         },
         emojiSet: {
             defaultValue: 'emojis-apple',
-            validate: (v) => ['emojis-apple', 'emojis-google'].contains(v)
+            validate: (v) => ['emojis-apple', 'emojis-google'].contains(v),
         },
     }
 
