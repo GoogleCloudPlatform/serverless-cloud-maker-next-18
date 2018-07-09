@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const helpers = require("../helpers")
-const decorator = require("../decorator")
+const helpers = require('../helpers');
+const decorator = require('../decorator');
 
 
 // resizes the infile to the specified width and height
@@ -23,18 +23,16 @@ const applyResize = (inFile, outFile, {width, height}) =>
         '-resize',
         `${width}x${height}`,
         outFile,
-    ])
+    ]);
 
-const transformApplyResize = decorator(applyResize)
+const transformApplyResize = decorator(applyResize);
 
 transformApplyResize.parameters = {
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-resized',
-        validate: () => true,
     },
     outputPrefix: {
         defaultValue: 'resized',
-        validate: () => true,
     },
     width: {
         defaultValue: 200,
@@ -44,8 +42,8 @@ transformApplyResize.parameters = {
         defaultValue: 200,
         validate: (h) => !isNaN(h) && Number.isInteger(Number(h)),
     },
-}
+};
 
-transformApplyResize.applyResize = applyResize
+transformApplyResize.applyResize = applyResize;
 
-module.exports = transformApplyResize
+module.exports = transformApplyResize;

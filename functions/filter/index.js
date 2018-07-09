@@ -14,45 +14,44 @@
 
 // Apply a specified filter (sepia, grayscale, or random colorize) to
 // an input image.
-const helpers = require('../helpers')
-const createImageMagickTransform = require('../decorator')
+const helpers = require('../helpers');
+const createImageMagickTransform = require('../decorator');
 
-// each time this function runs, generate a random 
-// hue to filter by
-const randomHue = Math.random() * 200
+const applyFilter = (inFile, outFile, {filterName}) => {
+    // each time this function runs, generate a random
+    // hue to filter by
+    const randomHue = Math.random() * 200;
 
-// map parameter names for filters
-// to the arguments we need to pass to
-// imagemagick
-const imageMagickFilters = {
-    sepia: ['-sepia-tone', '80%'],
-    grayscale: ['-colorspace', 'Gray'],
-    colorize: ['-modulate', `100,100,${randomHue}`],
-}
+    // map parameter names for filters
+    // to the arguments we need to pass to
+    // imagemagick
+    const imageMagickFilters = {
+        sepia: ['-sepia-tone', '80%'],
+        grayscale: ['-colorspace', 'Gray'],
+        colorize: ['-modulate', `100,100,${randomHue}`],
+    };
 
-const applyFilter = (inFile, outFile, {filterName = imageMagickFilters.sepia}) =>
-    helpers.resolveImageMagickConvert([
+    return helpers.resolveImageMagickConvert([
         inFile,
         ...imageMagickFilters[filterName],
         outFile,
-    ])
+    ]);
+};
 
-const transformApplyFilter = createImageMagickTransform(applyFilter)
+const transformApplyFilter = createImageMagickTransform(applyFilter);
 
 transformApplyFilter.parameters = {
         outputPrefix: {
             defaultValue: 'filtered',
-            validate: () => true,
         },
         outputBucketName: {
             defaultValue: 'cloud-maker-outputs-filtered',
-            validate: () => true,
         },
         filterName: {
             defaultValue: 'sepia',
-            validate: (v) => Object.keys(imageMagickFilters).includes(v.toLowerCase()),
+            validate: (v) => ['sepia', 'colorize', 'grayscale'].includes(v.toLowerCase()),
         },
-    }
-transformApplyFilter.applyFilter = applyFilter
+    };
+transformApplyFilter.applyFilter = applyFilter;
 
-module.exports = transformApplyFilter
+module.exports = transformApplyFilter;
