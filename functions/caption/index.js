@@ -51,16 +51,12 @@ const transformApplyAnnotationAsCaption = decorator(applyCaption)
 const generateCaption = (file) =>
     vision
         .labelDetection(`gs://${file.bucket.name}/${file.name}`)
-        .then(([{labelAnnotations}]) =>
-            // reduce the label annotations to the
-            // one with the most confidence
-            labelAnnotations.reduce(
-                (bestAnnotation, nextAnnotation) =>
-                    nextAnnotation.score > bestAnnotation.score
-                    ? nextAnnotation
-                    : bestAnnotation
-            )
-        )
+        .then(([{labelAnnotations}]) =>{
+            // find the maximum score among the annotations
+            const maxScore = Math.max(...labelAnnotations.map((l) => l.score))
+            // return the annotation with that score
+            return labelAnnotations.find((l) => l.score === maxScore)
+        })
         .then(({description}) => description)
 
 
@@ -89,9 +85,8 @@ transformApplyCaption.parameters = {
     caption: {
         defaultValue: false,
         validate: (v) =>
-            // if v coerces to true
             v
-            // excpect that it us the custom caption
+            // expect that it is the custom caption
             ? v.constructor == String && v.length > 0
             // otherwise return that is is valid
             : true,

@@ -17,70 +17,64 @@ const transformApplySafeSearch = require('./index.js')
 jest.mock('../helpers.js')
 const helpers = require('../helpers')
 
-jest.mock("@google-cloud/vision")
-const VisionApi = require("@google-cloud/vision").v1p2beta1
+jest.mock('@google-cloud/vision')
+const VisionApi = require('@google-cloud/vision').v1p2beta1
 
-jest.mock("../blur")
-const transformApplyBlur = require("../blur")
+jest.mock('../blur')
+const transformApplyBlur = require('../blur')
 
 VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
 VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([]))
 
 const adultAnnotation = {
-        adult: "VERY_LIKELY"
+        adult: 'VERY_LIKELY',
 }
 
 const violenceAnnotation = {
-        violence: "VERY_LIKELY"
+        violence: 'VERY_LIKELY',
 }
 
 const controlAnnotation = {}
 
 const file = {
-        bucket: {name: "foo"},
-        name: "bar.png"
+        bucket: {name: 'foo'},
+        name: 'bar.png',
 }
 
 describe('when transformApplySafeSearch is called', () => {
-        it('should have default parameters', () => {
-                expect(transformApplySafeSearch.parameters).not.toBeUndefined()
-        });
+    it('should have default parameters', () => {
+            expect(transformApplySafeSearch.parameters).not.toBeUndefined()
+    });
 
 
-        it('should call safeSearchDetection', () => {
-                VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-                VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([]))
-                transformApplySafeSearch(file)
-                expect(VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection).toHaveBeenCalledWith('gs://foo/bar.png')
-                // transformApplySafeSearch.applyRotate('a', 'b', {width: 1, height: 1})
-                // expect(helpers.resolveImageMagickConvert).toHaveBeenCalled()
-        });
+    it('should call safeSearchDetection', () => {
+            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
+            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([]))
+            transformApplySafeSearch(file)
+            expect(VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection).toHaveBeenCalledWith('gs://foo/bar.png')
+    });
 
-        it('should blur when unsafe', () => {
+    it('should blur when unsafe', () => {
+        VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
+        transformApplyBlur.mockClear()
+        VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{safeSearchAnnotation: adultAnnotation}]))
+        return transformApplySafeSearch(file)
+            .then(() => expect(transformApplyBlur).toHaveBeenCalled())
+    });
+
+    it('should blur when violent', () => {
+        VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
+        transformApplyBlur.mockClear()
+        VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{safeSearchAnnotation: violenceAnnotation}]))
+        return transformApplySafeSearch(file)
+            .then(() => expect(transformApplyBlur).toHaveBeenCalled())
+    });
+    it('should not blur when safe', () => {
             VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
             transformApplyBlur.mockClear()
-            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{ safeSearchAnnotation: adultAnnotation}]))
+            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{safeSearchAnnotation: controlAnnotation}]))
             return transformApplySafeSearch(file)
-                .then(() => expect(transformApplyBlur).toHaveBeenCalled())
-        
-        });
-
-        it('should blur when violent', () => {
-            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-            transformApplyBlur.mockClear()
-            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{ safeSearchAnnotation: violenceAnnotation}]))
-            return transformApplySafeSearch(file)
-                .then(() => expect(transformApplyBlur).toHaveBeenCalled())
-        
-        });
-        it('should not blur when safe', () => {
-                VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-                transformApplyBlur.mockClear()
-                VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{ safeSearchAnnotation: controlAnnotation}]))
-                return transformApplySafeSearch(file)
-                    .then(() => expect(transformApplyBlur).not.toHaveBeenCalled())
-        
-        });
-
+                .then(() => expect(transformApplyBlur).not.toHaveBeenCalled())
+    });
 });
 

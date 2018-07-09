@@ -87,13 +87,13 @@ const transformApplyComposites = decorator(applyComposites)
 
 const transformApplyEmojify = (file, parameters) =>
     /*
-    Use the vision api to annotate the
+    Use the Vision API to annotate the
     faces in an image and then convet them
     to emojis based on the emotion they have
      */
 
     Promise.all([
-        // send a remote url to the vision api
+        // send a remote url to the Vision API
         vision.faceDetection(`gs://${file.bucket.name}/${file.name}`),
         // simultaneously download all of the necessary emojis
         downloadEmojis(parameters),

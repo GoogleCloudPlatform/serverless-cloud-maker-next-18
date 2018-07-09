@@ -25,15 +25,13 @@ const isUnsafe = ([{safeSearchAnnotation}]) =>
 
 
 const transformApplySafeSearch = (file, parameters) =>
+    // if it's unsafe according to the Vision API apply a blur effect
     vision
         .safeSearchDetection(`gs://${file.bucket.name}/${file.name}`)
         .catch(console.err)
         .then((result) =>
-            // if it's unsafe
             isUnsafe(result)
-            // apply a blur
             ? transformApplyBlur(file, parameters)
-            // otherwise just return the file
             : file
         )
 

@@ -206,7 +206,7 @@ module.exports = {
     createTempFileName,
     changeExtension,
 
-    // helpers with annotatons from the vision apiu
+    // helpers with annotatons from the Vision API
     annotationToPolygon,
     annotationsToPolygons,
     annotationToCoordinate,
