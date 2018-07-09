@@ -35,8 +35,6 @@ const cropHintsToGeometry = (cropHintsAnnotation) => {
     const height = yMax - yMin
 
     return `${width}x${height}+${xMin}+${yMin}`
-
-    return [xMin, xMax, yMin, yMax]
 }
 
 const faceAnnotationToBoundingPoly = (faceAnnotation) => {
@@ -64,8 +62,7 @@ const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
 // Accept an array of arguments to be passed to imagemagick's convert method
 // and return a promise the resolves when the transformation is complete.
 const resolveImageMagickCommand = (cmd, args) =>
-    new Promise(
-        (resolve, reject) =>
+    new Promise((resolve, reject) =>
             cmd(args, (err, result) => {
                 if (err) {
                     console.error('ImageMagick command failed for arguments', args, err);

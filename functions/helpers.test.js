@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const helpers = require('./helpers')
+const helpers = require('./helpers');
 
 describe('when createOutputFileName is called', () => {
     const filename = 'filename.png'
@@ -45,7 +45,7 @@ describe(' when cropHintsToGeometry is called', () => {
             },
         ],
 
-    })
+    });
 
     it('should work', () => {
         const testResponse = testResponseFactory([
@@ -53,8 +53,8 @@ describe(' when cropHintsToGeometry is called', () => {
                         {x: 100, y: 0},
                         {x: 0, y: 100},
                         {x: 100, y: 100},
-            ])
-        expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`100x100+0+0`)
+            ]);
+        expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`100x100+0+0`);
     });
 
     it('should set offsets correctly', () => {
@@ -63,8 +63,8 @@ describe(' when cropHintsToGeometry is called', () => {
             {x: 100, y: 100},
             {x: 100, y: 15},
             {x: 10, y: 100},
-        ])
-        expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`90x85+10+15`)
+        ]);
+        expect(helpers.cropHintsToGeometry(testResponse)).toEqual(`90x85+10+15`);
     });
 });
 
@@ -73,7 +73,7 @@ describe('when faceAnnotationToBoundingPoly is called', () => {
         boundingPoly: {
             vertices,
         },
-    })
+    });
     it('should reduce the list of vertices to a string of tubles', () => {
         const testAnnotation = testAnnotationFactory([
             {x: 1, y: 2},
@@ -81,20 +81,20 @@ describe('when faceAnnotationToBoundingPoly is called', () => {
             {x: 5, y: 6},
             {x: 7, y: 8},
 
-        ])
-        expect(helpers.faceAnnotationToBoundingPoly(testAnnotation)).toEqual('1,2 3,4 5,6 7,8')
+        ]);
+        expect(helpers.faceAnnotationToBoundingPoly(testAnnotation)).toEqual('1,2 3,4 5,6 7,8');
     });
 });
 
 describe('when createOutputFileName is called', () => {
     it('should join the prefix to the previous file name and store it in temp', () => {
-        expect(helpers.createOutputFileName('foo.js', {outputPrefix: 'blurred'})).toBe('blurred-foo.js')
+        expect(helpers.createOutputFileName('foo.js', {outputPrefix: 'blurred'})).toBe('blurred-foo.js');
     });
 });
 
 describe('when createTempFileName is called', () => {
     it('should just prepend /tmp/', () => {
-        expect(helpers.createTempFileName('test2.js')).toBe('/tmp/test2.js')
+        expect(helpers.createTempFileName('test2.js')).toBe('/tmp/test2.js');
     });
 });
 
@@ -104,34 +104,34 @@ describe('when createTempFileName and createOutputFileName are used together', (
             helpers.createTempFileName(
                 helpers.createOutputFileName('img1.js', {outputPrefix: 'cropped'})
                 )
-            ).toBe('/tmp/cropped-img1.js')
+            ).toBe('/tmp/cropped-img1.js');
     });
 });
 
 describe('when resolveImageMagickCommand is used', () => {
     it('should call the passed function on the inputs', () => {
-        const cmd = jest.fn()
-        const args = []
-        helpers.resolveImageMagickCommand(cmd, args)
-        expect(cmd).toHaveBeenCalled()
+        const cmd = jest.fn();
+        const args = [];
+        helpers.resolveImageMagickCommand(cmd, args);
+        expect(cmd).toHaveBeenCalled();
     });
 
     it('should reject if the command throws', () => {
-        const result = 'result'
-        const goodCmd = jest.fn((a, cb) => cb(false, result))
-        const args = []
+        const result = 'result';
+        const goodCmd = jest.fn((a, cb) => cb(false, result));
+        const args = [];
         helpers
             .resolveImageMagickCommand(goodCmd, args)
-            .then((r) => expect(r).toBe(result))
+            .then((r) => expect(r).toBe(result));
     });
 
     it('should resolve if the command succeeds', () => {
-        const err = 'err'
-        const badCmd = jest.fn((a, cb) => cb(err, false))
-        const args = []
+        const err = 'err';
+        const badCmd = jest.fn((a, cb) => cb(err, false));
+        const args = [];
         helpers
             .resolveImageMagickCommand(badCmd, args)
-            .catch((e) => expect(e).toBe(err))
+            .catch((e) => expect(e).toBe(err));
     });
 });
 
