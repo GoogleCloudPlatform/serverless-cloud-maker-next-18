@@ -18,7 +18,7 @@ const storage = new StorageApi();
 const fs = require('fs');
 
 
-// Many of the desired functions will requires the same
+// Many of the desired functions will require the same
 // setup and teardown logic to interact with GCS and make sure
 // that the image they work on is present on disk. This decorator
 // extracts that into a single function for use in implementing

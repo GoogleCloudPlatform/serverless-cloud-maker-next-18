@@ -80,11 +80,9 @@ const resolveImageMagickIdentify = (args) => resolveImageMagickCommand(im.identi
 const resolveImageMagickConvert = (args) => resolveImageMagickCommand(im.convert, args)
 
 module.exports = {
-    // imageMagickConvert,
     resolveImageMagickConvert,
     resolveImageMagickIdentify,
     resolveImageMagickCommand,
-    // execImageMagickScript,
     cropHintsToGeometry,
     createOutputFileName,
     createTempFileName,
