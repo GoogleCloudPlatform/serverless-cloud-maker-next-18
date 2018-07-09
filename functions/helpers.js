@@ -15,110 +15,106 @@
 
 // Contains helpful methods that are shared by various functions.
 const path = require('path');
-const im = require('imagemagick')
+const im = require('imagemagick');
 
 
 const annotationToShape = (annotation, shape) => {
-    const vertices = annotation.boundingPoly.vertices  
+    const vertices = annotation.boundingPoly.vertices;
 
-    const xValues = vertices.map((vertex) => vertex.x)
-    const yValues = vertices.map((vertex) => vertex.y)
+    const xValues = vertices.map((vertex) => vertex.x);
+    const yValues = vertices.map((vertex) => vertex.y);
 
-    const xMax = Math.max(...xValues)
-    const xMin = Math.min(...xValues)
+    const xMax = Math.max(...xValues);
+    const xMin = Math.min(...xValues);
 
-    const yMax = Math.max(...yValues)
-    const yMin = Math.min(...yValues)
+    const yMax = Math.max(...yValues);
+    const yMin = Math.min(...yValues);
 
-    const width = xMax - xMin
-    const height = yMax - yMin
+    const width = xMax - xMin;
+    const height = yMax - yMin;
 
-    if (shape == 'square') {
-        const difference = Math.abs(width - height)
-        const delta = Math.round(difference / 2)
-        if (width > height) {
-            return `${width - difference}x${height}+${xMin + delta}+${yMin}`
+    if (['square', 'circle'].includes(shape)) {
+        const difference = Math.abs(width - height);
+        const delta = Math.round(difference / 2);
+
+        if (shape == 'square') {
+            return width > height
+                ? `${width - difference}x${height}+${xMin + delta}+${yMin}`
+                : `${width}x${height - difference}+${xMin}+${yMin + delta}`;
         }
 
-        if (height > width) {
-            return `${width}x${height - difference}+${xMin}+${yMin + delta}`
-        }
-    }
+        if (shape == 'circle') {
+            if (width > height) {
+                const newWidth = width - difference;
+                const newXMin = xMin + delta;
 
-    if (shape == 'circle') {
-        const difference = Math.abs(width - height)
-        const delta = Math.round(difference / 2)
-        if (width > height) {
-            const newWidth = width - difference
-            const newXMin = xMin + delta
+                const radius = Math.round(newWidth / 2);
 
-            const radius = Math.round(newWidth / 2)
+                const centerX = newXMin + radius;
+                const centerY = yMin + radius;
 
-            const centerX = newXMin + radius
-            const centerY = yMin + radius
+                return `circle ${centerX},${centerY} ${newXMin},${centerY}`;
+            }
 
-            return `circle ${centerX},${centerY} ${newXMin},${centerY}`
-        }
+            if (height > width) {
+                const newHeight = height - difference;
+                const newYMin = yMin + delta;
 
-        if (height > width) {
-            const newHeight = height - difference
-            const newYMin = yMin + delta
+                const radius = Math.round(newHeight / 2);
 
-            const radius = Math.round(newHeight / 2)
+                const centerX = xMin + radius;
+                const centerY = newYMin + radius;
 
-            const centerX = xMin + radius
-            const centerY = newYMin + radius
-
-            return `circle ${centerX},${centerY} ${xMin},${centerY}`
+                return `circle ${centerX},${centerY} ${xMin},${centerY}`;
+            }
         }
     }
-
-    return `${width}x${height}+${xMin}+${yMin}`
-}
+    return `${width}x${height}+${xMin}+${yMin}`;
+};
 
 const annotationToPolygon = (annotation) =>
     annotation
         .boundingPoly
         .vertices
         .map(({x, y}) => [x, y].join(','))
-        .join(' ')
+        .join(' ');
 
 const annotationsToPolygons = (annotations) =>
     annotations
         .map(annotationToPolygon)
         .map((polygon) => `polygon ${polygon}`)
-        .join(' ')
+        .join(' ');
 
 const annotationToCoordinate = (annotation) => {
-    const vertices = annotation.boundingPoly.vertices
-    const xValues = vertices.map((vertex) => vertex.x)
-    const yValues = vertices.map((vertex) => vertex.y)
+    const vertices = annotation.boundingPoly.vertices;
+    const xValues = vertices.map((vertex) => vertex.x);
+    const yValues = vertices.map((vertex) => vertex.y);
 
-    const xMax = Math.max(...xValues)
-    const xMin = Math.min(...xValues)
+    const xMax = Math.max(...xValues);
+    const xMin = Math.min(...xValues);
 
-    const yMax = Math.max(...yValues)
-    const yMin = Math.min(...yValues)
+    const yMax = Math.max(...yValues);
+    const yMin = Math.min(...yValues);
 
-    return `+${xMin}+${yMin}`
-}
+    return `+${xMin}+${yMin}`;
+};
 
 const annotationToDimensions = (annotation) => {
-    const vertices = annotation.boundingPoly.vertices
-    const xValues = vertices.map((vertex) => vertex.x)
-    const yValues = vertices.map((vertex) => vertex.y)
+    const vertices = annotation.boundingPoly.vertices;
+    const xValues = vertices.map((vertex) => vertex.x);
+    const yValues = vertices.map((vertex) => vertex.y);
 
-    const xMax = Math.max(...xValues)
-    const xMin = Math.min(...xValues)
+    const xMax = Math.max(...xValues);
+    const xMin = Math.min(...xValues);
 
-    const yMax = Math.max(...yValues)
-    const yMin = Math.min(...yValues)
+    const yMax = Math.max(...yValues);
+    const yMin = Math.min(...yValues);
 
-    const width = xMax - xMin
-    const height = yMax - yMin
+    const width = xMax - xMin;
+    const height = yMax - yMin;
 
-    return `${width}x${height}`
-}
+    return `${width}x${height}`;
+};
 
 const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>
     changeExtension(
@@ -128,14 +124,14 @@ const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}
             // otherwise append .out
             : `${path.parse(fileName).base}.out`
         , extension
-    )
+    );
 
-const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
+const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`;
 
 const changeExtension = (fileName, extension) =>
     extension
     ? fileName.substr(0, fileName.lastIndexOf('.')) + extension
-    : fileName
+    : fileName;
 
 const resolveImageMagickCommand = (cmd, args) =>
     new Promise((resolve, reject) =>
@@ -143,19 +139,19 @@ const resolveImageMagickCommand = (cmd, args) =>
                 if (err) {
                     console.error('ImageMagick command failed for arguments', args, err);
                     reject(err);
-                    return
+                    return;
                 } else {
-                    console.log('ImageMagick command was successful.', args)
-                    resolve(result)
+                    console.log('ImageMagick command was successful.', args);
+                    resolve(result);
                 }
             })
-    )
+    );
 
 const resolveImageMagickIdentify = (args) =>
-    resolveImageMagickCommand(im.identify, args)
+    resolveImageMagickCommand(im.identify, args);
 
 const resolveImageMagickConvert = (args) =>
-    resolveImageMagickCommand(im.convert, args)
+    resolveImageMagickCommand(im.convert, args);
 
 // blur all of the polygons in an image
 const blurPolygons = (inFile, outFile, {polygons}) =>
@@ -167,7 +163,7 @@ const blurPolygons = (inFile, outFile, {polygons}) =>
         '-alpha', 'off', '-write', 'mpr:mask', '+delete',
         '\)',
         '-mask', 'mpr:mask', '-blur', '0x5', '+mask', outFile,
-    ])
+    ]);
 
 // blur all of the polygons in an image and soften the edges
 const softBlurPolygons = (inFile, outFile, {polygons}) =>
@@ -182,7 +178,7 @@ const softBlurPolygons = (inFile, outFile, {polygons}) =>
         '-write', 'mpr:mask', '+delete',
         '\)',
         '-mask', 'mpr:mask', '-blur', '0x5', '+mask', outFile,
-    ])
+    ]);
 
 module.exports = {
     // ImageMagick helpers
@@ -205,6 +201,6 @@ module.exports = {
     annotationToCoordinate,
     annotationToDimensions,
     annotationToShape,
-}
+};
 
 
