@@ -14,14 +14,20 @@
 const helpers = require('../helpers')
 const decorator = require('../decorator')
 
+const googleColors = {
+    blue: "#4285F4",
+    green: "#34A853",
+    yellow: "#fbbc04",
+    red: "#EA4335",
+}
+
 const applyBorder = (inFile, outFile, {color='blue', width='1'}) =>
     helpers.resolveImageMagickConvert([
         inFile,
         '-bordercolor',
-        color.toLowerCase(),
+        googleColors[color.toLowerCase()],
         '-border',
         `${width}%x${width}%`,
-        // write it out to the same local file
         outFile,
     ])
 
@@ -43,17 +49,11 @@ transformApplyBorder.parameters = {
     width: {
         defaultValue: '1',
         validate: (v) =>
-            // the input is a number
             !isNaN(v) &&
-            // and is an integer
             Number.isInteger(Number(v)) &&
-            // greater than 1
             Number(v) >= 1 &&
-            // and less than 100
             Number(v) <= 100,
     },
-    // different colors
-    // different sizes
 }
 
 transformApplyBorder.applyBorder = applyBorder

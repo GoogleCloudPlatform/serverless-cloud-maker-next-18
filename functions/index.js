@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// assemple all of the functions built in this director into a single export
+// assemble all of the functions built in this directory into a single export
 
 // simple functions
 const copyImage = require('./copy')

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /*
-Creates all missing buckets according to the defaults set in the fuction fiels
+Creates all missing buckets according to the defaults set in the function fields
  */
 
 const functions = require('./index').functions;
@@ -43,4 +43,4 @@ Promise.all(
     results.filter(Boolean).length
     ? console.log('Created buckets:\n', results.filter(Boolean).join('\n'))
     : console.log('All default buckets exist')
-)
+);
