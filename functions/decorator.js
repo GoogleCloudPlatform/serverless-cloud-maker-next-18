@@ -36,11 +36,11 @@ const createImageMagickTransform = (transform) =>
     const tempLocalFileName = helpers.createTempFileName(file.name)
     const tempLocalOutputFileName = helpers.createTempFileName(outputFileName)
     return (
-        // if the file has already been downloaded (by a previous function)
+        // if we have the file already
         fs.existsSync(tempLocalFileName)
-            // skip to the next step
+            // skip
             ? Promise.resolve()
-            // otherwise, download it to that location
+            // download it to that location
             : file.download({destination: tempLocalFileName})
     )
     // apply the desired transform
