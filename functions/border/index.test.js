@@ -24,7 +24,7 @@ const color = 'blue'
 const width = 10
 
 describe('when transformApplyBorder is called', () => {
-  // it sould accept google colors
+  // it should accept google colors
   ['blue', 'green', 'yellow', 'red'].map((color) =>
 
     it(`it should accept ${color}`, () => {
@@ -32,7 +32,7 @@ describe('when transformApplyBorder is called', () => {
         })
   );
 
-  // it sould not accept non-google colors
+  // it should not accept non-google colors
   ['magenta', 'false', 'goldenrod', '0'].map((color) =>
 
     it(`it should not accept ${color}`, () => {
@@ -58,25 +58,9 @@ describe('when transformApplyBorder is called', () => {
       .toHaveBeenCalledWith([
         inFile,
         '-bordercolor',
-        'blue',
+        '#4285F4',
         '-border',
         '10%x10%',
         outFile])
   });
 });
-
-/*
-An example request
-
-{
-  "data": {
-    "gcsSourceUri": "gs://cloud-maker-inputs-small/00c923c9108d34149536bfedab12f91e_1016760185400008708_503820455.jpg",
-    "bucket": "cloud-maker-inputs-small",
-    "name": "00c923c9108d34149536bfedab12f91e_1016760185400008708_503820455.jpg"
-  },
-  "outpubBucketName": "cloud-maker-outputs-final",
-  "functions": [
-    { "name": "transformApplyBlur"}
-  ]
-}
- */

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // Apply a specified filter (sepia, grayscale, or random colorize) to
-// an imput image.
+// an input image.
 const helpers = require('../helpers')
 const createImageMagickTransform = require('../decorator')
 
