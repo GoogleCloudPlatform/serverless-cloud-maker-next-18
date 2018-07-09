@@ -44,9 +44,6 @@ const faceAnnotationToBoundingPoly = (faceAnnotation) => {
     return vertices.map(({x, y}) => [x, y].join(',')).join(' ')
 }
 
-// creates a the name of the file to be used for the
-// result of the function. Must be distrinct from the
-// input file name
 const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>
     changeExtension(
         outputPrefix
@@ -59,8 +56,6 @@ const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}
 
 const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
 
-// Accept an array of arguments to be passed to imagemagick's convert method
-// and return a promise the resolves when the transformation is complete.
 const resolveImageMagickCommand = (cmd, args) =>
     new Promise((resolve, reject) =>
             cmd(args, (err, result) => {
