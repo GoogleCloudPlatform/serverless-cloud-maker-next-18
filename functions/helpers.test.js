@@ -11,28 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const helpers = require('./helpers')
+const helpers = require('./helpers');
 
 
 describe('when createOutputFileName is called', () => {
-    const filename = 'filename.png'
-    const filenamedotout = filename + '.out'
-    const outputPrefix = 'prefix'
-    const prefixfilename = outputPrefix + '-' + filename
+    const filename = 'filename.png';
+    const filenamedotout = filename + '.out';
+    const outputPrefix = 'prefix';
+    const prefixfilename = outputPrefix + '-' + filename;
 
     it('should append .out if the prefix coerces to false', () => {
-        expect(helpers.createOutputFileName(filename)).toBe(filenamedotout)
-        expect(helpers.createOutputFileName(filename, {})).toBe(filenamedotout)
-        expect(helpers.createOutputFileName(filename, {outputPrefix: false})).toBe(filenamedotout)
+        expect(helpers.createOutputFileName(filename)).toBe(filenamedotout);
+        expect(helpers.createOutputFileName(filename, {})).toBe(filenamedotout);
+        expect(helpers.createOutputFileName(filename, {outputPrefix: false})).toBe(filenamedotout);
+        expect(helpers.createOutputFileName('bar.png', {outputPrefix: ''})).toBe('bar.png.out');
     });
 
     it('should add the passed prefix', () => {
-        expect(helpers.createOutputFileName(filename, {outputPrefix})).toBe(prefixfilename)
-    });
-
-    it('should pass these base cases', () => {
-        expect(helpers.createOutputFileName('bar.png', {outputPrefix: 'foo'})).toBe('foo-bar.png')
-        expect(helpers.createOutputFileName('bar.png', {outputPrefix: ''})).toBe('bar.png.out')
+        expect(helpers.createOutputFileName(filename, {outputPrefix})).toBe(prefixfilename);
+        expect(helpers.createOutputFileName('bar.png', {outputPrefix: 'foo'})).toBe('foo-bar.png');
     });
 });
 
@@ -43,6 +40,7 @@ describe(' when annotationToShape is called', () => {
                     vertices,
                 },
             })
+
 
     it('should work', () => {
         const testResponse = testResponseFactory([
@@ -106,13 +104,13 @@ describe('when annotationsToPolygons is called', () => {
 
 describe('when createOutputFileName is called', () => {
     it('should join the prefix to the previous file name and store it in temp', () => {
-        expect(helpers.createOutputFileName('foo.js', {outputPrefix: 'blurred'})).toBe('blurred-foo.js')
+        expect(helpers.createOutputFileName('foo.js', {outputPrefix: 'blurred'})).toBe('blurred-foo.js');
     });
 });
 
 describe('when createTempFileName is called', () => {
     it('should just prepend /tmp/', () => {
-        expect(helpers.createTempFileName('test2.js')).toBe('/tmp/test2.js')
+        expect(helpers.createTempFileName('test2.js')).toBe('/tmp/test2.js');
     });
 });
 
@@ -122,44 +120,44 @@ describe('when createTempFileName and createOutputFileName are used together', (
             helpers.createTempFileName(
                 helpers.createOutputFileName('img1.js', {outputPrefix: 'cropped'})
                 )
-            ).toBe('/tmp/cropped-img1.js')
+            ).toBe('/tmp/cropped-img1.js');
     });
 });
 
 describe('when resolveImageMagickCommand is used', () => {
     it('should call the passed function on the inputs', () => {
-        const cmd = jest.fn()
-        const args = []
-        helpers.resolveImageMagickCommand(cmd, args)
-        expect(cmd).toHaveBeenCalled()
+        const cmd = jest.fn();
+        const args = [];
+        helpers.resolveImageMagickCommand(cmd, args);
+        expect(cmd).toHaveBeenCalled();
     });
 
     it('should reject if the command throws', () => {
-        const result = 'result'
-        const goodCmd = jest.fn((a, cb) => cb(false, result))
-        const args = []
+        const result = 'result';
+        const goodCmd = jest.fn((a, cb) => cb(false, result));
+        const args = [];
         helpers
             .resolveImageMagickCommand(goodCmd, args)
-            .then((r) => expect(r).toBe(result))
+            .then((r) => expect(r).toBe(result));
     });
 
     it('should resolve if the command succeeds', () => {
-        const err = 'err'
-        const badCmd = jest.fn((a, cb) => cb(err, false))
-        const args = []
+        const err = 'err';
+        const badCmd = jest.fn((a, cb) => cb(err, false));
+        const args = [];
         helpers
             .resolveImageMagickCommand(badCmd, args)
-            .catch((e) => expect(e).toBe(err))
+            .catch((e) => expect(e).toBe(err));
     });
 });
 
 describe('when changeExtension is called', () => {
     it('should change extensions as expected', () => {
-        expect(helpers.changeExtension('test.png', '.jpg')).toBe('test.jpg')
-        expect(helpers.changeExtension('test.jpg', '.png')).toBe('test.png')
-        expect(helpers.changeExtension('test.png', '.gif')).toBe('test.gif')
-        expect(helpers.changeExtension('test.png', '')).toBe('test.png')
-        expect(helpers.changeExtension('test.png')).toBe('test.png')
+        expect(helpers.changeExtension('test.png', '.jpg')).toBe('test.jpg');
+        expect(helpers.changeExtension('test.jpg', '.png')).toBe('test.png');
+        expect(helpers.changeExtension('test.png', '.gif')).toBe('test.gif');
+        expect(helpers.changeExtension('test.png', '')).toBe('test.png');
+        expect(helpers.changeExtension('test.png')).toBe('test.png');
     });
 });
 

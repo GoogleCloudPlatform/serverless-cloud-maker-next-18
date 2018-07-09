@@ -120,10 +120,6 @@ const annotationToDimensions = (annotation) => {
     return `${width}x${height}`
 }
 
-
-// creates a the name of the file to be used for the
-// result of the function. Must be distrinct from the
-// input file name
 const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>
     changeExtension(
         outputPrefix
@@ -141,11 +137,8 @@ const changeExtension = (fileName, extension) =>
     ? fileName.substr(0, fileName.lastIndexOf('.')) + extension
     : fileName
 
-// Accept an array of arguments to be passed to imagemagick's convert method
-// and return a promise the resolves when the transformation is complete.
 const resolveImageMagickCommand = (cmd, args) =>
-    new Promise(
-        (resolve, reject) =>
+    new Promise((resolve, reject) =>
             cmd(args, (err, result) => {
                 if (err) {
                     console.error('ImageMagick command failed for arguments', args, err);
