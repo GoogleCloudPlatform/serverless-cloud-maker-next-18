@@ -89,11 +89,9 @@ const changeExtension = (fileName, extension) =>
     : fileName
 
 module.exports = {
-    // imageMagickConvert,
     resolveImageMagickConvert,
     resolveImageMagickIdentify,
     resolveImageMagickCommand,
-    // execImageMagickScript,
     cropHintsToGeometry,
     createOutputFileName,
     createTempFileName,

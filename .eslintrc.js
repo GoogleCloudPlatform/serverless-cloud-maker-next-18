@@ -22,8 +22,8 @@ module.exports = {
     	es6: true,
     },
     rules:{
-    	"max-len": 0,
-        semi: 0,
+    	// "max-len": 0,
+        // semi: [2, "always"],
+        // "no-extra-semi": 2,
     },
-
 };
