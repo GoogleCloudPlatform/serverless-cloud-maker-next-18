@@ -69,13 +69,16 @@ const validateParameters = (name, parameters={}) => {
     const defaultKeys = Object.keys(defaults)
     // generate the set of keys specified by the user
     const inputKeys = Object.keys(parameters)
+    // by default, accept all values
+    const defaultValidator = () => true
 
     inputKeys.forEach(
         (key) => {
             if (defaultKeys.includes(key)) {
                 const value = parameters[key]
-                if (defaults[key].validate(value)) {
-                    // returning without throwing will cause this=
+                const validate = defaults[key].validate || defaultValidator
+                if (validate(value)) {
+                    // returning without throwing will cause this
                     // value to be set in the result.
                     return
                 } else {

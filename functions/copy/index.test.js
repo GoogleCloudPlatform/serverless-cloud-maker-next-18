@@ -43,11 +43,6 @@ describe('when copyImage is called', () => {
         expect(copyImage.parameters).not.toBeUndefined()
     });
 
-    it('should accept any output bucket name or prefix', () => {
-        expect(copyImage.parameters.outputBucketName.validate()).toBe(true)
-        expect(copyImage.parameters.outputPrefix.validate()).toBe(true)
-    });
-
     it('should call copy the file to the cloud storage output bucket', () => {
 
         const parameters = {
