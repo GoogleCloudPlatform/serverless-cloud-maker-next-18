@@ -47,11 +47,9 @@ const copyImage = (file, parameters) => {
 copyImage.parameters = {
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-copied',
-        validate: () => true,
     },
     outputPrefix: {
         defaultValue: 'copied',
-        validate: () => true,
     },
 }
 
