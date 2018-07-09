@@ -76,11 +76,9 @@ const transformApplyCaption = (file, parameters) =>
 transformApplyCaption.parameters = {
     outputPrefix: {
         defaultValue: 'caption',
-        validate: () => true,
     },
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-captions',
-        validate: () => true,
     },
     caption: {
         defaultValue: false,

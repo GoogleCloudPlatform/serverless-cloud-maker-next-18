@@ -26,11 +26,9 @@ const transformApplyReflect = decorator(applyReflect)
 transformApplyReflect.parameters = {
         outputPrefix: {
             defaultValue: 'reflected',
-            validate: () => true,
         },
         outputBucketName: {
             defaultValue: 'cloud-maker-outputs-reflected',
-            validate: () => true,
         },
         axis: {
             defaultValue: "y",

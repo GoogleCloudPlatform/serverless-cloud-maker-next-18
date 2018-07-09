@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// relative imports
-const helpers = require("../helpers")
-const decorator = require("../decorator")
+const helpers = require('../helpers');
+const decorator = require('../decorator');
 
 // use ImageMagick to apply a simple blur effect to the image
 const applyBlur = (inFile, outFile, parameters) =>
@@ -25,21 +24,19 @@ const applyBlur = (inFile, outFile, parameters) =>
         '-blur',
         '0x24',
         outFile,
-    ])
+    ]);
 
-const transformApplyBlur = decorator(applyBlur)
+const transformApplyBlur = decorator(applyBlur);
 
 transformApplyBlur.parameters = {
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-blurred',
-        validate: () => true,
     },
     outputPrefix: {
         defaultValue: 'blurred',
-        validate: () => true,
     },
-}
+};
 
-transformApplyBlur.applyBlur = applyBlur
+transformApplyBlur.applyBlur = applyBlur;
 
-module.exports = transformApplyBlur
+module.exports = transformApplyBlur;

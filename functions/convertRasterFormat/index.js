@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const helpers = require('../helpers');
-const decorator = require('../decorator')
+const decorator = require('../decorator');
 
 /*
 Converts images between png, jpg, gif
@@ -23,25 +23,23 @@ const applyChangeFormat = (inFile, outFile, parameters) =>
     helpers.resolveImageMagickConvert([
         helpers.createTempFileName(inFile),
         helpers.createTempFileName(outFile),
-    ])
+    ]);
 
 const convertRasterFormat = decorator(applyChangeFormat);
 
 convertRasterFormat.parameters = {
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-converted',
-        validate: () => true,
     },
     outputPrefix: {
         defaultValue: 'converted',
-        validate: () => true,
     },
     extension: {
         defaultValue: '.png',
         validate: (v) => ['.jpg', '.png', '.gif'].includes(v.toLowerCase()),
     },
-}
+};
 
-convertRasterFormat.applyChangeFormat = applyChangeFormat
+convertRasterFormat.applyChangeFormat = applyChangeFormat;
 
-module.exports = convertRasterFormat
+module.exports = convertRasterFormat;

@@ -14,8 +14,8 @@
 
 // This file defines a function that rotates an image
 // by a specified number of degrees
-const helpers = require("../helpers")
-const decorator = require("../decorator")
+const helpers = require('../helpers');
+const decorator = require('../decorator');
 
 // use the signature expected by the decorator
 const applyRotate = (inFile, outFile, {degrees}) =>
@@ -24,28 +24,26 @@ const applyRotate = (inFile, outFile, {degrees}) =>
         '-rotate',
         degrees,
         outFile,
-    ])
+    ]);
 
 // apply the decorator to handle GCS buckets
-const transformApplyRotate = decorator(applyRotate)
+const transformApplyRotate = decorator(applyRotate);
 
 // set default parameters and validation functions
 transformApplyRotate.parameters = {
     outputPrefix: {
         defaultValue: 'rotated',
-        validate: () => true,
     },
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-rotated',
-        validate: () => true,
     },
     degrees: {
         defaultValue: 90,
         validate: (d) => !isNaN(d) && Number.isInteger(Number(d)),
     },
-}
+};
 
 // attach the original functio for testing purposes
-transformApplyRotate.applyRotate = applyRotate
+transformApplyRotate.applyRotate = applyRotate;
 
-module.exports = transformApplyRotate
+module.exports = transformApplyRotate;

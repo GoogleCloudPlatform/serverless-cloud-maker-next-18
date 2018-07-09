@@ -36,11 +36,9 @@ const transformApplyBorder = decorator(applyBorder)
 transformApplyBorder.parameters = {
     outputPrefix: {
         defaultValue: 'bordered',
-        validate: () => true,
     },
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-bordered',
-        validate: () => true,
     },
     color: {
         defaultValue: 'blue',

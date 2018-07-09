@@ -13,8 +13,8 @@
 // limitations under the License.
 
 
-const helpers = require('../helpers')
-const decorator = require('../decorator')
+const helpers = require('../helpers');
+const decorator = require('../decorator');
 
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
@@ -25,7 +25,7 @@ const detectCropHints = (file) =>
         // apply the crophints annotation on the input image
         .cropHints(`gs://${file.bucket.name}/${file.name}`)
         // extract the results of the api call
-        .then(([{cropHintsAnnotation}]) => cropHintsAnnotation.cropHints[0])
+        .then(([{cropHintsAnnotation}]) => cropHintsAnnotation.cropHints[0]);
 
 // taking a shape and the correct geometry string for that shape
 // (rectangles wxh+x+y)
@@ -52,9 +52,9 @@ const applyCropGeometry = (inFile, outFile, {geometry, shape}) =>
                 '-crop',
                 geometry,
                 outFile,
-            ])
+            ]);
 
-const transformApplyCropGeometry = decorator(applyCropGeometry)
+const transformApplyCropGeometry = decorator(applyCropGeometry);
 
 
 const transformApplyCropShape = (file, parameters) =>
@@ -63,17 +63,15 @@ const transformApplyCropShape = (file, parameters) =>
         // use our helper function to convert the results of the api call to the wxh+x+y format
         .then((annotation) => helpers.annotationToShape(annotation, parameters.shape))
         // apply a crop
-        .then((geometry) => transformApplyCropGeometry(file, Object.assign(parameters, {geometry})))
+        .then((geometry) => transformApplyCropGeometry(file, Object.assign(parameters, {geometry})));
 
 
 transformApplyCropShape.parameters = {
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-cropped',
-        validate: () => true,
     },
     outputPrefix: {
         defaultValue: 'shape',
-        validate: () => true,
     },
     shape: {
         defaultValue: 'suggested',
@@ -85,10 +83,10 @@ transformApplyCropShape.parameters = {
         defaultValue: '.png',
         validate: (s) => s == '.png',
     },
-}
+};
 
-transformApplyCropShape.applyCropGeometry = applyCropGeometry
-transformApplyCropShape.detectCropHints = detectCropHints
+transformApplyCropShape.applyCropGeometry = applyCropGeometry;
+transformApplyCropShape.detectCropHints = detectCropHints;
 
 
-module.exports = transformApplyCropShape
+module.exports = transformApplyCropShape;

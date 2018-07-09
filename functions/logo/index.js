@@ -11,37 +11,35 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const helpers = require('../helpers')
-const decorator = require('../decorator')
+const helpers = require('../helpers');
+const decorator = require('../decorator');
 
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
-const transformApplyBlurPolygons = decorator(helpers.blurPolygons)
+const transformApplyBlurPolygons = decorator(helpers.blurPolygons);
 
 const detectLogos = (file) =>
     vision
         .logoDetection(`gs://${file.bucket.name}/${file.name}`)
-        .then(([{logoAnnotations}]) => logoAnnotations)
+        .then(([{logoAnnotations}]) => logoAnnotations);
 
 const transformApplyBlurLogos = (file, parameters) =>
     detectLogos(file)
         .then(helpers.annotationsToPolygons)
         .then((polygons) => transformApplyBlurPolygons(file, Object.assign(parameters, {polygons})))
-        .catch(console.error)
+        .catch(console.error);
 
 transformApplyBlurLogos.parameters = {
     outputPrefix: {
         defaultValue: 'logo',
-        validate: () => true,
     },
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-logos',
-        validate: () => true,
     },
-}
+};
 
-transformApplyBlurLogos.detectLogos = detectLogos
+transformApplyBlurLogos.detectLogos = detectLogos;
 
 
-module.exports = transformApplyBlurLogos
+module.exports = transformApplyBlurLogos;

@@ -15,7 +15,7 @@
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
-const transformApplyCaption = require('../caption')
+const transformApplyCaption = require('../caption');
 
 // resolves with the best lamndmark annotation that the vision api
 // finds inside the image
@@ -28,8 +28,8 @@ const detectLandmark = (file) =>
                     nextAnnotation.score > bestAnnotation.score
                     ? nextAnnotation
                     : bestAnnotation
-                , { score: 0 })
-        )
+                , {score: 0})
+        );
 
 const transformApplyLandmarks = (file, parameters) =>
     detectLandmark(file)
@@ -43,19 +43,17 @@ const transformApplyLandmarks = (file, parameters) =>
             // otherise, add a caption that there was no landmark found
             : transformApplyCaption(file, Object.assign(parameters, {caption: 'No landmark found.'}))
         )
-        .catch(console.error)
+        .catch(console.error);
 
 transformApplyLandmarks.parameters = {
     outputPrefix: {
         defaultValue: 'landmark',
-        validate: () => true,
     },
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-landmarks',
-        validate: () => true,
     },
-}
+};
 
-transformApplyLandmarks.detectLandmark = detectLandmark
+transformApplyLandmarks.detectLandmark = detectLandmark;
 
-module.exports = transformApplyLandmarks
+module.exports = transformApplyLandmarks;

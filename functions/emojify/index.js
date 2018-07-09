@@ -112,11 +112,9 @@ const transformApplyEmojify = (file, parameters) =>
 transformApplyEmojify.parameters = {
         outputPrefix: {
             defaultValue: 'emojis',
-            validate: () => true,
         },
         outputBucketName: {
             defaultValue: 'cloud-maker-outputs-emojis',
-            validate: () => true,
         },
         emojiSet: {
             defaultValue: 'emojis-apple',
