@@ -14,24 +14,21 @@
 const helpers = require('./helpers');
 
 describe('when createOutputFileName is called', () => {
-    const filename = 'filename.png'
-    const filenamedotout = filename + '.out'
-    const outputPrefix = 'prefix'
-    const prefixfilename = outputPrefix + '-' + filename
+    const filename = 'filename.png';
+    const filenamedotout = filename + '.out';
+    const outputPrefix = 'prefix';
+    const prefixfilename = outputPrefix + '-' + filename;
 
     it('should append .out if the prefix coerces to false', () => {
-        expect(helpers.createOutputFileName(filename)).toBe(filenamedotout)
-        expect(helpers.createOutputFileName(filename, {})).toBe(filenamedotout)
-        expect(helpers.createOutputFileName(filename, {outputPrefix: false})).toBe(filenamedotout)
+        expect(helpers.createOutputFileName(filename)).toBe(filenamedotout);
+        expect(helpers.createOutputFileName(filename, {})).toBe(filenamedotout);
+        expect(helpers.createOutputFileName(filename, {outputPrefix: false})).toBe(filenamedotout);
+        expect(helpers.createOutputFileName('bar.png', {outputPrefix: ''})).toBe('bar.png.out');
     });
 
     it('should add the passed prefix', () => {
-        expect(helpers.createOutputFileName(filename, {outputPrefix})).toBe(prefixfilename)
-    });
-
-    it('should pass these base cases', () => {
-        expect(helpers.createOutputFileName('bar.png', {outputPrefix: 'foo'})).toBe('foo-bar.png')
-        expect(helpers.createOutputFileName('bar.png', {outputPrefix: ''})).toBe('bar.png.out')
+        expect(helpers.createOutputFileName(filename, {outputPrefix})).toBe(prefixfilename);
+        expect(helpers.createOutputFileName('bar.png', {outputPrefix: 'foo'})).toBe('foo-bar.png');
     });
 });
 
@@ -137,10 +134,10 @@ describe('when resolveImageMagickCommand is used', () => {
 
 describe('when changeExtension is called', () => {
     it('should change extensions as expected', () => {
-        expect(helpers.changeExtension('test.png', '.jpg')).toBe('test.jpg')
-        expect(helpers.changeExtension('test.jpg', '.png')).toBe('test.png')
-        expect(helpers.changeExtension('test.png', '.gif')).toBe('test.gif')
-        expect(helpers.changeExtension('test.png', '')).toBe('test.png')
-        expect(helpers.changeExtension('test.png')).toBe('test.png')
+        expect(helpers.changeExtension('test.png', '.jpg')).toBe('test.jpg');
+        expect(helpers.changeExtension('test.jpg', '.png')).toBe('test.png');
+        expect(helpers.changeExtension('test.png', '.gif')).toBe('test.gif');
+        expect(helpers.changeExtension('test.png', '')).toBe('test.png');
+        expect(helpers.changeExtension('test.png')).toBe('test.png');
     });
 });
