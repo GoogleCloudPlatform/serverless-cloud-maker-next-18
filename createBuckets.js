@@ -16,31 +16,38 @@
 Creates all missing buckets according to the defaults set in the function fields
  */
 
-const functions = require('./index').functions;
+require('dotenv').config();
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 
+const buckets = [
+    process.env.OUTPUT_BUCKET,
+    process.env.INPUT_BUCKET,
+];
 
-Promise.all(
-    Object.keys(functions).map(
-        (key) =>
-            storage
-                .bucket(functions[key].parameters.outputBucketName.defaultValue)
-                .exists()
-                .then(
-                    ([exists]) =>
-                        exists
-                        ? Promise.resolve()
-                        : storage
-                            .bucket(functions[key].parameters.outputBucketName.defaultValue)
-                            .create()
-                            // return the name of the function so that we can log it
-                            .then(() => functions[key].parameters.outputBucketName.defaultValue)
-                )
-    )
+if (!process.env.INPUT_BUCKET) {
+    throw 'process.env.INPUT_BUCKET not set';
+}
+console.log('Input bucket set to', process.env.INPUT_BUCKET);
+
+if (!process.env.OUTPUT_BUCKET) {
+    throw 'process.env.OUTPUT_BUCKET not set';
+}
+console.log('Output bucket set to', process.env.OUTPUT_BUCKET);
+
+
+buckets.map(
+    (bucket) =>
+        storage
+            .bucket(bucket)
+            .exists()
+            .then(
+                ([exists]) =>
+                    exists
+                    ? Promise.resolve()
+                    : storage
+                        .bucket(bucket)
+                        .create()
+                        .then(() => console.log('Created', bucket))
+            )
 )
-.then((results) =>
-    results.filter(Boolean).length
-    ? console.log('Created buckets:\n', results.filter(Boolean).join('\n'))
-    : console.log('All default buckets exist')
-);

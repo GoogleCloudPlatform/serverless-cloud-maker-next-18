@@ -19,14 +19,22 @@ can be deployed as a service for the backend of the
 showcase demo.
  */
 
-
+require('dotenv').config()
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 
 // imports all of the functions declared in the functions
 // directory that can be called by the handler
-
 const functions = require('./functions')
+
+if (!process.env.INPUT_BUCKET){
+    throw "process.env.INPUT_BUCKET not set"
+}
+
+if (!process.env.OUTPUT_BUCKET){
+    throw "process.env.OUTPUT_BUCKET not set"
+}
+
 
 const validateData = (data) => {
 /*
@@ -183,7 +191,7 @@ const handler = (request, response) => {
         return
     }
 
-    const outputBucketName = request.body.outputBucketName || 'cloud-maker-outputs-final'
+    const outputBucketName = request.body.outputBucketName || process.env.OUTPUT_BUCKET
 
     // convert the json in the
     // request to the objects

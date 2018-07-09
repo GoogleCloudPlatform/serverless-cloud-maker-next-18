@@ -31,7 +31,7 @@ const fs = require('fs');
 const createImageMagickTransform = (transform) =>
 
  (file, parameters) => {
-    const outputBucketName = parameters.outputBucketName
+    const outputBucketName = parameters.outputBucketName || process.env.OUTPUT_BUCKET
     const outputFileName = helpers.createOutputFileName(file.name, parameters)
     const tempLocalFileName = helpers.createTempFileName(file.name)
     const tempLocalOutputFileName = helpers.createTempFileName(outputFileName)
