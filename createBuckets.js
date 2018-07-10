@@ -20,27 +20,32 @@ const functions = require('./index').functions;
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 
-
 Promise.all(
     Object.keys(functions).map(
-        (key) =>
-            storage
+        (key) => {
+            return storage
                 .bucket(functions[key].parameters.outputBucketName.defaultValue)
                 .exists()
                 .then(
-                    ([exists]) =>
-                        exists
-                        ? Promise.resolve()
-                        : storage
-                            .bucket(functions[key].parameters.outputBucketName.defaultValue)
-                            .create()
-                            // return the name of the function so that we can log it
-                            .then(() => functions[key].parameters.outputBucketName.defaultValue)
-                )
+                    ([exists]) => {
+                        if (exists) {
+                            return Promise.resolve();
+                        } else {
+                            return storage
+                                .bucket(functions[key].parameters.outputBucketName.defaultValue)
+                                .create()
+                                // return the name of the function so that we can log it
+                                .then(() => functions[key].parameters.outputBucketName.defaultValue);
+                        }
+                });
+        }
     )
 )
-.then((results) =>
-    results.filter(Boolean).length
-    ? console.log('Created buckets:\n', results.filter(Boolean).join('\n'))
-    : console.log('All default buckets exist')
-);
+.then((results) => {
+    const createdBuckets = results.filter((bucket) => Boolean(bucket));
+    if (createdBuckets.length) {
+        console.log('Created buckets:\n', createdBuckets.join('\n'));
+    } else {
+         console.log('All default buckets exist');
+    }
+});
