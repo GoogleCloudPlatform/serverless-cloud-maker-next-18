@@ -16,8 +16,8 @@ const helpers = require('../helpers')
 
 const transformApplyRotate = require('./index.js')
 
-const inFile = "inFile"
-const outFile = "outFile"
+const inFile = 'inFile'
+const outFile = 'outFile'
 const degrees = 180
 
 
@@ -44,9 +44,8 @@ describe('transformApplyRotate', () => {
 
   it('should call resolveImageMagickConvert with the degrees', () => {
     helpers.resolveImageMagickConvert.mockClear()
-    transformApplyRotate.applyRotate(inFile, outFile, { degrees })
+    transformApplyRotate.applyRotate(inFile, outFile, {degrees})
     expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([inFile, '-rotate', degrees, outFile])
   });
-
 });
 

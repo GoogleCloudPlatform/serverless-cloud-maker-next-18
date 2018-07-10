@@ -18,7 +18,6 @@ const copyImage = require('./index.js');
 jest.mock('@google-cloud/storage');
 const StorageAPI = require('@google-cloud/storage');
 
-
 const copySpy = jest.fn(() => Promise.resolve());
 
 const mockFile = {

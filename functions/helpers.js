@@ -40,18 +40,16 @@ const cropHintsToGeometry = (cropHintsAnnotation) => {
 const faceAnnotationToBoundingPoly = (faceAnnotation) => {
     const boundingPoly = faceAnnotation.boundingPoly
     const vertices = boundingPoly.vertices
-
     return vertices.map(({x, y}) => [x, y].join(',')).join(' ')
 }
 
-// creates a the name of the file to be used for the
-// result of the function. Must be distrinct from the
-// input file name
-const createOutputFileName = (prefix = '', fileName) => {
-    if (prefix) {
-        return `${prefix}-${path.parse(fileName).base}`    
+const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>{
+    if (outputPrefix){
+        return changeExtension(`${outputPrefix}-${path.parse(fileName).base}`, extension)
     }
-    return `${path.parse(fileName).base}.out`
+    else {
+        return changeExtension(`${path.parse(fileName).base}.out`, extension)
+    }
 }
 
 const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
@@ -60,22 +58,32 @@ const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`
 // and return a promise the resolves when the transformation is complete.
 const resolveImageMagickCommand = (cmd, args) => {
     return new Promise((resolve, reject) =>
-            cmd(args, (err, result) => {
-                if (err) {
-                    console.error('ImageMagick command failed for arguments', args, err);
-                    reject(err);
-                    return
-                } else {
-                    console.log('ImageMagick command was successful.', args)
-                    resolve(result)
-                }
-            })
+        cmd(args, (err, result) => {
+            if (err) {
+                console.error('ImageMagick command failed for arguments', args, err);
+                reject(err);
+                return
+            } else {
+                console.log('ImageMagick command was successful.', args)
+                resolve(result)
+            }
+        })
     )
 }
 
 const resolveImageMagickIdentify = (args) => resolveImageMagickCommand(im.identify, args)
 
 const resolveImageMagickConvert = (args) => resolveImageMagickCommand(im.convert, args)
+
+
+const changeExtension = (fileName, extension) => {
+    if (extension){
+        return fileName.substr(0, fileName.lastIndexOf('.')) + extension
+    } 
+    else{
+      return fileName  
+    }
+}
 
 module.exports = {
     resolveImageMagickConvert,
@@ -85,6 +93,7 @@ module.exports = {
     createOutputFileName,
     createTempFileName,
     faceAnnotationToBoundingPoly,
+    changeExtension,
 }
 
 

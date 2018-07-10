@@ -12,12 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// assemple all of the functions built in this director into a single export
+// assemble all of the functions built in this directory into a single export
 
 const copyImage = require('./copy')
-const transformApplyRotate = require("./rotate")
+const convertRasterFormat = require('./convertRasterFormat')
+const transformApplyResize = require('./resize')
+const transformApplyRotate = require('./rotate')
+const transformApplyReflect = require('./reflect')
+const transformApplyFilter = require('./filter')
+const transformApplyBorder = require('./border')
+const transformApplyBlur = require('./blur')
 
 module.exports = {
+	// basic functions
     copyImage,
+    convertRasterFormat,
+    // basic transformations
+    transformApplyResize,
     transformApplyRotate,
+    transformApplyReflect,
+    transformApplyFilter,
+    transformApplyBorder,
+    transformApplyBlur,
 }
