@@ -14,12 +14,13 @@
 const helpers = require("../helpers")
 const decorator = require("../decorator")
 
-const applyReflect = (inFile, outFile, {axis }) =>
-    helpers.resolveImageMagickConvert([
+const applyReflect = (inFile, outFile, {axis}) => {
+    return helpers.resolveImageMagickConvert([
         inFile,
         axis == "x" ? "-flip" : "-flop",
         outFile,
     ])
+}
 
 const transformApplyReflect = decorator(applyReflect)
 

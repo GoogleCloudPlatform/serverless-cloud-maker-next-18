@@ -116,42 +116,17 @@ const annotationToDimensions = (annotation) => {
     return `${width}x${height}`;
 };
 
-const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>
-    changeExtension(
-        outputPrefix
-            // if a prefix was specified use that
-            ? `${outputPrefix}-${path.parse(fileName).base}`
-            // otherwise append .out
-            : `${path.parse(fileName).base}.out`
-        , extension
-    );
+
+const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>{
+    if (outputPrefix){
+        return changeExtension(`${outputPrefix}-${path.parse(fileName).base}`, extension)
+    }
+    else {
+        return changeExtension(`${path.parse(fileName).base}.out`, extension)
+    }
+}
 
 const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`;
-
-const changeExtension = (fileName, extension) =>
-    extension
-    ? fileName.substr(0, fileName.lastIndexOf('.')) + extension
-    : fileName;
-
-const resolveImageMagickCommand = (cmd, args) =>
-    new Promise((resolve, reject) =>
-            cmd(args, (err, result) => {
-                if (err) {
-                    console.error('ImageMagick command failed for arguments', args, err);
-                    reject(err);
-                    return;
-                } else {
-                    console.log('ImageMagick command was successful.', args);
-                    resolve(result);
-                }
-            })
-    );
-
-const resolveImageMagickIdentify = (args) =>
-    resolveImageMagickCommand(im.identify, args);
-
-const resolveImageMagickConvert = (args) =>
-    resolveImageMagickCommand(im.convert, args);
 
 // blur all of the polygons in an image
 const blurPolygons = (inFile, outFile, {polygons}) =>
@@ -178,6 +153,39 @@ const softBlurPolygons = (inFile, outFile, {polygons}) =>
         '\)',
         '-mask', 'mpr:mask', '-blur', '0x5', '+mask', outFile,
     ]);
+
+// Accept an array of arguments to be passed to imagemagick's convert method
+// and return a promise the resolves when the transformation is complete.
+const resolveImageMagickCommand = (cmd, args) => {
+    return new Promise((resolve, reject) =>
+        cmd(args, (err, result) => {
+            if (err) {
+                console.error('ImageMagick command failed for arguments', args, err);
+                reject(err);
+                return
+            } else {
+                console.log('ImageMagick command was successful.', args)
+                resolve(result)
+            }
+        })
+    )
+}
+
+const resolveImageMagickIdentify = (args) =>
+    resolveImageMagickCommand(im.identify, args);
+
+const resolveImageMagickConvert = (args) =>
+    resolveImageMagickCommand(im.convert, args);
+
+
+const changeExtension = (fileName, extension) => {
+    if (extension){
+        return fileName.substr(0, fileName.lastIndexOf('.')) + extension
+    } 
+    else{
+      return fileName  
+    }
+}
 
 module.exports = {
     // ImageMagick helpers

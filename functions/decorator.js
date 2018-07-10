@@ -27,34 +27,31 @@ const fs = require('fs');
 // Accepts a function transform that takes the infile, outfile and 
 // the input parameters and returns a function that can be called by 
 // the handler to execute that transform
+const createImageMagickTransform = (transform) => {
 
-const createImageMagickTransform = (transform) =>
-
- (file, parameters) => {
-    const outputBucketName = parameters.outputBucketName
-    const outputFileName = helpers.createOutputFileName(file.name, parameters)
-    const tempLocalFileName = helpers.createTempFileName(file.name)
-    const tempLocalOutputFileName = helpers.createTempFileName(outputFileName)
-    return (
-        // if we have the file already
-        fs.existsSync(tempLocalFileName)
-            // skip
-            ? Promise.resolve()
-            // download it to that location
-            : file.download({destination: tempLocalFileName})
-    )
-    // apply the desired transform
-    .then(() => transform(tempLocalFileName, tempLocalOutputFileName, parameters))
-    // write errors in the transform to the console
-    .catch(console.error)
-    .then(() =>
-        // upload it to the desired output bucket
-        storage
-            .bucket(outputBucketName)
-            .upload(tempLocalOutputFileName, {destination: outputFileName})
-            // resolve with the file object created by that upload
-            .then(() => storage.bucket(outputBucketName).file(outputFileName))
-    )
+    return (file, parameters) => {
+        const outputBucketName = parameters.outputBucketName
+        const outputFileName = helpers.createOutputFileName(file.name, parameters)
+        const tempLocalFileName = helpers.createTempFileName(file.name)
+        const tempLocalOutputFileName = helpers.createTempFileName(outputFileName)
+        let download = Promise.resolve()
+        if (!fs.existsSync(tempLocalFileName)) {
+            download = file.download({destination: tempLocalFileName})
+        }
+        return download
+            // apply the desired transform
+            .then(() => transform(tempLocalFileName, tempLocalOutputFileName, parameters))
+            // write errors in the transform to the console
+            .catch(console.error)
+            .then(() =>
+                // upload it to the desired output bucket
+                storage
+                    .bucket(outputBucketName)
+                    .upload(tempLocalOutputFileName, {destination: outputFileName})
+                    // resolve with the file object created by that upload
+                    .then(() => storage.bucket(outputBucketName).file(outputFileName))
+            )
+    }
 }
 
 

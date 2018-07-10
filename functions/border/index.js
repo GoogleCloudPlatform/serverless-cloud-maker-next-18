@@ -21,8 +21,8 @@ const googleColors = {
     red: "#EA4335",
 }
 
-const applyBorder = (inFile, outFile, {color='blue', width='1'}) =>
-    helpers.resolveImageMagickConvert([
+const applyBorder = (inFile, outFile, {color='blue', width='1'}) => {
+    return helpers.resolveImageMagickConvert([
         inFile,
         '-bordercolor',
         googleColors[color.toLowerCase()],
@@ -30,6 +30,7 @@ const applyBorder = (inFile, outFile, {color='blue', width='1'}) =>
         `${width}%x${width}%`,
         outFile,
     ])
+}
 
 const transformApplyBorder = decorator(applyBorder)
 
