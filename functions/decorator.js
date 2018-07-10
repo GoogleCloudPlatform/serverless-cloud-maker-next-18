@@ -28,8 +28,8 @@ const fs = require('fs');
 // the input parameters and returns a function that can be called by 
 // the handler to execute that transform
 
-const createImageMagickTransform = (transform) =>
-     (file, parameters) => {
+const createImageMagickTransform = (transform) => {
+    return (file, parameters) => {
         const outputBucketName = parameters.outputBucketName
         const outputFileName = helpers.createOutputFileName(parameters.outputPrefix, file.name)
         const tempLocalFileName = helpers.createTempFileName(file.name)
@@ -55,6 +55,7 @@ const createImageMagickTransform = (transform) =>
                 .then(() => storage.bucket(outputBucketName).file(outputFileName))
         )
     }
+}
 
 
 module.exports = createImageMagickTransform
