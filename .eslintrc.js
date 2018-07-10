@@ -21,9 +21,4 @@ module.exports = {
     	node: true,
     	es6: true,
     },
-    rules:{
-    	"max-len": 0,
-        semi: 0,
-    },
-
 };
