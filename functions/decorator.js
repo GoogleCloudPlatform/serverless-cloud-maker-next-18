@@ -34,26 +34,21 @@ const createImageMagickTransform = (transform) => {
         const outputFileName = helpers.createOutputFileName(parameters.outputPrefix, file.name)
         const tempLocalFileName = helpers.createTempFileName(file.name)
         const tempLocalOutputFileName = helpers.createTempFileName(outputFileName)
-        return (
-            // if we have the file already
-            fs.existsSync(tempLocalFileName)
-                // skip
-                ? Promise.resolve()
-                // download it to that location
-                : file.download({destination: tempLocalFileName})
-        )
-        // apply the desired transform
-        .then(() => transform(tempLocalFileName, tempLocalOutputFileName, parameters))
-        // write errors in the transform to the console
-        .catch(console.error)
-        .then(() =>
-            // upload it to the desired output bucket
-            storage
-                .bucket(outputBucketName)
-                .upload(tempLocalOutputFileName, {destination: outputFileName})
-                // resolve with the file object created by that upload
-                .then(() => storage.bucket(outputBucketName).file(outputFileName))
-        )
+        let download = Promise.resolve()
+        if (!fs.existsSync(tempLocalFileName)) {
+            download = file.download({destination: tempLocalFileName})
+        }
+        return download
+            .then(() => transform(tempLocalFileName, tempLocalOutputFileName, parameters))
+            .catch(console.error)
+            .then(() =>
+                // upload it to the desired output bucket
+                storage
+                    .bucket(outputBucketName)
+                    .upload(tempLocalOutputFileName, {destination: outputFileName})
+                    // resolve with the file object created by that upload
+                    .then(() => storage.bucket(outputBucketName).file(outputFileName))
+            )
     }
 }
 
