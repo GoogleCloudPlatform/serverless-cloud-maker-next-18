@@ -173,8 +173,7 @@ const softBlurPolygons = (inFile, outFile, {polygons}) =>
         '-clone', '0', '-fill', 'white', '-colorize', '100', '-fill', 'black',
         '-draw', polygons,
         '-alpha', 'off',
-            // adding these two flags softens the edges
-            '-blur', '0x5',
+            '-blur', '0x5', // adding these two flags softens the edges
         '-write', 'mpr:mask', '+delete',
         '\)',
         '-mask', 'mpr:mask', '-blur', '0x5', '+mask', outFile,

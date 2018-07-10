@@ -91,7 +91,6 @@ transformApplyCaption.parameters = {
     },
 }
 
-// export the subroutines for testing
 transformApplyCaption.applyCaption = applyCaption
 transformApplyCaption.transformApplyAnnotationAsCaption = transformApplyAnnotationAsCaption
 transformApplyCaption.generateCaption = generateCaption
