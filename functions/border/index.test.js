@@ -17,7 +17,6 @@ const transformApplyBorder = require('./index.js')
 jest.mock('../helpers.js')
 const helpers = require('../helpers')
 
-// placeholder file names
 const inFile = 'inFile'
 const outFile = 'outFile'
 const color = 'blue'

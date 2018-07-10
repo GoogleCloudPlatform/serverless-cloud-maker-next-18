@@ -17,8 +17,6 @@ const transformApplyFilter = require('./index.js')
 // create mock of the helper functions
 jest.mock('../helpers.js')
 const helpers = require('../helpers')
-
-// placeholder file names
 const inFile = 'inFile'
 const outFile = 'outFile'
 
