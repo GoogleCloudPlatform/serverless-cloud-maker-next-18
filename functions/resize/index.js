@@ -17,13 +17,14 @@ const decorator = require('../decorator');
 
 
 // resizes the infile to the specified width and height
-const applyResize = (inFile, outFile, {width, height}) =>
-    helpers.resolveImageMagickConvert([
+const applyResize = (inFile, outFile, {width, height}) => {
+    return helpers.resolveImageMagickConvert([
         inFile,
         '-resize',
         `${width}x${height}`,
         outFile,
     ]);
+}
 
 const transformApplyResize = decorator(applyResize);
 

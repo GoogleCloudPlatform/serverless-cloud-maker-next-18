@@ -19,11 +19,12 @@ const decorator = require('../decorator');
 Converts images between png, jpg, gif
  */
 
-const applyChangeFormat = (inFile, outFile, parameters) =>
-    helpers.resolveImageMagickConvert([
+const applyChangeFormat = (inFile, outFile, parameters) => { 
+    return helpers.resolveImageMagickConvert([
         helpers.createTempFileName(inFile),
         helpers.createTempFileName(outFile),
     ]);
+}
 
 const convertRasterFormat = decorator(applyChangeFormat);
 
