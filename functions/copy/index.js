@@ -13,24 +13,15 @@
 // limitations under the License.
 
 /*
-This file contains a function that duplicates the input image 
+This file contains a function that duplicates the input image
 by using the storage client library's .copy method to upload
 it to a different bucket.
  */
 
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
-const path = require("path");
-
-// creates a the name of the file to be used for the
-// result of the function. Must be distrinct from the
-// input file name
-const createOutputFileName = (prefix = "", fileName) => 
-    prefix
-    // if a prefix was specified use that
-    ? `${prefix}-${path.parse(fileName).base}`
-    // else, append .out
-    : `${path.parse(fileName).base}.out`
+const path = require('path');
+const helpers = require('../helpers')
 
 /*
 Create a copy of an image and upload the result to an
@@ -40,7 +31,7 @@ const copyImage = (file, parameters) => {
     // extract the output bucket from the paramters
     const outputBucketName = parameters.outputBucketName
     // use the output prefix to create eh name of the output file
-    const outputFileName = createOutputFileName(parameters.outputPrefix, file.name)
+    const outputFileName = helpers.createOutputFileName(parameters.outputPrefix, file.name)
     //  construct the output file using the GCS client library
     const outputFile = storage.bucket(outputBucketName).file(outputFileName)
 
@@ -55,12 +46,10 @@ const copyImage = (file, parameters) => {
 
 copyImage.parameters = {
     outputBucketName: {
-        defaultValue: 'outputs-copied',
-        validate: () => true,
+        defaultValue: 'cloud-maker-outputs-copied',
     },
     outputPrefix: {
         defaultValue: 'copied',
-        validate: () => true,
     },
 }
 

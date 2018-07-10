@@ -13,25 +13,25 @@
 // limitations under the License.
 
 
-const copyImage = require('./index.js')
+const copyImage = require('./index.js');
 
-jest.mock("@google-cloud/storage")
-const StorageAPI = require("@google-cloud/storage")
+jest.mock('@google-cloud/storage');
+const StorageAPI = require('@google-cloud/storage');
 
 
-const copySpy = jest.fn(() => Promise.resolve())
+const copySpy = jest.fn(() => Promise.resolve());
 
 const mockFile = {
-    name: "foo.png",
+    name: 'foo.png',
     copy: copySpy,
-}
+};
 
 // mock the bucket method to enable us to chain with it
-StorageAPI.prototype.bucket.mockReturnValue(new StorageAPI())
+StorageAPI.prototype.bucket.mockReturnValue(new StorageAPI());
 
 // create a mock file method for chaining that just returns
 // our mock file
-StorageAPI.prototype.file = jest.fn(() => mockFile)
+StorageAPI.prototype.file = jest.fn(() => mockFile);
 
 
 describe('when copyImage is called', () => {
@@ -40,29 +40,24 @@ describe('when copyImage is called', () => {
     });
 
     it('should have default parameters', () => {
-        expect(copyImage.parameters).not.toBeUndefined()
-    });
-
-    it('should accept any output bucket name or prefix', () => {
-        expect(copyImage.parameters.outputBucketName.validate()).toBe(true)
-        expect(copyImage.parameters.outputPrefix.validate()).toBe(true)
+        expect(copyImage.parameters).not.toBeUndefined();
     });
 
     it('should call copy the file to the cloud storage output bucket', () => {
-
         const parameters = {
-            outputBucketName: "output-bucket",
-            outputPrefix: "output",
-        }
+            outputBucketName: 'output-bucket',
+            outputPrefix: 'output',
+        };
 
-        const result = copyImage(mockFile, parameters)
-        expect(StorageAPI.prototype.bucket).toHaveBeenCalledWith(parameters.outputBucketName)
-        expect(copySpy).toHaveBeenCalled()
-        
+        const result = copyImage(mockFile, parameters);
+
+        expect(StorageAPI.prototype.bucket)
+            .toHaveBeenCalledWith(parameters.outputBucketName);
+
+        expect(copySpy).toHaveBeenCalled();
+
         return result.then((outputFile) => {
-            expect(outputFile).toEqual(mockFile)
-        }) 
-
+            expect(outputFile).toEqual(mockFile);
+        });
     });
-
 });
