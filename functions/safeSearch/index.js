@@ -24,9 +24,9 @@ const isUnsafe = ([{safeSearchAnnotation}]) =>
     safeSearchAnnotation.violence === 'VERY_LIKELY';
 
 
-const transformApplySafeSearch = (file, parameters) =>
+const transformApplySafeSearch = (file, parameters) => {
     // if it's unsafe according to the Vision API apply a blur effect
-    vision
+    return vision
         .safeSearchDetection(`gs://${file.bucket.name}/${file.name}`)
         .catch(console.err)
         .then((result) =>
@@ -34,6 +34,7 @@ const transformApplySafeSearch = (file, parameters) =>
             ? transformApplyBlur(file, parameters)
             : file
         );
+}
 
 transformApplySafeSearch.parameters = {
     outputPrefix: {

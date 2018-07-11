@@ -20,50 +20,55 @@ const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
 
-const detectCropHints = (file) =>
-    vision
+const detectCropHints = (file) => {
+    return vision
         // apply the crophints annotation on the input image
         .cropHints(`gs://${file.bucket.name}/${file.name}`)
         // extract the results of the api call
         .then(([{cropHintsAnnotation}]) => cropHintsAnnotation.cropHints[0]);
+}
 
 // taking a shape and the correct geometry string for that shape
 // (rectangles wxh+x+y)
 // (cricles centerX,centerY pointX,pointY)
 // run ImageMagick's crop method to generate that shape
-const applyCropGeometry = (inFile, outFile, {geometry, shape}) =>
-    shape == 'circle'
-        ? helpers.resolveImageMagickConvert([
-                inFile,
-                '\(',
-                '+clone',
-                '-alpha',
-                'transparent',
-                '-draw',
-                geometry,
-                '\)',
-                '-compose',
-                'copyopacity',
-                '-composite',
-                outFile,
-            ])
-        : helpers.resolveImageMagickConvert([
-                inFile,
-                '-crop',
-                geometry,
-                outFile,
-            ]);
+const applyCropGeometry = (inFile, outFile, {geometry, shape}) => {
+
+    if (shape == 'circle') {
+        return helpers.resolveImageMagickConvert([
+            inFile,
+            '\(',
+            '+clone',
+            '-alpha',
+            'transparent',
+            '-draw',
+            geometry,
+            '\)',
+            '-compose',
+            'copyopacity',
+            '-composite',
+            outFile,
+        ])
+    }
+
+    return helpers.resolveImageMagickConvert([
+        inFile,
+        '-crop',
+        geometry,
+        outFile,
+    ]);
+}
 
 const transformApplyCropGeometry = decorator(applyCropGeometry);
 
 
-const transformApplyCropShape = (file, parameters) =>
-    // detect the crop hints using the vision api
-    detectCropHints(file)
+const transformApplyCropShape = (file, parameters) => {
+    return detectCropHints(file)
         // use our helper function to convert the results of the api call to the wxh+x+y format
         .then((annotation) => helpers.annotationToShape(annotation, parameters.shape))
         // apply a crop
         .then((geometry) => transformApplyCropGeometry(file, Object.assign(parameters, {geometry})));
+}
 
 
 transformApplyCropShape.parameters = {

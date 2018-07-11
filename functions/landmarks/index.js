@@ -19,8 +19,8 @@ const transformApplyCaption = require('../caption');
 
 // resolves with the best lamndmark annotation that the vision api
 // finds inside the image
-const detectLandmark = (file) =>
-    vision
+const detectLandmark = (file) => {
+    return vision
         .landmarkDetection(`gs://${file.bucket.name}/${file.name}`)
         .then(([{landmarkAnnotations}]) =>
             landmarkAnnotations.reduce(
@@ -30,20 +30,23 @@ const detectLandmark = (file) =>
                     : bestAnnotation
                 , {score: 0})
         );
+}
 
-const transformApplyLandmarks = (file, parameters) =>
-    detectLandmark(file)
+const transformApplyLandmarks = (file, parameters) => {
+    return detectLandmark(file)
         .catch(console.error)
         // extract the description from the
         // returned landmark annotation
         .then(({description}) =>
-            description
-            // if there was a landmark detected, add it to the image
-            ? transformApplyCaption(file, Object.assign(parameters, {caption: description}))
-            // otherise, add a caption that there was no landmark found
-            : transformApplyCaption(file, Object.assign(parameters, {caption: 'No landmark found.'}))
+            transformApplyCaption(
+                file, 
+                Object.assign(
+                    parameters, 
+                    {caption: description || 'No landmark found.'})
+                )
         )
         .catch(console.error);
+}
 
 transformApplyLandmarks.parameters = {
     outputPrefix: {

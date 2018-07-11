@@ -18,13 +18,9 @@ const helpers = require('../helpers');
 const createImageMagickTransform = require('../decorator');
 
 const applyFilter = (inFile, outFile, {filterName}) => {
-    // each time this function runs, generate a random
-    // hue to filter by
+
     const randomHue = Math.random() * 200;
 
-    // map parameter names for filters
-    // to the arguments we need to pass to
-    // imagemagick
     const imageMagickFilters = {
         sepia: ['-sepia-tone', '80%'],
         grayscale: ['-colorspace', 'Gray'],
@@ -52,6 +48,7 @@ transformApplyFilter.parameters = {
             validate: (v) => ['sepia', 'colorize', 'grayscale'].includes(v.toLowerCase()),
         },
     };
+
 transformApplyFilter.applyFilter = applyFilter;
 
 module.exports = transformApplyFilter;
