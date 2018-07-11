@@ -18,9 +18,11 @@ const decorator = require('../decorator');
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
-// add a caption to the image by identifying its dimensions and then
-// adding a section at the bottom with a black background
-// and white centered text on top of it.
+/*
+ * Add a caption to the image by identifying its dimensions and then
+ * adding a section at the bottom with a black background
+ * and white centered text on top of it.
+ */
 const applyCaption = (inFile, outFile, {caption}) => {
     return helpers
         .resolveImageMagickIdentify(inFile)
@@ -48,7 +50,6 @@ const applyCaption = (inFile, outFile, {caption}) => {
 
 const transformApplyAnnotationAsCaption = decorator(applyCaption);
 
-// using the vision api
 const generateCaption = (file) => {
     return vision
         .labelDetection(`gs://${file.bucket.name}/${file.name}`)

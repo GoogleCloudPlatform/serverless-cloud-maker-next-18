@@ -15,10 +15,8 @@
 const helpers = require('../helpers');
 const decorator = require('../decorator');
 
-/*
-Converts images between png, jpg, gif
- */
 
+// Converts images between png, jpg, gif
 const applyChangeFormat = (inFile, outFile, parameters) => {
     return helpers.resolveImageMagickConvert([
         helpers.createTempFileName(inFile),
