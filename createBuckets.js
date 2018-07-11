@@ -22,13 +22,7 @@ const storage = new StorageApi();
 
 const buckets = [
     process.env.OUTPUT_BUCKET,
-    process.env.INPUT_BUCKET,
 ];
-
-if (!process.env.INPUT_BUCKET) {
-    throw 'process.env.INPUT_BUCKET not set';
-}
-console.log('Input bucket set to', process.env.INPUT_BUCKET);
 
 if (!process.env.OUTPUT_BUCKET) {
     throw 'process.env.OUTPUT_BUCKET not set';

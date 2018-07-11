@@ -29,7 +29,6 @@ const fs = require('fs');
 // the handler to execute that transform
 const createImageMagickTransform = (transform) => {
     return (file, parameters) => {
-        const outputBucketName = parameters.outputBucketName || process.env.OUTPUT_BUCKET;
         const outputFileName = helpers.createOutputFileName(
             file.name,
             parameters
@@ -52,20 +51,25 @@ const createImageMagickTransform = (transform) => {
             )
             // write errors in the transform to the console
             .catch(console.error)
-            .then(() =>
-                // upload it to the desired output bucket
-                storage
-                    .bucket(outputBucketName)
-                    .upload(
-                        tempLocalOutputFileName,
-                        {destination: outputFileName}
-                    )
-                    // resolve with the file object created by that upload
-                    .then(() =>
-                        storage
-                            .bucket(outputBucketName)
-                            .file(outputFileName)
-                    )
+            .then(() => {
+                // construct a result file defaulting to the global output bucket
+                const resultFile = storage
+                    .bucket(process.env.OUTPUT_BUCKET)
+                    .file(outputFileName)
+
+                if (parameters.outputBucketName) {
+                    // upload to the bucket specific to this function
+                    return storage
+                        .bucket(parameters.outputBucketName)
+                        .upload(
+                            tempLocalOutputFileName,
+                            {destination: outputFileName}
+                        )
+                        .then(() => resultFile)
+
+                }
+                return resultFile
+            }
             );
     };
 };

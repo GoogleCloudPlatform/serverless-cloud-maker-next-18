@@ -31,7 +31,7 @@ const transformApplyBlur = decorator(applyBlur);
 
 transformApplyBlur.parameters = {
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-blurred',
+        defaultValue: null,
     },
     outputPrefix: {
         defaultValue: 'blurred',

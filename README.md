@@ -22,6 +22,10 @@ __DISCLAIMER__: This is not an official Google product.
 ### Install npm dependencies
 - `cd serverless-cloud-maker-next-18 && npm install`
 
+### Set Environment Variables
+- `touch .env`
+- set `OUTPUT_BUCKET` in `.env`
+- Optional: run `node createBuckets.js` to create the bucket if it does not exist.
 
 ## Organization
 - `index.js` implements the main handler function

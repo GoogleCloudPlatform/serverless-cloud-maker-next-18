@@ -79,7 +79,7 @@ const transformApplyCropShape = (file, parameters) => {
 
 transformApplyCropShape.parameters = {
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-cropped',
+        defaultValue: null,
     },
     outputPrefix: {
         defaultValue: 'shape',

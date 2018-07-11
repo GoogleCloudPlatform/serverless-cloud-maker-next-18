@@ -40,7 +40,7 @@ transformApplyFilter.parameters = {
             defaultValue: 'filtered',
         },
         outputBucketName: {
-            defaultValue: 'cloud-maker-outputs-filtered',
+            defaultValue: null,
         },
         filterName: {
             defaultValue: 'sepia',

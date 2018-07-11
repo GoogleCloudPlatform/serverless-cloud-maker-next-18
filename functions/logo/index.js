@@ -42,7 +42,7 @@ transformApplyBlurLogos.parameters = {
         defaultValue: 'logo',
     },
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-logos',
+        defaultValue: null,
     },
 };
 

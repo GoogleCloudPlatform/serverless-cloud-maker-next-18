@@ -28,7 +28,7 @@ const convertRasterFormat = decorator(applyChangeFormat);
 
 convertRasterFormat.parameters = {
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-converted',
+        defaultValue: null,
     },
     outputPrefix: {
         defaultValue: 'converted',

@@ -23,10 +23,6 @@ const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 const functions = require('./functions');
 
-if (!process.env.INPUT_BUCKET) {
-    throw 'process.env.INPUT_BUCKET not set';
-}
-
 if (!process.env.OUTPUT_BUCKET) {
     throw 'process.env.OUTPUT_BUCKET not set';
 }
@@ -229,12 +225,20 @@ const handler = (request, response) => {
         )
         // Copy the final result to the output bucket
         .then(
-            (resultFile) =>
-                resultFile.copy(
-                    storage
-                        .bucket(outputBucketName)
-                        .file(resultFile.name)
-                )
+            (resultFile) => {
+                // console.log()
+                return storage
+                    .bucket(outputBucketName)
+                    .upload(
+                        functions.helpers.createTempFileName(resultFile.name),
+                        {destination: resultFile.name}
+                    )
+                // return resultFile.copy(
+                //     storage
+                //         .bucket(outputBucketName)
+                //         .file(resultFile.name)
+                // )
+            }
         )
         .then(([outputFile]) => response.send(outputFile))
         .catch((err) => response.send(err));

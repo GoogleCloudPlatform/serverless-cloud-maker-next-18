@@ -48,7 +48,7 @@ transformApplyBlurFaces.parameters = {
         defaultValue: 'faces',
     },
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-faces',
+        defaultValue: null,
     },
 };
 

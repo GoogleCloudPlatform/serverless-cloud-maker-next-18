@@ -116,7 +116,7 @@ transformApplyEmojify.parameters = {
             defaultValue: 'emojis',
         },
         outputBucketName: {
-            defaultValue: 'cloud-maker-outputs-emojis',
+            defaultValue: null,
         },
         emojiSet: {
             defaultValue: 'emojis-apple',

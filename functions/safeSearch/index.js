@@ -47,7 +47,7 @@ transformApplySafeSearch.parameters = {
         defaultValue: 'safe',
     },
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-safe',
+        defaultValue: null,
     },
 };
 
