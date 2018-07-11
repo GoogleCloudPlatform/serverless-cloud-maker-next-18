@@ -34,7 +34,7 @@ const transformApplyBlurLogos = require('./logo');
 const transformApplyLandmarks = require('./landmarks');
 
 module.exports = {
-	// basic functions
+    // basic functions
     copyImage,
     convertRasterFormat,
     // basic transformations

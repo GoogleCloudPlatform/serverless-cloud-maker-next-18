@@ -26,6 +26,8 @@ const helpers = require('../helpers');
 jest.mock('@google-cloud/vision');
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 
+const mockDetection = VisionApi.ImageAnnotatorClient.prototype.logoDetection;
+
 
 const file = {
     bucket: {name: 'foo'},
@@ -40,25 +42,33 @@ describe('when transformApplyBlurLogos is called', () => {
 
   it('should blur the logos', () => {
         decorator.mockReturnValue(spy);
-        VisionApi.ImageAnnotatorClient.prototype.logoDetection.mockClear();
-        VisionApi.ImageAnnotatorClient.prototype.logoDetection.mockReturnValue(Promise.resolve([{logoAnnotations: 'result'}]));
+        mockDetection.mockClear();
+        mockDetection.mockReturnValue(
+            Promise.resolve([{logoAnnotations: 'result'}])
+        );
         helpers.annotationsToPolygons.mockClear();
         helpers.annotationsToPolygons.mockReturnValue('polygons');
         const parameters = {};
         transformApplyBlurLogos(file, parameters).then(() => {
-            expect(helpers.annotationsToPolygons).toHaveBeenCalledWith('result');
-            expect(spy).toHaveBeenCalledWith(file, {polygons: 'polygons'});
+            expect(helpers.annotationsToPolygons)
+                .toHaveBeenCalledWith('result');
+            expect(spy)
+                .toHaveBeenCalledWith(file, {polygons: 'polygons'});
         });
   });
 });
 
 describe('when detectLogos is called', () => {
     it('should call the vision api', () => {
-        VisionApi.ImageAnnotatorClient.prototype.logoDetection.mockClear();
-        VisionApi.ImageAnnotatorClient.prototype.logoDetection.mockReturnValue(Promise.resolve([{logoAnnotations: 'result'}]));
+        mockDetection.mockClear();
+        mockDetection.mockReturnValue(
+            Promise.resolve([{logoAnnotations: 'result'}])
+        );
         transformApplyBlurLogos.detectLogos(file).then((result) => {
-            expect(VisionApi.ImageAnnotatorClient.prototype.logoDetection).toHaveBeenCalledWith(`gs://foo/bar.png`);
-            expect(result).toEqual('result');
+            expect(mockDetection)
+                .toHaveBeenCalledWith(`gs://foo/bar.png`);
+            expect(result)
+                .toEqual('result');
         });
     });
 });

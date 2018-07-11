@@ -23,11 +23,25 @@ describe('when convertRasterFormat is called', () => {
     it('should only accept .gif, .png, .jpg', () => {
         expect(convertRasterFormat.parameters).not.toBeUndefined();
         ['.gif', '.PNG', '.jpg'].map((extension) => {
-            expect(convertRasterFormat.parameters.extension.validate(extension)).toBe(true);
+            expect(
+                convertRasterFormat
+                    .parameters
+                    .extension
+                    .validate(extension)
+            )
+                .toBe(true);
         });
 
         ['.asdf', 'false', '.jpeg'].map((extension) =>
-            expect(convertRasterFormat.parameters.extension.validate(extension)).not.toBe(true));
+            expect(
+                convertRasterFormat
+                    .parameters
+                    .extension
+                    .validate(extension)
+            )
+                .not
+                .toBe(true)
+        );
     });
 
     it('should call resolveImageMagickConvert', () => {
@@ -38,7 +52,8 @@ describe('when convertRasterFormat is called', () => {
         convertRasterFormat.applyChangeFormat(inFile, outFile);
         // we mocked the return value to just be inFile permanently,
         // // so just use inFile
-        expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([inFile, inFile]);
+        expect(helpers.resolveImageMagickConvert)
+            .toHaveBeenCalledWith([inFile, inFile]);
     });
 });
 

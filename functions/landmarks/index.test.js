@@ -25,6 +25,11 @@ const file = {
     name: 'bar.png',
 };
 
+const mockDetection = VisionApi
+    .ImageAnnotatorClient
+    .prototype
+    .landmarkDetection;
+
 describe('when transformApplyLandmarks is called', () => {
   it('should have default parameters', () => {
     expect(transformApplyLandmarks.parameters).not.toBeUndefined();
@@ -33,16 +38,10 @@ describe('when transformApplyLandmarks is called', () => {
   it('should create a caption if a landmark is detected', () => {
     transformApplyCaption.mockClear();
     transformApplyCaption.mockReturnValue(Promise.resolve());
-        VisionApi
-            .ImageAnnotatorClient
-            .prototype
-            .landmarkDetection
+        mockDetection
             .mockClear();
 
-        VisionApi
-            .ImageAnnotatorClient
-            .prototype
-            .landmarkDetection
+        mockDetection
             .mockReturnValue(Promise.resolve(
                 [{
                     landmarkAnnotations: [
@@ -51,44 +50,40 @@ describe('when transformApplyLandmarks is called', () => {
                     ],
                 }]
             ));
-        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, {caption: 'bestAnnotation'}));
+        return transformApplyLandmarks(file, {})
+            .then(() =>
+                expect(transformApplyCaption)
+                    .toHaveBeenCalledWith(file, {caption: 'bestAnnotation'})
+            );
   });
 
   it('should not create a caption if none are detected', () => {
     transformApplyCaption.mockClear();
     transformApplyCaption.mockReturnValue(Promise.resolve());
-        VisionApi
-            .ImageAnnotatorClient
-            .prototype
-            .landmarkDetection
+        mockDetection
             .mockClear();
 
-        VisionApi
-            .ImageAnnotatorClient
-            .prototype
-            .landmarkDetection
+        mockDetection
             .mockReturnValue(Promise.resolve(
                 [{
                     landmarkAnnotations: [],
                 }]
             ));
-        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, {caption: 'No landmark found.'}));
+        return transformApplyLandmarks(file, {})
+            .then(() =>
+                expect(transformApplyCaption)
+                    .toHaveBeenCalledWith(file, {caption: 'No landmark found.'})
+            );
   });
 });
 
 
 describe('detectLandmark', () => {
     it('should call landmarkDetection with a GCS url', () => {
-        VisionApi
-            .ImageAnnotatorClient
-            .prototype
-            .landmarkDetection
+        mockDetection
             .mockClear();
 
-        VisionApi
-            .ImageAnnotatorClient
-            .prototype
-            .landmarkDetection
+        mockDetection
             .mockReturnValue(Promise.resolve(
                 [{
                     landmarkAnnotations: [
@@ -97,10 +92,12 @@ describe('detectLandmark', () => {
                     ],
                 }]
             ));
-        return transformApplyLandmarks.detectLandmark(file).then(({description}) => {
-            expect(VisionApi.ImageAnnotatorClient.prototype.landmarkDetection)
-                .toHaveBeenCalledWith('gs://foo/bar.png');
-            expect(description).toEqual('bestAnnotation');
-        });
+        return transformApplyLandmarks
+            .detectLandmark(file)
+            .then(({description}) => {
+                expect(mockDetection)
+                    .toHaveBeenCalledWith('gs://foo/bar.png');
+                expect(description).toEqual('bestAnnotation');
+            });
     });
 });

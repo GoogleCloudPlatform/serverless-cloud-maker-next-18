@@ -30,25 +30,42 @@ const fs = require('fs');
 const createImageMagickTransform = (transform) => {
     return (file, parameters) => {
         const outputBucketName = parameters.outputBucketName;
-        const outputFileName = helpers.createOutputFileName(file.name, parameters);
+        const outputFileName = helpers.createOutputFileName(
+            file.name,
+            parameters
+        );
         const tempLocalFileName = helpers.createTempFileName(file.name);
-        const tempLocalOutputFileName = helpers.createTempFileName(outputFileName);
+        const tempLocalOutputFileName = helpers.createTempFileName(
+            outputFileName
+        );
         let download = Promise.resolve();
         if (!fs.existsSync(tempLocalFileName)) {
             download = file.download({destination: tempLocalFileName});
         }
         return download
             // apply the desired transform
-            .then(() => transform(tempLocalFileName, tempLocalOutputFileName, parameters))
+            .then(() =>
+                transform(
+                    tempLocalFileName,
+                    tempLocalOutputFileName,
+                    parameters)
+            )
             // write errors in the transform to the console
             .catch(console.error)
             .then(() =>
                 // upload it to the desired output bucket
                 storage
                     .bucket(outputBucketName)
-                    .upload(tempLocalOutputFileName, {destination: outputFileName})
+                    .upload(
+                        tempLocalOutputFileName,
+                        {destination: outputFileName}
+                    )
                     // resolve with the file object created by that upload
-                    .then(() => storage.bucket(outputBucketName).file(outputFileName))
+                    .then(() =>
+                        storage
+                            .bucket(outputBucketName)
+                            .file(outputFileName)
+                    )
             );
     };
 };

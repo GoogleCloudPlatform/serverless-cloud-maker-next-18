@@ -30,7 +30,7 @@ const transformApplyBlurLogos = (file, parameters) => {
         .then(helpers.annotationsToPolygons)
         .then((polygons) =>
             transformApplyBlurPolygons(
-                file, 
+                file,
                 Object.assign(parameters, {polygons})
             )
         )

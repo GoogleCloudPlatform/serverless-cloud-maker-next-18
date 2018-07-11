@@ -27,13 +27,27 @@ describe('when transformApplyCaption is called', () => {
     it('should have default parameters', () => {
         expect(transformApplyCaption.parameters).not.toBeUndefined();
     });
-    [false, 'a', null, 0].map((caption) => it(`should accept ${caption}`, () => {
-        expect(transformApplyCaption.parameters.caption.validate(caption)).toBe(true);
+
+    [false, 'a', null, 0].map((caption) =>
+        it(`should accept ${caption}`, () => {
+            expect(
+                transformApplyCaption
+                    .parameters
+                    .caption
+                    .validate(caption)
+                )
+                .toBe(true);
     }));
 
     [true, {}, 1].map((caption) =>
         it(`should reject ${caption}`, () => {
-            expect(transformApplyCaption.parameters.caption.validate(caption)).toBe(false);
+            expect(
+                transformApplyCaption
+                    .parameters
+                    .caption
+                    .validate(caption)
+                )
+                .toBe(false);
         })
     );
 
@@ -71,27 +85,35 @@ describe('when generateCaption is called', () => {
 
 describe('when applyCaption is called', () => {
     it('should identify and then convert', () => {
-        helpers.resolveImageMagickIdentify.mockReturnValue(Promise.resolve({width: 1, height: 1}));
-        helpers.resolveImageMagickConvert.mockReturnValue(Promise.resolve());
-        return transformApplyCaption.applyCaption(inFile, outFile, {caption}).then(() => {
-            expect(helpers.resolveImageMagickIdentify).toHaveBeenCalledWith(inFile);
-            expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([
-                '-background',
-                     '#0008',
-                     '-fill',
-                     'white',
-                     '-gravity',
-                     'center',
-                     '-size',
-                     `${1}x30`,
-                     `caption: ${caption}`,
-                     inFile,
-                     '+swap',
-                     '-gravity',
-                     'south',
-                     '-composite',
-                     outFile,
-                ]);
-        });
+        helpers
+            .resolveImageMagickIdentify
+            .mockReturnValue(Promise.resolve({width: 1, height: 1}));
+        helpers
+            .resolveImageMagickConvert
+            .mockReturnValue(Promise.resolve());
+        return transformApplyCaption
+            .applyCaption(inFile, outFile, {caption})
+            .then(() => {
+                expect(helpers.resolveImageMagickIdentify)
+                    .toHaveBeenCalledWith(inFile);
+                expect(helpers.resolveImageMagickConvert)
+                    .toHaveBeenCalledWith([
+                        '-background',
+                             '#0008',
+                             '-fill',
+                             'white',
+                             '-gravity',
+                             'center',
+                             '-size',
+                             `${1}x30`,
+                             `caption: ${caption}`,
+                             inFile,
+                             '+swap',
+                             '-gravity',
+                             'south',
+                             '-composite',
+                             outFile,
+                        ]);
+            });
     });
 });

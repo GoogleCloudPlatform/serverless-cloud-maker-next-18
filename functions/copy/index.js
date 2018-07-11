@@ -20,7 +20,6 @@ it to a different bucket.
 
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
-const path = require('path');
 const helpers = require('../helpers');
 
 /*
@@ -31,7 +30,10 @@ const copyImage = (file, parameters) => {
     // extract the output bucket from the paramters
     const outputBucketName = parameters.outputBucketName;
     // use the output prefix to create eh name of the output file
-    const outputFileName = helpers.createOutputFileName(parameters.outputPrefix, file.name);
+    const outputFileName = helpers.createOutputFileName(
+        parameters.outputPrefix,
+        file.name
+    );
     //  construct the output file using the GCS client library
     const outputFile = storage.bucket(outputBucketName).file(outputFileName);
 

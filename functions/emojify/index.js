@@ -103,7 +103,10 @@ const transformApplyEmojify = (file, parameters) => {
         )
         // apply those composites over the image
         .then((composites) =>
-            transformApplyComposites(file, Object.assign(parameters, {composites}))
+            transformApplyComposites(
+                file,
+                Object.assign(parameters, {composites})
+            )
         );
 };
 

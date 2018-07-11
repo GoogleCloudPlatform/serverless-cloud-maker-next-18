@@ -97,8 +97,10 @@ transformApplyCaption.parameters = {
     },
 };
 
-transformApplyCaption.applyCaption = applyCaption;
-transformApplyCaption.transformApplyAnnotationAsCaption = transformApplyAnnotationAsCaption;
-transformApplyCaption.generateCaption = generateCaption;
+Object.assign(transformApplyCaption, {
+    applyCaption,
+    transformApplyAnnotationAsCaption,
+    generateCaption,
+});
 
 module.exports = transformApplyCaption;

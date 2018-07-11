@@ -87,13 +87,11 @@ const annotationsToPolygons = (annotations) =>
 
 const annotationToCoordinate = (annotation) => {
     const vertices = annotation.boundingPoly.vertices;
-    const xValues = vertices.map((vertex) => vertex.x);
-    const yValues = vertices.map((vertex) => vertex.y);
 
-    const xMax = Math.max(...xValues);
+    const xValues = vertices.map(({x}) => x);
+    const yValues = vertices.map(({y}) => y);
+
     const xMin = Math.min(...xValues);
-
-    const yMax = Math.max(...yValues);
     const yMin = Math.min(...yValues);
 
     return `+${xMin}+${yMin}`;
@@ -117,11 +115,19 @@ const annotationToDimensions = (annotation) => {
 };
 
 
-const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>{
+const createOutputFileName = (fileName, parameters = {}) =>{
+    const outputPrefix = parameters.outputPrefix || '';
+    const extension = parameters.extension || '';
     if (outputPrefix) {
-        return changeExtension(`${outputPrefix}-${path.parse(fileName).base}`, extension);
+        return changeExtension(
+            `${outputPrefix}-${path.parse(fileName).base}`,
+            extension
+        );
     } else {
-        return changeExtension(`${path.parse(fileName).base}.out`, extension);
+        return changeExtension(
+            `${path.parse(fileName).base}.out`,
+            extension
+        );
     }
 };
 
@@ -159,11 +165,18 @@ const resolveImageMagickCommand = (cmd, args) => {
     return new Promise((resolve, reject) =>
         cmd(args, (err, result) => {
             if (err) {
-                console.error('ImageMagick command failed for arguments', args, err);
+                console.error(
+                    'ImageMagick command failed for arguments',
+                    args,
+                    err
+                );
                 reject(err);
                 return;
             } else {
-                console.log('ImageMagick command was successful.', args);
+                console.log(
+                    'ImageMagick command was successful.',
+                    args
+                );
                 resolve(result);
             }
         })

@@ -39,9 +39,12 @@ describe('when createImageMagickTransform is used', () => {
 
         helpers.createOutputFileName.mockReturnValue(outputFileName);
         decoratedTransform(file, parameters);
-        expect(helpers.createOutputFileName).toHaveBeenCalledWith(name, {outputPrefix, outputBucketName});
-        expect(helpers.createTempFileName).toHaveBeenCalledWith(name);
-        expect(helpers.createTempFileName).toHaveBeenCalledWith(outputFileName);
+        expect(helpers.createOutputFileName)
+            .toHaveBeenCalledWith(name, {outputPrefix, outputBucketName});
+        expect(helpers.createTempFileName)
+            .toHaveBeenCalledWith(name);
+        expect(helpers.createTempFileName)
+            .toHaveBeenCalledWith(outputFileName);
     });
 
     it('should download the file if it not present in memory', () => {
@@ -60,10 +63,18 @@ describe('when createImageMagickTransform is used', () => {
         expect(file.download).not.toHaveBeenCalled();
     });
 
-    it('should pass the inFile, outFile, and parameters to the transform', () => {
+    it('should pass the inFile, outFile, and parameters', () => {
         transform.mockClear();
         helpers.createTempFileName.mockReturnValue(outputFileName);
         const decoratedTransform = decorator(transform);
-        decoratedTransform(file, parameters).then(() => expect(transform).toHaveBeenCalledWith(outputFileName, outputFileName, parameters));
+        decoratedTransform(file, parameters)
+            .then(() =>
+                expect(transform)
+                    .toHaveBeenCalledWith(
+                        outputFileName,
+                        outputFileName,
+                        parameters
+                    )
+            );
     });
 });

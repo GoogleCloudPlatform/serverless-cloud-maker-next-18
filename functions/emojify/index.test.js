@@ -30,7 +30,8 @@ decorator.mockReturnValue(spy);
 
 
 const mockResponse = [{faceAnnotations: []}];
-VisionAPI.ImageAnnotatorClient.prototype.faceDetection.mockReturnValue(Promise.resolve(mockResponse));
+const mockDetection = VisionAPI.ImageAnnotatorClient.prototype.faceDetection;
+mockDetection.mockReturnValue(Promise.resolve(mockResponse));
 
 const transformApplyEmojify = require('./index.js');
 
@@ -47,16 +48,20 @@ describe('when transformApplyEmojify is called', () => {
         expect(transformApplyEmojify.parameters).not.toBeUndefined();
     });
 
-    it(`should download ${Object.keys(transformApplyEmojify.emojis).length} emojis`, () => {
+    const emojiCount = Object
+        .keys(transformApplyEmojify.emojis)
+        .length;
+
+    it(`should download ${emojiCount} emojis`, () => {
         return transformApplyEmojify(file, {}).then(() =>
             expect(StorageAPI.prototype.download)
-            .toHaveBeenCalledTimes(Object.keys(transformApplyEmojify.emojis).length)
+                .toHaveBeenCalledTimes(emojiCount)
             );
     });
 
     it(`should call faceDetection with the file`, () => {
         return transformApplyEmojify(file, {}).then(() =>
-            expect(VisionAPI.ImageAnnotatorClient.prototype.faceDetection)
+            expect(mockDetection)
             .toHaveBeenCalledWith('gs://foo/bar.png')
         );
     });
@@ -72,7 +77,7 @@ describe('when transformApplyEmojify is called', () => {
         const response = [{faceAnnotations: [{joyLikelihood: 'VERY_LIKELY'}]}];
         helpers.annotationToDimensions.mockReturnValue('baz');
         helpers.annotationToCoordinate.mockReturnValue('quxx');
-        VisionAPI.ImageAnnotatorClient.prototype.faceDetection.mockReturnValue(Promise.resolve(response));
+        mockDetection.mockReturnValue(Promise.resolve(response));
         spy.mockClear();
         return transformApplyEmojify(file, {}).then(() =>
             expect(spy).toHaveBeenCalledWith(file, {composites: [

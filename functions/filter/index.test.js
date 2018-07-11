@@ -21,14 +21,31 @@ const inFile = 'inFile';
 const outFile = 'outFile';
 
 describe('when transformApplyFilter is called', () => {
-  it('should accept, sepia, grayscale, or colorize parameters', () => {
-    expect(transformApplyFilter.parameters).not.toBeUndefined();
+    it('should accept, sepia, grayscale, or colorize parameters', () => {
+        expect(transformApplyFilter.parameters).not.toBeUndefined();
+        ['sepia', 'grayscale', 'colorize'].map((filter) =>
+            expect(
+                transformApplyFilter
+                    .parameters
+                    .filterName
+                    .validate(filter)
+            )
+            .toBe(true)
+        );
+    });
 
-    ['sepia', 'grayscale', 'colorize'].map((filter) => expect(transformApplyFilter.parameters.filterName.validate(filter)).toBe(true));
-  });
-
-  it('should call resolveImageMagickConvert', () => {
-    transformApplyFilter.applyFilter(inFile, outFile, {filterName: 'grayscale'});
-    expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([inFile, '-colorspace', 'Gray', outFile]);
-  });
+    it('should call resolveImageMagickConvert', () => {
+        transformApplyFilter.applyFilter(
+            inFile,
+            outFile,
+            {filterName: 'grayscale'}
+        );
+        expect(helpers.resolveImageMagickConvert)
+            .toHaveBeenCalledWith([
+                inFile,
+                '-colorspace',
+                'Gray',
+                outFile,
+            ]);
+    });
 });

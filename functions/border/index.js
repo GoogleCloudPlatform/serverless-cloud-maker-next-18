@@ -43,7 +43,8 @@ transformApplyBorder.parameters = {
     },
     color: {
         defaultValue: 'blue',
-        validate: (v) => ['blue', 'green', 'yellow', 'red'].includes(v.toLowerCase()),
+        validate: (v) =>
+            ['blue', 'green', 'yellow', 'red'].includes(v.toLowerCase()),
     },
     width: {
         defaultValue: '1',

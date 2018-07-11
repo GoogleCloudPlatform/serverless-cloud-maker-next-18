@@ -45,7 +45,8 @@ describe('transformApplyRotate', () => {
   it('should call resolveImageMagickConvert with the degrees', () => {
     helpers.resolveImageMagickConvert.mockClear();
     transformApplyRotate.applyRotate(inFile, outFile, {degrees});
-    expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([inFile, '-rotate', degrees, outFile]);
+    expect(helpers.resolveImageMagickConvert)
+      .toHaveBeenCalledWith([inFile, '-rotate', degrees, outFile]);
   });
 });
 

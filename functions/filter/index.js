@@ -44,7 +44,8 @@ transformApplyFilter.parameters = {
         },
         filterName: {
             defaultValue: 'sepia',
-            validate: (v) => ['sepia', 'colorize', 'grayscale'].includes(v.toLowerCase()),
+            validate: (v) =>
+                ['sepia', 'colorize', 'grayscale'].includes(v.toLowerCase()),
         },
     };
 

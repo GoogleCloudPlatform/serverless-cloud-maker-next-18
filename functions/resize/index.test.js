@@ -21,7 +21,11 @@ const outFile = 'outFile';
 
 describe('when transformApplyResize is called', () => {
     it('should call resolveImageMagickConvert', () => {
-        transformApplyResize.applyResize(inFile, outFile, {width: 1, height: 1});
+        transformApplyResize.applyResize(
+            inFile,
+            outFile,
+            {width: 1, height: 1}
+        );
         expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([
             inFile,
             '-resize',
@@ -34,11 +38,17 @@ describe('when transformApplyResize is called', () => {
         expect(transformApplyResize.parameters).not.toBeUndefined();
     });
     it('should reject non-numeric inputs', () => {
-        expect(transformApplyResize.parameters.width.validate('1234')).toBe(true);
-        expect(transformApplyResize.parameters.height.validate('1234')).toBe(true);
-        expect(transformApplyResize.parameters.width.validate(1234)).toBe(true);
-        expect(transformApplyResize.parameters.height.validate(4321)).toBe(true);
-        expect(transformApplyResize.parameters.width.validate('asdf')).toBe(false);
-        expect(transformApplyResize.parameters.width.validate('fdsa')).toBe(false);
+        expect(transformApplyResize.parameters.width.validate('1234'))
+            .toBe(true);
+        expect(transformApplyResize.parameters.height.validate('1234'))
+            .toBe(true);
+        expect(transformApplyResize.parameters.width.validate(1234))
+            .toBe(true);
+        expect(transformApplyResize.parameters.height.validate(4321))
+            .toBe(true);
+        expect(transformApplyResize.parameters.width.validate('asdf'))
+            .toBe(false);
+        expect(transformApplyResize.parameters.width.validate('fdsa'))
+            .toBe(false);
     });
 });
