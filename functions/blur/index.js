@@ -27,9 +27,9 @@ const applyBlur = (inFile, outFile, parameters) => {
     ]);
 };
 
-const transformApplyBlur = decorator(applyBlur);
+const blurTransform = decorator(applyBlur);
 
-transformApplyBlur.parameters = {
+blurTransform.parameters = {
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-blurred',
     },
@@ -38,6 +38,6 @@ transformApplyBlur.parameters = {
     },
 };
 
-transformApplyBlur.applyBlur = applyBlur;
+blurTransform.applyBlur = applyBlur;
 
-module.exports = transformApplyBlur;
+module.exports = blurTransform;

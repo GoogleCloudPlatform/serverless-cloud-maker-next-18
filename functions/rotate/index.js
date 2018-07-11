@@ -26,9 +26,9 @@ const applyRotate = (inFile, outFile, {degrees}) => {
     ]);
 };
 
-const transformApplyRotate = decorator(applyRotate);
+const rotateTransform = decorator(applyRotate);
 
-transformApplyRotate.parameters = {
+rotateTransform.parameters = {
     outputPrefix: {
         defaultValue: 'rotated',
     },
@@ -41,6 +41,6 @@ transformApplyRotate.parameters = {
     },
 };
 
-transformApplyRotate.applyRotate = applyRotate;
+rotateTransform.applyRotate = applyRotate;
 
-module.exports = transformApplyRotate;
+module.exports = rotateTransform;

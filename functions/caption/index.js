@@ -63,7 +63,7 @@ const generateCaption = (file) => {
 };
 
 
-const transformApplyCaption = (file, parameters) => {
+const captionTransform = (file, parameters) => {
     if (parameters.caption) {
         return transformApplyAnnotationAsCaption(
             file,
@@ -80,7 +80,7 @@ const transformApplyCaption = (file, parameters) => {
         );
 };
 
-transformApplyCaption.parameters = {
+captionTransform.parameters = {
     outputPrefix: {
         defaultValue: 'caption',
     },
@@ -98,10 +98,10 @@ transformApplyCaption.parameters = {
     },
 };
 
-Object.assign(transformApplyCaption, {
+Object.assign(captionTransform, {
     applyCaption,
     transformApplyAnnotationAsCaption,
     generateCaption,
 });
 
-module.exports = transformApplyCaption;
+module.exports = captionTransform;

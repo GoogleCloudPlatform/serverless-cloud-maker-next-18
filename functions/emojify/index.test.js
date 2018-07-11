@@ -33,7 +33,7 @@ const mockResponse = [{faceAnnotations: []}];
 const mockDetection = VisionAPI.ImageAnnotatorClient.prototype.faceDetection;
 mockDetection.mockReturnValue(Promise.resolve(mockResponse));
 
-const transformApplyEmojify = require('./index.js');
+const emojiTransform = require('./index.js');
 
 jest.mock('../helpers.js');
 const helpers = require('../helpers');
@@ -43,24 +43,24 @@ const file = {
     name: 'bar.png',
 };
 
-describe('when transformApplyEmojify is called', () => {
+describe('when emojiTransform is called', () => {
     it('should have default parameters', () => {
-        expect(transformApplyEmojify.parameters).not.toBeUndefined();
+        expect(emojiTransform.parameters).not.toBeUndefined();
     });
 
     const emojiCount = Object
-        .keys(transformApplyEmojify.emojis)
+        .keys(emojiTransform.emojis)
         .length;
 
     it(`should download ${emojiCount} emojis`, () => {
-        return transformApplyEmojify(file, {}).then(() =>
+        return emojiTransform(file, {}).then(() =>
             expect(StorageAPI.prototype.download)
                 .toHaveBeenCalledTimes(emojiCount)
             );
     });
 
     it(`should call faceDetection with the file`, () => {
-        return transformApplyEmojify(file, {}).then(() =>
+        return emojiTransform(file, {}).then(() =>
             expect(mockDetection)
             .toHaveBeenCalledWith('gs://foo/bar.png')
         );
@@ -68,7 +68,7 @@ describe('when transformApplyEmojify is called', () => {
 
     it('should call transformApplyComposites', () => {
         spy.mockClear();
-        return transformApplyEmojify(file, {}).then(() =>
+        return emojiTransform(file, {}).then(() =>
             expect(spy).toHaveBeenCalledWith(file, {composites: []})
             );
     });
@@ -79,7 +79,7 @@ describe('when transformApplyEmojify is called', () => {
         helpers.annotationToCoordinate.mockReturnValue('quxx');
         mockDetection.mockReturnValue(Promise.resolve(response));
         spy.mockClear();
-        return transformApplyEmojify(file, {}).then(() =>
+        return emojiTransform(file, {}).then(() =>
             expect(spy).toHaveBeenCalledWith(file, {composites: [
                 '(',
                 '/tmp/joy.png',
