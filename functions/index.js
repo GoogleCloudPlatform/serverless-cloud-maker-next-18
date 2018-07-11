@@ -14,17 +14,27 @@
 
 // assemble all of the functions built in this directory into a single export
 
-const copyImage = require('./copy')
-const convertRasterFormat = require('./convertRasterFormat')
-const transformApplyResize = require('./resize')
-const transformApplyRotate = require('./rotate')
-const transformApplyReflect = require('./reflect')
-const transformApplyFilter = require('./filter')
-const transformApplyBorder = require('./border')
-const transformApplyBlur = require('./blur')
+// simple functions
+const copyImage = require('./copy');
+const convertRasterFormat = require('./convertRasterFormat');
+// basic transformations
+const transformApplyResize = require('./resize');
+const transformApplyRotate = require('./rotate');
+const transformApplyReflect = require('./reflect');
+const transformApplyFilter = require('./filter');
+const transformApplyBorder = require('./border');
+const transformApplyBlur = require('./blur');
+// vision transformations
+const transformApplyCaption = require('./caption');
+const transformApplyBlurFaces = require('./faces');
+const transformApplyCropShape = require('./shape');
+const transformApplySafeSearch = require('./safeSearch');
+const transformApplyEmojify = require('./emojify');
+const transformApplyBlurLogos = require('./logo');
+const transformApplyLandmarks = require('./landmarks');
 
 module.exports = {
-	// basic functions
+    // basic functions
     copyImage,
     convertRasterFormat,
     // basic transformations
@@ -34,4 +44,12 @@ module.exports = {
     transformApplyFilter,
     transformApplyBorder,
     transformApplyBlur,
-}
+    // vision transformations
+    transformApplyCaption,
+    transformApplyLandmarks,
+    transformApplyBlurFaces,
+    transformApplyBlurLogos,
+    transformApplyCropShape,
+    transformApplySafeSearch,
+    transformApplyEmojify,
+};

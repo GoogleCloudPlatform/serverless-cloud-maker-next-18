@@ -11,18 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const helpers = require("../helpers")
-const decorator = require("../decorator")
+const helpers = require('../helpers');
+const decorator = require('../decorator');
 
 const applyReflect = (inFile, outFile, {axis}) => {
     return helpers.resolveImageMagickConvert([
         inFile,
-        axis == "x" ? "-flip" : "-flop",
+        axis == 'x' ? '-flip' : '-flop',
         outFile,
-    ])
-}
+    ]);
+};
 
-const transformApplyReflect = decorator(applyReflect)
+const transformApplyReflect = decorator(applyReflect);
 
 transformApplyReflect.parameters = {
         outputPrefix: {
@@ -32,10 +32,10 @@ transformApplyReflect.parameters = {
             defaultValue: 'cloud-maker-outputs-reflected',
         },
         axis: {
-            defaultValue: "y",
-            validate: (a) => ["x", "y"].includes(a),
+            defaultValue: 'y',
+            validate: (a) => ['x', 'y'].includes(a),
         },
-    }
-transformApplyReflect.applyReflect = applyReflect
+    };
+transformApplyReflect.applyReflect = applyReflect;
 
-module.exports = transformApplyReflect
+module.exports = transformApplyReflect;

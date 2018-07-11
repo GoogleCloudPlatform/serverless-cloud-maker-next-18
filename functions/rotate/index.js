@@ -17,7 +17,6 @@
 const helpers = require('../helpers');
 const decorator = require('../decorator');
 
-// use the signature expected by the decorator
 const applyRotate = (inFile, outFile, {degrees}) => {
     return helpers.resolveImageMagickConvert([
         inFile,
@@ -25,12 +24,10 @@ const applyRotate = (inFile, outFile, {degrees}) => {
         degrees,
         outFile,
     ]);
-}
+};
 
-// apply the decorator to handle GCS buckets
 const transformApplyRotate = decorator(applyRotate);
 
-// set default parameters and validation functions
 transformApplyRotate.parameters = {
     outputPrefix: {
         defaultValue: 'rotated',
@@ -44,7 +41,6 @@ transformApplyRotate.parameters = {
     },
 };
 
-// attach the original functio for testing purposes
 transformApplyRotate.applyRotate = applyRotate;
 
 module.exports = transformApplyRotate;

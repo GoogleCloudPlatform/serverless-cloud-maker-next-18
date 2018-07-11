@@ -14,242 +14,230 @@
 
 
 /*
-This file contains the main handler function that
-can be deployed as a service for the backend of the
-showcase demo.
+ * This file contains the main handler function that
+ * can be deployed as a service for the backend of the
+ * showcase demo.
  */
-
-
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
+const functions = require('./functions');
 
-// imports all of the functions declared in the functions
-// directory that can be called by the handler
-
-const functions = require('./functions')
-
-const validateData = (data) => {
 /*
-Confirms that the "data" parameter of a request that specifies the input
-file contains the required information. Should be of the form
-{
-    gcsSourceUri,
-    name,
-    bucket
-}
+ * Confirms that the "data" parameter of a request that specifies the input
+ * file contains the required information. Should be of the form
+ * {
+ *       gcsSourceUri,
+ *       name,
+ *      bucket
+ *  }
  */
+const validateData = (data) => {
     if (data.constructor == Array) {
-        throw 'Data should be a single object, not an array'
+        throw 'Data should be a single object, not an array';
     }
     if (!data.gcsSourceUri) {
-        throw 'No gcsSourceUri specified'
+        throw 'No gcsSourceUri specified';
     }
 
     if (!data.bucket) {
-        throw 'No bucket specified'
+        throw 'No bucket specified';
     }
 
     if (!data.name) {
-        throw 'No name specified'
+        throw 'No name specified';
     }
 
-    return true
-}
+    return true;
+};
 
 /*
-Conforms that the "parameters" passed to a function as part of a given request
-are structured correctly and valid according to the validation fucntion
-provided
+ * Confirms that the "parameters" passed to a function
+ * are structured correctly and valid
  */
-
 const validateParameters = (name, parameters={}) => {
     // grab the default values from the master dictionary
-    const defaults = functions[name].parameters
+    const defaults = functions[name].parameters;
     // generate the set of acceptable parameters
-    const defaultKeys = Object.keys(defaults)
+    const defaultKeys = Object.keys(defaults);
     // generate the set of keys specified by the user
-    const inputKeys = Object.keys(parameters)
+    const inputKeys = Object.keys(parameters);
     // by default, accept all values
-    const defaultValidator = () => true
+    const defaultValidator = () => true;
 
     inputKeys.forEach(
         (key) => {
             if (defaultKeys.includes(key)) {
-                const value = parameters[key]
-                const validate = defaults[key].validate || defaultValidator
+                const value = parameters[key];
+                const validate = defaults[key].validate || defaultValidator;
                 if (validate(value)) {
-                    // returning without throwing will cause this
-                    // value to be set in the result.
-                    return
+                    return;
                 } else {
-                    throw `Parameter ${key} with value ${value} was rejected by ${name}`
+                    throw `Parameter ${key} with value ${value} was rejected by ${name}`;
                 }
             } else {
-                throw `Parameter ${key} not expected for function ${name}. Expected one of ${defaultKeys}`
+                throw `Parameter ${key} not expected for function ${name}. Expected one of ${defaultKeys}`;
             }
         }
-    )
+    );
 
-    return true
-}
+    return true;
+};
 
- /*
-Confirms that each entry of the "function" parameter of a request
-specifies the name of a function that exists in this file
+/*
+ * Confirms that each entry of the "function" parameter of a request
+ * specifies the name of a function that exists in this file
  */
 const validateFunction = (func) => {
     if (!func.name) {
-        throw 'No function name specified'
+        throw 'No function name specified';
     }
 
     if (!functions[func.name]) {
-        throw `No function exists with name ${func.name}`
+        throw `No function exists with name ${func.name}`;
     }
 
-    validateParameters(func.name, func.parameters)
+    validateParameters(func.name, func.parameters);
 
-    return true
-}
+    return true;
+};
 
 /*
-Confirms that the request is correctly structured
+ * Confirms that the request is correctly structured
  */
+
 const validateRequest = (request) => {
     if (!request.body) {
-        throw 'Invalid request: Missing body parameter.'
+        throw 'Invalid request: Missing body parameter.';
     }
 
     if (!request.body.data) {
-        throw 'Invalid request: Missing input data.'
+        throw 'Invalid request: Missing input data.';
     }
 
     if (!request.body.functions) {
-        throw 'Invalid request: Missing functions list.'
+        throw 'Invalid request: Missing functions list.';
     }
 
-    validateData(request.body.data)
+    validateData(request.body.data);
 
-    request.body.functions.map(validateFunction)
+    request.body.functions.map(validateFunction);
 
-    return true
-}
+    return true;
+};
 
 
 const assignParameters = (name, parameters = {}) => {
     // initialize an empty result dictionary
-    const result = {}
+    const result = {};
 
     // grab the defaul values from the master dictionary
-    const defaults = functions[name].parameters
+    const defaults = functions[name].parameters;
 
     // generate the set of acceptable parameters
-    const defaultKeys = Object.keys(defaults)
+    const defaultKeys = Object.keys(defaults);
 
     // generate the set of keys specified by the user
-    const inputKeys = Object.keys(parameters)
+    const inputKeys = Object.keys(parameters);
 
     // for each default key
     defaultKeys.forEach(
         (key) => {
             // set it as the default valud in the result dictionary
-            result[key] = defaults[key].defaultValue
+            result[key] = defaults[key].defaultValue;
         }
-    )
+    );
 
     // for each of the keys that were
     inputKeys.forEach(
         (key) => {
             // because we have already validated in a previous
             // step, we can assume that the input is correct
-            result[key] = parameters[key]
+            result[key] = parameters[key];
         }
-    )
+    );
 
-    return result
-}
+    return result;
+};
 
 const handler = (request, response) => {
     // first, make sure that
     // the request is valid
     try {
         // validate request data
-        validateRequest(request)
+        validateRequest(request);
     } catch (err) {
         // if the request is bad
-        console.error(err)
+        console.error(err);
         // send the error as the response
-        response.send(err)
+        response.send(err);
         // stop execution of the function
-        return
+        return;
     }
 
-    const outputBucketName = request.body.outputBucketName || 'cloud-maker-outputs-final'
+    const outputBucketName = request.body.outputBucketName || 'cloud-maker-outputs-final';
 
-    // convert the json in the
-    // request to the objects
-    // produced by the client library
-    // (so that subroutines can download it)
-    const data = request.body.data
-    const file = storage.bucket(data.bucket).file(data.name)
+    /*
+     * Convert the json in the request to the objects
+     * produced by the client library
+     * (so that subroutines can download it)
+     */
+    const data = request.body.data;
+    const file = storage.bucket(data.bucket).file(data.name);
 
 
-    // reduce the list of functions to a promise that
-    // resolves when they have all been completed
+    // Resolve when all functios have been completed
     return request
         .body
         .functions
         .reduce(
             // at each step of the reduction
             (accPromise, nextFunction) =>
-                // Each function needs the ability
-                // to resolve asynchronously, so we
-                // assume that result of the previous
-                // call was a promise.
+                /*
+                 * Each function needs the ability
+                 * to resolve asynchronously, so we
+                 * assume that result of the previous
+                 * call was a promise.
+                 */
                 accPromise
                     .then(
                         // the promise will resolve with the accumulator
                         (acc) =>
-                            // assuming that the named function exists, extract it from the
-                            // functions dictionary
-                            // and call it on the accumulator with the passed parameters
-                            functions[nextFunction.name](acc, assignParameters(nextFunction.name, nextFunction.parameters))
+                            // call the next functionn on the current image
+                            functions[nextFunction.name](
+                                acc,
+                                assignParameters(
+                                    nextFunction.name,
+                                    nextFunction.parameters
+                                )
+                            )
                     )
                     .catch(console.error)
-            // to guarantee our assumption is correct,
-            // conver the initial value to a promise resolution
+            /*
+             * To guarantee our assumption is correct,
+             * convert the initial value to a promise resolution.
+             */
             , Promise.resolve(file)
         )
-        // then copy the final result to the output bucket
+        // Copy the final result to the output bucket
         .then(
             (resultFile) =>
                 resultFile.copy(
-                    // keep the name of the file
                     storage
-                        // but move it to the final bucket
                         .bucket(outputBucketName)
                         .file(resultFile.name)
                 )
         )
-        // and then send the final file to terminate the function
         .then(([outputFile]) => response.send(outputFile))
-
-        // catch any errors in this process
-        .catch((err) => response.send(err))
-}
+        .catch((err) => response.send(err));
+};
 
 
 module.exports = {
-    // export the handler so that it
-    // can be deployed to gcp
     handler,
-
-    // exports the functions for testing
     functions,
-
-    // export the validators for testing
     validateFunction,
     validateRequest,
     validateData,
     validateParameters,
     assignParameters,
-}
+};
