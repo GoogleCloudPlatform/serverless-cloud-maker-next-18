@@ -21,8 +21,8 @@ const vision = new VisionApi.ImageAnnotatorClient();
 // add a caption to the image by identifying its dimensions and then
 // adding a section at the bottom with a black background
 // and white centered text on top of it.
-const applyCaption = (inFile, outFile, {caption}) =>
-    helpers
+const applyCaption = (inFile, outFile, {caption}) => {
+    return helpers
         .resolveImageMagickIdentify(inFile)
         .then(({format, width, height}) =>
             helpers
@@ -44,12 +44,13 @@ const applyCaption = (inFile, outFile, {caption}) =>
                      outFile,
                     ])
             )
+}
 
 const transformApplyAnnotationAsCaption = decorator(applyCaption)
 
 // using the vision api
-const generateCaption = (file) =>
-    vision
+const generateCaption = (file) => {
+    return vision
         .labelDetection(`gs://${file.bucket.name}/${file.name}`)
         .then(([{labelAnnotations}]) =>{
             // find the maximum score among the annotations
@@ -58,20 +59,25 @@ const generateCaption = (file) =>
             return labelAnnotations.find((l) => l.score === maxScore)
         })
         .then(({description}) => description)
+}
 
 
-const transformApplyCaption = (file, parameters) =>
-    (
-        // if a caption was set
-        parameters.caption
-        // use that caption
-        ? Promise.resolve(parameters.caption)
-        // otherwise, use the vision api to generate one
-        : generateCaption(file)
-    )
-    .catch(console.error)
-    .then((caption) => transformApplyAnnotationAsCaption(file, Object.assign(parameters, {caption})))
-
+const transformApplyCaption = (file, parameters) => {
+    if (parameters.caption){
+        return transformApplyAnnotationAsCaption(
+            file, 
+            parameters
+        )
+    }
+    return generateCaption(file)
+        .then(
+            (caption) => 
+                transformApplyAnnotationAsCaption(
+                    file, 
+                    Object.assign(parameters, {caption})
+                )
+        )
+}
 
 transformApplyCaption.parameters = {
     outputPrefix: {

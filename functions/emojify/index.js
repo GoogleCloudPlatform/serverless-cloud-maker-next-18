@@ -36,35 +36,37 @@ const emojis = {
 }
 
 // downloads all apple emojis
-const downloadEmojis = () =>
-    Promise.all(
-        Object.keys(emojis)
+const downloadEmojis = ({ emojiSet }) => {
+    return Promise.all(
+        Object
+            .keys(emojis)
             .map((key) =>
                 storage
-                    .bucket('emojis-apple')
+                    .bucket(emojiSet)
                     .file(emojis[key])
-                    .download({destination: `/tmp/${emojis[key]}`}))
+                    .download({destination: `/tmp/${emojis[key]}`})
+            )
     )
+}
 
 // get the emoji that best matches this face's emotion.
 // If expressionless, return expressionless
-const determineEmoji = (face) =>
-    // index the result into the emojis object to return the
-    // file name
-    emojis[
-        // get the best emoji for this face
-        Object.keys(emojis).reduce(
-            (emotion, nextEmotion) =>
-                ['VERY_LIKELY', 'LIKELY', 'POSSIBLE'].includes(face[nextEmotion])
-                ? nextEmotion
-                : emotion
-            // default to expressionless
-            , 'expressionless'
+const determineEmoji = (face) => {
+    
+    let bestEmoji = Object
+        .keys(emojis)
+        .find(emotion =>
+            ['VERY_LIKELY', 'LIKELY', 'POSSIBLE'].includes(face[emotion])
         )
-    ]
 
-const faceAnnotationToEmojiComposite = (faceAnnotation) => (
-    [
+    if (!bestEmoji) {
+        return emojis.expressionless
+    }
+
+    return emojis[bestEmoji]
+}
+const faceAnnotationToEmojiComposite = (faceAnnotation) => {
+    return [
         '\(',
         `/tmp/${determineEmoji(faceAnnotation)}`,
         '-resize',
@@ -74,31 +76,25 @@ const faceAnnotationToEmojiComposite = (faceAnnotation) => (
         helpers.annotationToCoordinate(faceAnnotation),
         '-composite',
     ]
-)
+}
 
-const applyComposites = (inFile, outFile, {composites}) =>
-    helpers.resolveImageMagickConvert([
+const applyComposites = (inFile, outFile, {composites}) => {
+    return helpers.resolveImageMagickConvert([
         inFile,
         ...composites,
         outFile,
     ])
+}
 
 const transformApplyComposites = decorator(applyComposites)
 
-const transformApplyEmojify = (file, parameters) =>
-    /*
-    Use the Vision API to annotate the
-    faces in an image and then convet them
-    to emojis based on the emotion they have
-     */
-
-    Promise.all([
-        // send a remote url to the Vision API
-        vision.faceDetection(`gs://${file.bucket.name}/${file.name}`),
-        // simultaneously download all of the necessary emojis
-        downloadEmojis(parameters),
-    ])
-
+const transformApplyEmojify = (file, parameters) => {
+    return Promise.all([
+            // send a remote url to the Vision API
+            vision.faceDetection(`gs://${file.bucket.name}/${file.name}`),
+            // simultaneously download all of the necessary emojis
+            downloadEmojis(parameters),
+        ])
         // convert the result to its most relevant emoji
         .then(([[{faceAnnotations}]]) =>
             faceAnnotations
@@ -107,7 +103,10 @@ const transformApplyEmojify = (file, parameters) =>
                 .reduce((acc, nextComposite) => acc.concat(nextComposite), [])
         )
         // apply those composites over the image
-        .then((composites) => transformApplyComposites(file, Object.assign(parameters, {composites})))
+        .then((composites) => 
+            transformApplyComposites(file, Object.assign(parameters, {composites}))
+        )
+}
 
 transformApplyEmojify.parameters = {
         outputPrefix: {
