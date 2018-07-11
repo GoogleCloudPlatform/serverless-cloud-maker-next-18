@@ -228,7 +228,7 @@ const handler = (request, response) => {
                     .upload(
                         functions.helpers.createTempFileName(resultFile.name),
                         {destination: resultFile.name}
-                    )
+                    );
                 // return resultFile.copy(
                 //     storage
                 //         .bucket(outputBucketName)

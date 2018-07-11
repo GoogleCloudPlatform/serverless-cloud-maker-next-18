@@ -52,10 +52,9 @@ const createImageMagickTransform = (transform) => {
             // write errors in the transform to the console
             .catch(console.error)
             .then(() => {
-                // construct a result file defaulting to the global output bucket
                 const resultFile = storage
                     .bucket(process.env.OUTPUT_BUCKET)
-                    .file(outputFileName)
+                    .file(outputFileName);
 
                 if (parameters.outputBucketName) {
                     // upload to the bucket specific to this function
@@ -65,10 +64,9 @@ const createImageMagickTransform = (transform) => {
                             tempLocalOutputFileName,
                             {destination: outputFileName}
                         )
-                        .then(() => resultFile)
-
+                        .then(() => resultFile);
                 }
-                return resultFile
+                return resultFile;
             }
             );
     };
