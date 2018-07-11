@@ -16,17 +16,23 @@ const vision = new VisionApi.ImageAnnotatorClient();
 
 const transformApplyBlur = require('../blur');
 
-// Given the safe search annotation returned by the cloud vision api,
-// determine if it is an unsafe image by comparing against the "adult"
-// and "violence"features
+/*
+ *Given the safe search annotation returned by the cloud vision api,
+ * determine if it is an unsafe image by comparing against the "adult"
+ * and "violence"features
+ */
 const isUnsafe = ([{safeSearchAnnotation}]) =>
     safeSearchAnnotation.adult === 'VERY_LIKELY' ||
     safeSearchAnnotation.violence === 'VERY_LIKELY';
 
 
-const transformApplySafeSearch = (file, parameters) =>
-    // if it's unsafe according to the Vision API apply a blur effect
-    vision
+/*
+ * Query the SafeSearch endpoint of the Vision API
+ * and if it returns unsafe, apply a blur effect
+ * to the image.
+ */
+const transformApplySafeSearch = (file, parameters) => {
+    return vision
         .safeSearchDetection(`gs://${file.bucket.name}/${file.name}`)
         .catch(console.err)
         .then((result) =>
@@ -34,6 +40,7 @@ const transformApplySafeSearch = (file, parameters) =>
             ? transformApplyBlur(file, parameters)
             : file
         );
+};
 
 transformApplySafeSearch.parameters = {
     outputPrefix: {

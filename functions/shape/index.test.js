@@ -13,7 +13,7 @@
 // limitations under the License.
 
 
-const transformApplyCropShape = require('./index')
+const transformApplyCropShape = require('./index');
 
 describe('transformApplyCropShape', () => {
     it('should have default parameters', () => {
@@ -22,17 +22,21 @@ describe('transformApplyCropShape', () => {
 
     ['suggested', 'square', 'circle'].map((shape) =>
         it(`should accept ${shape}`, () => {
-            expect(transformApplyCropShape.parameters.shape.validate(shape)).toBe(true)
+            expect(transformApplyCropShape.parameters.shape.validate(shape))
+                .toBe(true);
         })
     );
 
     [false, 0, 'rectangle', null].map((shape) =>
         it(`should reject ${shape}`, () => {
-            expect(transformApplyCropShape.parameters.shape.validate(shape)).toBe(false)
+            expect(transformApplyCropShape.parameters.shape.validate(shape))
+                .toBe(false);
         })
     );
     it('should only accept .png as the file extension', () => {
-        expect(transformApplyCropShape.parameters.extension.validate('.png')).toBe(true)
-        expect(transformApplyCropShape.parameters.extension.validate('.jpg')).toBe(false)
+        expect(transformApplyCropShape.parameters.extension.validate('.png'))
+            .toBe(true);
+        expect(transformApplyCropShape.parameters.extension.validate('.jpg'))
+            .toBe(false);
     });
 });

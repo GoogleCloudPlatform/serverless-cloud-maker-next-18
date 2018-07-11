@@ -36,7 +36,7 @@ if (!process.env.OUTPUT_BUCKET) {
 console.log('Output bucket set to', process.env.OUTPUT_BUCKET);
 
 
-buckets.map(
+buckets.forEach(
     (bucket) =>
         storage
             .bucket(bucket)
@@ -50,4 +50,4 @@ buckets.map(
                         .create()
                         .then(() => console.log('Created', bucket))
             )
-)
+);

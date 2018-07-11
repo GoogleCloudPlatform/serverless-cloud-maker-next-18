@@ -12,69 +12,82 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const transformApplySafeSearch = require('./index.js')
+const transformApplySafeSearch = require('./index.js');
 
-jest.mock('../helpers.js')
-const helpers = require('../helpers')
+jest.mock('@google-cloud/vision');
+const VisionApi = require('@google-cloud/vision').v1p2beta1;
 
-jest.mock('@google-cloud/vision')
-const VisionApi = require('@google-cloud/vision').v1p2beta1
-
-jest.mock('../blur')
-const transformApplyBlur = require('../blur')
-
-VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([]))
+jest.mock('../blur');
+const transformApplyBlur = require('../blur');
 
 const adultAnnotation = {
         adult: 'VERY_LIKELY',
-}
+};
 
 const violenceAnnotation = {
         violence: 'VERY_LIKELY',
-}
+};
 
-const controlAnnotation = {}
+const controlAnnotation = {};
 
 const file = {
         bucket: {name: 'foo'},
         name: 'bar.png',
-}
+};
+
+const mockDetection = VisionApi
+    .ImageAnnotatorClient
+    .prototype
+    .safeSearchDetection;
+
+mockDetection.mockClear();
+
+mockDetection.mockReturnValue(
+    Promise.resolve([{safeSearchAnnotation: controlAnnotation}])
+);
 
 describe('when transformApplySafeSearch is called', () => {
     it('should have default parameters', () => {
-            expect(transformApplySafeSearch.parameters).not.toBeUndefined()
+            expect(transformApplySafeSearch.parameters).not.toBeUndefined();
     });
 
 
     it('should call safeSearchDetection', () => {
-            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([]))
-            transformApplySafeSearch(file)
-            expect(VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection).toHaveBeenCalledWith('gs://foo/bar.png')
+            mockDetection.mockClear();
+            mockDetection.mockReturnValue(
+                Promise.resolve([{safeSearchAnnotation: controlAnnotation}])
+            );
+            transformApplySafeSearch(file);
+            expect(mockDetection).toHaveBeenCalledWith('gs://foo/bar.png');
     });
 
     it('should blur when unsafe', () => {
-        VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-        transformApplyBlur.mockClear()
-        VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{safeSearchAnnotation: adultAnnotation}]))
+        mockDetection.mockClear();
+        transformApplyBlur.mockClear();
+        mockDetection.mockReturnValue(
+            Promise.resolve([{safeSearchAnnotation: adultAnnotation}])
+        );
         return transformApplySafeSearch(file)
-            .then(() => expect(transformApplyBlur).toHaveBeenCalled())
+            .then(() => expect(transformApplyBlur).toHaveBeenCalled());
     });
 
     it('should blur when violent', () => {
-        VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-        transformApplyBlur.mockClear()
-        VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{safeSearchAnnotation: violenceAnnotation}]))
+        mockDetection.mockClear();
+        transformApplyBlur.mockClear();
+        mockDetection.mockReturnValue(
+            Promise.resolve([{safeSearchAnnotation: violenceAnnotation}])
+        );
         return transformApplySafeSearch(file)
-            .then(() => expect(transformApplyBlur).toHaveBeenCalled())
+            .then(() => expect(transformApplyBlur).toHaveBeenCalled());
     });
     it('should not blur when safe', () => {
-            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-            transformApplyBlur.mockClear()
-            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{safeSearchAnnotation: controlAnnotation}]))
+            mockDetection.mockClear();
+            transformApplyBlur.mockClear();
+            mockDetection.mockReturnValue(
+                Promise.resolve([{safeSearchAnnotation: controlAnnotation}])
+            );
             return transformApplySafeSearch(file)
-                .then(() => expect(transformApplyBlur).not.toHaveBeenCalled())
+                .then(() => expect(transformApplyBlur).not.toHaveBeenCalled());
     });
 });
 

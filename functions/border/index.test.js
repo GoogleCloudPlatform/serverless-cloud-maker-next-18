@@ -12,23 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const transformApplyBorder = require('./index.js')
+const transformApplyBorder = require('./index.js');
 
-jest.mock('../helpers.js')
-const helpers = require('../helpers')
+jest.mock('../helpers.js');
+const helpers = require('../helpers');
 
-// placeholder file names
-const inFile = 'inFile'
-const outFile = 'outFile'
-const color = 'blue'
-const width = 10
+const inFile = 'inFile';
+const outFile = 'outFile';
+const color = 'blue';
+const width = 10;
 
 describe('when transformApplyBorder is called', () => {
   // it should accept google colors
   ['blue', 'green', 'yellow', 'red'].map((color) =>
 
     it(`it should accept ${color}`, () => {
-      expect(transformApplyBorder.parameters.color.validate(color)).toBe(true)
+      expect(transformApplyBorder.parameters.color.validate(color)).toBe(true);
         })
   );
 
@@ -36,24 +35,24 @@ describe('when transformApplyBorder is called', () => {
   ['magenta', 'false', 'goldenrod', '0'].map((color) =>
 
     it(`it should not accept ${color}`, () => {
-      expect(transformApplyBorder.parameters.color.validate(color)).toBe(false)
+      expect(transformApplyBorder.parameters.color.validate(color)).toBe(false);
         })
   );
 
   [10, '20', 30.0].map((width) =>
     it(`should accept ${width}`, () => {
-      expect(transformApplyBorder.parameters.width.validate(width)).toBe(true)
+      expect(transformApplyBorder.parameters.width.validate(width)).toBe(true);
     })
   );
 
   [200, 'foo', 30.01].map((width) =>
     it(`should not accept ${width}`, () => {
-      expect(transformApplyBorder.parameters.width.validate(width)).toBe(false)
+      expect(transformApplyBorder.parameters.width.validate(width)).toBe(false);
     })
   );
 
   it('should call resolveImageMagickConvert', () => {
-    transformApplyBorder.applyBorder(inFile, outFile, {width, color})
+    transformApplyBorder.applyBorder(inFile, outFile, {width, color});
     expect(helpers.resolveImageMagickConvert)
       .toHaveBeenCalledWith([
         inFile,
@@ -61,6 +60,6 @@ describe('when transformApplyBorder is called', () => {
         '#4285F4',
         '-border',
         '10%x10%',
-        outFile])
+        outFile]);
   });
 });

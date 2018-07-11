@@ -11,18 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const helpers = require('../helpers')
+const helpers = require('../helpers');
 
-const decorator = require('../decorator')
+const decorator = require('../decorator');
 
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
-// add a caption to the image by identifying its dimensions and then
-// adding a section at the bottom with a black background
-// and white centered text on top of it.
-const applyCaption = (inFile, outFile, {caption}) =>
-    helpers
+/*
+ * Add a caption to the image by identifying its dimensions and then
+ * adding a section at the bottom with a black background
+ * and white centered text on top of it.
+ */
+const applyCaption = (inFile, outFile, {caption}) => {
+    return helpers
         .resolveImageMagickIdentify(inFile)
         .then(({format, width, height}) =>
             helpers
@@ -43,35 +45,40 @@ const applyCaption = (inFile, outFile, {caption}) =>
                      '-composite',
                      outFile,
                     ])
-            )
+            );
+};
 
-const transformApplyAnnotationAsCaption = decorator(applyCaption)
+const transformApplyAnnotationAsCaption = decorator(applyCaption);
 
-// using the vision api
-const generateCaption = (file) =>
-    vision
+const generateCaption = (file) => {
+    return vision
         .labelDetection(`gs://${file.bucket.name}/${file.name}`)
         .then(([{labelAnnotations}]) =>{
             // find the maximum score among the annotations
-            const maxScore = Math.max(...labelAnnotations.map((l) => l.score))
+            const maxScore = Math.max(...labelAnnotations.map((l) => l.score));
             // return the annotation with that score
-            return labelAnnotations.find((l) => l.score === maxScore)
+            return labelAnnotations.find((l) => l.score === maxScore);
         })
-        .then(({description}) => description)
+        .then(({description}) => description);
+};
 
 
-const transformApplyCaption = (file, parameters) =>
-    (
-        // if a caption was set
-        parameters.caption
-        // use that caption
-        ? Promise.resolve(parameters.caption)
-        // otherwise, use the vision api to generate one
-        : generateCaption(file)
-    )
-    .catch(console.error)
-    .then((caption) => transformApplyAnnotationAsCaption(file, Object.assign(parameters, {caption})))
-
+const transformApplyCaption = (file, parameters) => {
+    if (parameters.caption) {
+        return transformApplyAnnotationAsCaption(
+            file,
+            parameters
+        );
+    }
+    return generateCaption(file)
+        .then(
+            (caption) =>
+                transformApplyAnnotationAsCaption(
+                    file,
+                    Object.assign(parameters, {caption})
+                )
+        );
+};
 
 transformApplyCaption.parameters = {
     outputPrefix: {
@@ -89,11 +96,12 @@ transformApplyCaption.parameters = {
             // otherwise return that is is valid
             : true,
     },
-}
+};
 
-// export the subroutines for testing
-transformApplyCaption.applyCaption = applyCaption
-transformApplyCaption.transformApplyAnnotationAsCaption = transformApplyAnnotationAsCaption
-transformApplyCaption.generateCaption = generateCaption
+Object.assign(transformApplyCaption, {
+    applyCaption,
+    transformApplyAnnotationAsCaption,
+    generateCaption,
+});
 
-module.exports = transformApplyCaption
+module.exports = transformApplyCaption;

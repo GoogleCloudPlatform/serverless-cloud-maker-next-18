@@ -11,36 +11,36 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const transformApplyBlurFaces = require('./index.js')
+const transformApplyBlurFaces = require('./index.js');
 
-jest.mock('../helpers.js')
-const helpers = require('../helpers')
+jest.mock('../helpers.js');
+const helpers = require('../helpers');
 
-jest.mock('@google-cloud/vision')
+jest.mock('@google-cloud/vision');
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 
 describe('when transformApplyBlurFaces is called', () => {
     it('should have default parameters', () => {
-        expect(transformApplyBlurFaces.parameters).not.toBeUndefined()
+        expect(transformApplyBlurFaces.parameters).not.toBeUndefined();
     });
 
     it('should call the vision api', () => {
-        const polygon = 'polygon'
-        const faceAnnotations = [{polygon}]
+        const polygon = 'polygon';
+        const faceAnnotations = [{polygon}];
 
         const file = {
             name: 'bar.png',
             bucket: {name: 'foo'},
-        }
+        };
 
-        helpers.annotationsToPolygons.mockReturnValue(polygon)
+        helpers.annotationsToPolygons.mockReturnValue(polygon);
 
 
         VisionApi
             .ImageAnnotatorClient
             .prototype
             .faceDetection
-            .mockReturnValue(Promise.resolve([{faceAnnotations}]))
+            .mockReturnValue(Promise.resolve([{faceAnnotations}]));
 
 
         return transformApplyBlurFaces
@@ -53,7 +53,7 @@ describe('when transformApplyBlurFaces is called', () => {
                         .faceDetection
                     )
                     .toHaveBeenCalledWith(`gs://foo/bar.png`);
-                expect(annotations).toEqual(faceAnnotations)
-            })
+                expect(annotations).toEqual(faceAnnotations);
+            });
     });
 });
