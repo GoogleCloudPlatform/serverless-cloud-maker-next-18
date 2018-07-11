@@ -14,30 +14,24 @@
 
 
 /*
-This file contains the main handler function that
-can be deployed as a service for the backend of the
-showcase demo.
+ * This file contains the main handler function that
+ * can be deployed as a service for the backend of the
+ * showcase demo.
  */
-
-
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
-
-// imports all of the functions declared in the functions
-// directory that can be called by the handler
-
 const functions = require('./functions');
 
-const validateData = (data) => {
 /*
-Confirms that the "data" parameter of a request that specifies the input
-file contains the required information. Should be of the form
-{
-    gcsSourceUri,
-    name,
-    bucket
-}
+ * Confirms that the "data" parameter of a request that specifies the input
+ * file contains the required information. Should be of the form
+ * {
+ *       gcsSourceUri,
+ *       name,
+ *      bucket
+ *  }
  */
+const validateData = (data) => {
     if (data.constructor == Array) {
         throw 'Data should be a single object, not an array';
     }
@@ -57,11 +51,9 @@ file contains the required information. Should be of the form
 };
 
 /*
-Conforms that the "parameters" passed to a function as part of a given request
-are structured correctly and valid according to the validation fucntion
-provided
+ * Confirms that the "parameters" passed to a function
+ * are structured correctly and valid
  */
-
 const validateParameters = (name, parameters={}) => {
     // grab the default values from the master dictionary
     const defaults = functions[name].parameters;
@@ -78,8 +70,6 @@ const validateParameters = (name, parameters={}) => {
                 const value = parameters[key];
                 const validate = defaults[key].validate || defaultValidator;
                 if (validate(value)) {
-                    // returning without throwing will cause this
-                    // value to be set in the result.
                     return;
                 } else {
                     throw `Parameter ${key} with value ${value} was rejected by ${name}`;
@@ -93,9 +83,9 @@ const validateParameters = (name, parameters={}) => {
     return true;
 };
 
- /*
-Confirms that each entry of the "function" parameter of a request
-specifies the name of a function that exists in this file
+/*
+ * Confirms that each entry of the "function" parameter of a request
+ * specifies the name of a function that exists in this file
  */
 const validateFunction = (func) => {
     if (!func.name) {
@@ -112,8 +102,9 @@ const validateFunction = (func) => {
 };
 
 /*
-Confirms that the request is correctly structured
+ * Confirms that the request is correctly structured
  */
+
 const validateRequest = (request) => {
     if (!request.body) {
         throw 'Invalid request: Missing body parameter.';
@@ -185,72 +176,65 @@ const handler = (request, response) => {
 
     const outputBucketName = request.body.outputBucketName || 'cloud-maker-outputs-final';
 
-    // convert the json in the
-    // request to the objects
-    // produced by the client library
-    // (so that subroutines can download it)
+    /*
+     * Convert the json in the request to the objects
+     * produced by the client library
+     * (so that subroutines can download it)
+     */
     const data = request.body.data;
     const file = storage.bucket(data.bucket).file(data.name);
 
 
-    // reduce the list of functions to a promise that
-    // resolves when they have all been completed
+    // Resolve when all functios have been completed
     return request
         .body
         .functions
         .reduce(
             // at each step of the reduction
             (accPromise, nextFunction) =>
-                // Each function needs the ability
-                // to resolve asynchronously, so we
-                // assume that result of the previous
-                // call was a promise.
+                /*
+                 * Each function needs the ability
+                 * to resolve asynchronously, so we
+                 * assume that result of the previous
+                 * call was a promise.
+                 */
                 accPromise
                     .then(
                         // the promise will resolve with the accumulator
                         (acc) =>
                             // call the next functionn on the current image
                             functions[nextFunction.name](
-                                acc, 
+                                acc,
                                 assignParameters(
-                                    nextFunction.name, 
+                                    nextFunction.name,
                                     nextFunction.parameters
                                 )
                             )
                     )
                     .catch(console.error)
-            // to guarantee our assumption is correct,
-            // conver the initial value to a promise resolution
+            /*
+             * To guarantee our assumption is correct,
+             * convert the initial value to a promise resolution.
+             */
             , Promise.resolve(file)
         )
-        // then copy the final result to the output bucket
+        // Copy the final result to the output bucket
         .then(
             (resultFile) =>
                 resultFile.copy(
-                    // keep the name of the file
                     storage
-                        // but move it to the final bucket
                         .bucket(outputBucketName)
                         .file(resultFile.name)
                 )
         )
-        // and then send the final file to terminate the function
         .then(([outputFile]) => response.send(outputFile))
-
-        // catch any errors in this process
         .catch((err) => response.send(err));
 };
 
 
 module.exports = {
-    // export the handler so that it
-    // can be deployed to gcp
     handler,
-
-    // exports the functions for testing
     functions,
-
-    // export the validators for testing
     validateFunction,
     validateRequest,
     validateData,
