@@ -23,10 +23,6 @@ const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 const functions = require('./functions');
 
-if (!process.env.OUTPUT_BUCKET) {
-    throw 'process.env.OUTPUT_BUCKET not set';
-}
-
 /*
  * Confirms that the "data" parameter of a request that specifies the input
  * file contains the required information. Should be of the form
@@ -179,7 +175,7 @@ const handler = (request, response) => {
         return;
     }
 
-    const outputBucketName = request.body.outputBucketName || process.env.OUTPUT_BUCKET;
+    const outputBucketName = request.body.outputBucketName;
 
     /*
      * Convert the json in the request to the objects

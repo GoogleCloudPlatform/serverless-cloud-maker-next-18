@@ -6,3 +6,4 @@ deprecated/**
 sftp-config.json
 request.json
 outputFileName
+.env
