@@ -222,18 +222,12 @@ const handler = (request, response) => {
         // Copy the final result to the output bucket
         .then(
             (resultFile) => {
-                // console.log()
                 return storage
                     .bucket(outputBucketName)
                     .upload(
                         functions.helpers.createTempFileName(resultFile.name),
                         {destination: resultFile.name}
                     );
-                // return resultFile.copy(
-                //     storage
-                //         .bucket(outputBucketName)
-                //         .file(resultFile.name)
-                // )
             }
         )
         .then(([outputFile]) => response.send(outputFile))
