@@ -86,7 +86,7 @@ const applyComposites = (inFile, outFile, {composites}) => {
     ]);
 };
 
-const transformApplyComposites = decorator(applyComposites);
+const compositesTransform = decorator(applyComposites);
 
 const emojiTransform = (file, parameters) => {
     return Promise.all([
@@ -104,7 +104,7 @@ const emojiTransform = (file, parameters) => {
         )
         // apply those composites over the image
         .then((composites) =>
-            transformApplyComposites(
+            compositesTransform(
                 file,
                 Object.assign(parameters, {composites})
             )

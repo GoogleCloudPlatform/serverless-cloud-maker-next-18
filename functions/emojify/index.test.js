@@ -66,7 +66,7 @@ describe('when emojiTransform is called', () => {
         );
     });
 
-    it('should call transformApplyComposites', () => {
+    it('should call compositesTransform', () => {
         spy.mockClear();
         return emojiTransform(file, {}).then(() =>
             expect(spy).toHaveBeenCalledWith(file, {composites: []})

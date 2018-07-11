@@ -60,7 +60,7 @@ const applyCropGeometry = (inFile, outFile, {geometry, shape}) => {
     ]);
 };
 
-const transformApplyCropGeometry = decorator(applyCropGeometry);
+const cropGeometryTransform = decorator(applyCropGeometry);
 
 
 const cropShapeTransform = (file, parameters) => {
@@ -69,7 +69,7 @@ const cropShapeTransform = (file, parameters) => {
             helpers.annotationToShape(annotation, parameters.shape)
         )
         .then((geometry) =>
-            transformApplyCropGeometry(
+            cropGeometryTransform(
                 file,
                 Object.assign(parameters, {geometry})
             )

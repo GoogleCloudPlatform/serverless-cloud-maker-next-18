@@ -48,7 +48,7 @@ const applyCaption = (inFile, outFile, {caption}) => {
             );
 };
 
-const transformApplyAnnotationAsCaption = decorator(applyCaption);
+const annotationAsCaptionTransform = decorator(applyCaption);
 
 const generateCaption = (file) => {
     return vision
@@ -65,7 +65,7 @@ const generateCaption = (file) => {
 
 const captionTransform = (file, parameters) => {
     if (parameters.caption) {
-        return transformApplyAnnotationAsCaption(
+        return annotationAsCaptionTransform(
             file,
             parameters
         );
@@ -73,7 +73,7 @@ const captionTransform = (file, parameters) => {
     return generateCaption(file)
         .then(
             (caption) =>
-                transformApplyAnnotationAsCaption(
+                annotationAsCaptionTransform(
                     file,
                     Object.assign(parameters, {caption})
                 )
@@ -100,7 +100,7 @@ captionTransform.parameters = {
 
 Object.assign(captionTransform, {
     applyCaption,
-    transformApplyAnnotationAsCaption,
+    annotationAsCaptionTransform,
     generateCaption,
 });
 
