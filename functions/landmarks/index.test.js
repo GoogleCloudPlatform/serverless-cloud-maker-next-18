@@ -11,33 +11,33 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const transformApplyLandmarks = require('./index.js')
+const transformApplyLandmarks = require('./index.js');
 
-jest.mock('../caption')
-const transformApplyCaption = require('../caption')
+jest.mock('../caption');
+const transformApplyCaption = require('../caption');
 
 
-jest.mock('@google-cloud/vision')
+jest.mock('@google-cloud/vision');
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 
 const file = {
     bucket: {name: 'foo'},
     name: 'bar.png',
-}
+};
 
 describe('when transformApplyLandmarks is called', () => {
   it('should have default parameters', () => {
-    expect(transformApplyLandmarks.parameters).not.toBeUndefined()
+    expect(transformApplyLandmarks.parameters).not.toBeUndefined();
   });
 
   it('should create a caption if a landmark is detected', () => {
-    transformApplyCaption.mockClear()
-    transformApplyCaption.mockReturnValue(Promise.resolve())
+    transformApplyCaption.mockClear();
+    transformApplyCaption.mockReturnValue(Promise.resolve());
         VisionApi
             .ImageAnnotatorClient
             .prototype
             .landmarkDetection
-            .mockClear()
+            .mockClear();
 
         VisionApi
             .ImageAnnotatorClient
@@ -50,18 +50,18 @@ describe('when transformApplyLandmarks is called', () => {
                         {description: 'worstAnnotation', score: 0},
                     ],
                 }]
-            ))
-        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, {caption: 'bestAnnotation'}))
+            ));
+        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, {caption: 'bestAnnotation'}));
   });
 
   it('should not create a caption if none are detected', () => {
-    transformApplyCaption.mockClear()
-    transformApplyCaption.mockReturnValue(Promise.resolve())
+    transformApplyCaption.mockClear();
+    transformApplyCaption.mockReturnValue(Promise.resolve());
         VisionApi
             .ImageAnnotatorClient
             .prototype
             .landmarkDetection
-            .mockClear()
+            .mockClear();
 
         VisionApi
             .ImageAnnotatorClient
@@ -71,8 +71,8 @@ describe('when transformApplyLandmarks is called', () => {
                 [{
                     landmarkAnnotations: [],
                 }]
-            ))
-        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, {caption: 'No landmark found.'}))
+            ));
+        transformApplyLandmarks(file, {}).then(() => expect(transformApplyCaption).toHaveBeenCalledWith(file, {caption: 'No landmark found.'}));
   });
 });
 
@@ -83,7 +83,7 @@ describe('detectLandmark', () => {
             .ImageAnnotatorClient
             .prototype
             .landmarkDetection
-            .mockClear()
+            .mockClear();
 
         VisionApi
             .ImageAnnotatorClient
@@ -96,11 +96,11 @@ describe('detectLandmark', () => {
                         {description: 'worstAnnotation', score: 0},
                     ],
                 }]
-            ))
+            ));
         return transformApplyLandmarks.detectLandmark(file).then(({description}) => {
             expect(VisionApi.ImageAnnotatorClient.prototype.landmarkDetection)
                 .toHaveBeenCalledWith('gs://foo/bar.png');
-            expect(description).toEqual('bestAnnotation')
-        })
+            expect(description).toEqual('bestAnnotation');
+        });
     });
 });

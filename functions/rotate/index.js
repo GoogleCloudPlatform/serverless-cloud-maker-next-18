@@ -25,7 +25,7 @@ const applyRotate = (inFile, outFile, {degrees}) => {
         degrees,
         outFile,
     ]);
-}
+};
 
 // apply the decorator to handle GCS buckets
 const transformApplyRotate = decorator(applyRotate);

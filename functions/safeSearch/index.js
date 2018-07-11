@@ -34,7 +34,7 @@ const transformApplySafeSearch = (file, parameters) => {
             ? transformApplyBlur(file, parameters)
             : file
         );
-}
+};
 
 transformApplySafeSearch.parameters = {
     outputPrefix: {

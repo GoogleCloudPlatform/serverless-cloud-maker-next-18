@@ -26,14 +26,13 @@ const detectCropHints = (file) => {
         .cropHints(`gs://${file.bucket.name}/${file.name}`)
         // extract the results of the api call
         .then(([{cropHintsAnnotation}]) => cropHintsAnnotation.cropHints[0]);
-}
+};
 
 // taking a shape and the correct geometry string for that shape
 // (rectangles wxh+x+y)
 // (cricles centerX,centerY pointX,pointY)
 // run ImageMagick's crop method to generate that shape
 const applyCropGeometry = (inFile, outFile, {geometry, shape}) => {
-
     if (shape == 'circle') {
         return helpers.resolveImageMagickConvert([
             inFile,
@@ -48,7 +47,7 @@ const applyCropGeometry = (inFile, outFile, {geometry, shape}) => {
             'copyopacity',
             '-composite',
             outFile,
-        ])
+        ]);
     }
 
     return helpers.resolveImageMagickConvert([
@@ -57,18 +56,23 @@ const applyCropGeometry = (inFile, outFile, {geometry, shape}) => {
         geometry,
         outFile,
     ]);
-}
+};
 
 const transformApplyCropGeometry = decorator(applyCropGeometry);
 
 
 const transformApplyCropShape = (file, parameters) => {
     return detectCropHints(file)
-        // use our helper function to convert the results of the api call to the wxh+x+y format
-        .then((annotation) => helpers.annotationToShape(annotation, parameters.shape))
-        // apply a crop
-        .then((geometry) => transformApplyCropGeometry(file, Object.assign(parameters, {geometry})));
-}
+        .then((annotation) =>
+            helpers.annotationToShape(annotation, parameters.shape)
+        )
+        .then((geometry) =>
+            transformApplyCropGeometry(
+                file,
+                Object.assign(parameters, {geometry})
+            )
+        );
+};
 
 
 transformApplyCropShape.parameters = {

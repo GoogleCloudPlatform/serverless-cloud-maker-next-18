@@ -12,33 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const convertRasterFormat = require('./index.js')
-jest.mock('../helpers')
-const helpers = require('../helpers')
+const convertRasterFormat = require('./index.js');
+jest.mock('../helpers');
+const helpers = require('../helpers');
 
-const inFile = 'inFile.jpg'
-const outFile = 'outFile.png'
+const inFile = 'inFile.jpg';
+const outFile = 'outFile.png';
 
 describe('when convertRasterFormat is called', () => {
     it('should only accept .gif, .png, .jpg', () => {
         expect(convertRasterFormat.parameters).not.toBeUndefined();
         ['.gif', '.PNG', '.jpg'].map((extension) => {
-            expect(convertRasterFormat.parameters.extension.validate(extension)).toBe(true)
+            expect(convertRasterFormat.parameters.extension.validate(extension)).toBe(true);
         });
 
         ['.asdf', 'false', '.jpeg'].map((extension) =>
-            expect(convertRasterFormat.parameters.extension.validate(extension)).not.toBe(true))
+            expect(convertRasterFormat.parameters.extension.validate(extension)).not.toBe(true));
     });
 
     it('should call resolveImageMagickConvert', () => {
         // set this mocked function to return
         // infile so that it is not undefined when
         // we run the test.
-        helpers.createTempFileName.mockReturnValue(inFile)
-        convertRasterFormat.applyChangeFormat(inFile, outFile)
+        helpers.createTempFileName.mockReturnValue(inFile);
+        convertRasterFormat.applyChangeFormat(inFile, outFile);
         // we mocked the return value to just be inFile permanently,
         // // so just use inFile
-        expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([inFile, inFile])
+        expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([inFile, inFile]);
     });
 });
 

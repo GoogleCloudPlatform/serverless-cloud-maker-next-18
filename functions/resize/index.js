@@ -24,7 +24,7 @@ const applyResize = (inFile, outFile, {width, height}) => {
         `${width}x${height}`,
         outFile,
     ]);
-}
+};
 
 const transformApplyResize = decorator(applyResize);
 

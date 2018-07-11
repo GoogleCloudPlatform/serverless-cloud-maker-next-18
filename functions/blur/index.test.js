@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const transformApplyBlur = require('./index.js')
+const transformApplyBlur = require('./index.js');
 
-jest.mock('../helpers.js')
-const helpers = require('../helpers')
+jest.mock('../helpers.js');
+const helpers = require('../helpers');
 
-const inFile = 'inFile'
-const outFile = 'outFile'
+const inFile = 'inFile';
+const outFile = 'outFile';
 
 describe('when transformApplyBlur is called', () => {
-
     it('should have default parameters', () => {
-        expect(transformApplyBlur.parameters).not.toBeUndefined()
+        expect(transformApplyBlur.parameters).not.toBeUndefined();
     });
 
     it('should call resolveImageMagickConvert', () => {
-        transformApplyBlur.applyBlur(inFile, outFile)
+        transformApplyBlur.applyBlur(inFile, outFile);
         expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([
              inFile,
             '-channel',
@@ -35,6 +34,6 @@ describe('when transformApplyBlur is called', () => {
             '-blur',
             '0x24',
             outFile,
-        ])
+        ]);
     });
 });

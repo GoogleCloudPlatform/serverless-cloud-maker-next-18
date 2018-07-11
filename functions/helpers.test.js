@@ -39,7 +39,7 @@ describe(' when annotationToShape is called', () => {
                 boundingPoly: {
                     vertices,
                 },
-            })
+            });
 
 
     it('should work', () => {
@@ -48,8 +48,8 @@ describe(' when annotationToShape is called', () => {
                         {x: 100, y: 0},
                         {x: 0, y: 100},
                         {x: 100, y: 100},
-            ])
-        expect(helpers.annotationToShape(testResponse)).toEqual(`100x100+0+0`)
+            ]);
+        expect(helpers.annotationToShape(testResponse)).toEqual(`100x100+0+0`);
     });
 
     it('should set offsets correctly', () => {
@@ -58,8 +58,8 @@ describe(' when annotationToShape is called', () => {
             {x: 100, y: 100},
             {x: 100, y: 15},
             {x: 10, y: 100},
-        ])
-        expect(helpers.annotationToShape(testResponse)).toEqual(`90x85+10+15`)
+        ]);
+        expect(helpers.annotationToShape(testResponse)).toEqual(`90x85+10+15`);
     });
 
 
@@ -69,8 +69,8 @@ describe(' when annotationToShape is called', () => {
             {x: 100, y: 100},
             {x: 100, y: 15},
             {x: 10, y: 100},
-        ])
-        expect(helpers.annotationToShape(testResponse, "square")).toEqual(`85x85+13+15`)
+        ]);
+        expect(helpers.annotationToShape(testResponse, 'square')).toEqual(`85x85+13+15`);
     });
     it('should create a circle', () => {
         const testResponse = testResponseFactory([
@@ -78,9 +78,8 @@ describe(' when annotationToShape is called', () => {
             {x: 100, y: 100},
             {x: 100, y: 15},
             {x: 10, y: 100},
-        ])
-        expect(helpers.annotationToShape(testResponse, "circle")).toEqual(`circle 56,58 13,58`)
-    
+        ]);
+        expect(helpers.annotationToShape(testResponse, 'circle')).toEqual(`circle 56,58 13,58`);
     });
 });
 
@@ -90,15 +89,15 @@ describe('when annotationsToPolygons is called', () => {
         boundingPoly: {
             vertices,
         },
-    }])
+    }]);
     it('should reduce the list of vertices to a string of tubles', () => {
         const testAnnotation = testAnnotationsFactory([
             {x: 1, y: 2},
             {x: 3, y: 4},
             {x: 5, y: 6},
             {x: 7, y: 8},
-        ])
-        expect(helpers.annotationsToPolygons(testAnnotation)).toEqual('polygon 1,2 3,4 5,6 7,8')
+        ]);
+        expect(helpers.annotationsToPolygons(testAnnotation)).toEqual('polygon 1,2 3,4 5,6 7,8');
     });
 });
 
@@ -166,15 +165,15 @@ describe('when annotationToDimensions is called', () => {
         boundingPoly: {
             vertices,
         },
-    })
+    });
     it('should reduce the list of vertices to a string of tubles', () => {
         const testAnnotation = testAnnotationFactory([
             {x: 1, y: 2},
             {x: 3, y: 4},
             {x: 5, y: 6},
             {x: 7, y: 8},
-        ])
-        expect(helpers.annotationToDimensions(testAnnotation)).toEqual('6x6')
+        ]);
+        expect(helpers.annotationToDimensions(testAnnotation)).toEqual('6x6');
     });
 });
 
@@ -183,14 +182,14 @@ describe('when annotationToCoordinate is called', () => {
         boundingPoly: {
             vertices,
         },
-    })
+    });
     it('should reduce the list of vertices to a string of tubles', () => {
         const testAnnotation = testAnnotationFactory([
             {x: 1, y: 2},
             {x: 3, y: 4},
             {x: 5, y: 6},
             {x: 7, y: 8},
-        ])
-        expect(helpers.annotationToCoordinate(testAnnotation)).toEqual('+1+2')
+        ]);
+        expect(helpers.annotationToCoordinate(testAnnotation)).toEqual('+1+2');
     });
 });

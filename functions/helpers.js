@@ -118,13 +118,12 @@ const annotationToDimensions = (annotation) => {
 
 
 const createOutputFileName = (fileName, {outputPrefix = '', extension = ''} = {}) =>{
-    if (outputPrefix){
-        return changeExtension(`${outputPrefix}-${path.parse(fileName).base}`, extension)
+    if (outputPrefix) {
+        return changeExtension(`${outputPrefix}-${path.parse(fileName).base}`, extension);
+    } else {
+        return changeExtension(`${path.parse(fileName).base}.out`, extension);
     }
-    else {
-        return changeExtension(`${path.parse(fileName).base}.out`, extension)
-    }
-}
+};
 
 const createTempFileName = (fileName) => `/tmp/${path.parse(fileName).base}`;
 
@@ -162,14 +161,14 @@ const resolveImageMagickCommand = (cmd, args) => {
             if (err) {
                 console.error('ImageMagick command failed for arguments', args, err);
                 reject(err);
-                return
+                return;
             } else {
-                console.log('ImageMagick command was successful.', args)
-                resolve(result)
+                console.log('ImageMagick command was successful.', args);
+                resolve(result);
             }
         })
-    )
-}
+    );
+};
 
 const resolveImageMagickIdentify = (args) =>
     resolveImageMagickCommand(im.identify, args);
@@ -179,13 +178,12 @@ const resolveImageMagickConvert = (args) =>
 
 
 const changeExtension = (fileName, extension) => {
-    if (extension){
-        return fileName.substr(0, fileName.lastIndexOf('.')) + extension
-    } 
-    else{
-      return fileName  
+    if (extension) {
+        return fileName.substr(0, fileName.lastIndexOf('.')) + extension;
+    } else {
+      return fileName;
     }
-}
+};
 
 module.exports = {
     // ImageMagick helpers

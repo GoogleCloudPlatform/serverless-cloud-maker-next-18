@@ -30,23 +30,21 @@ const detectLandmark = (file) => {
                     : bestAnnotation
                 , {score: 0})
         );
-}
+};
 
 const transformApplyLandmarks = (file, parameters) => {
     return detectLandmark(file)
         .catch(console.error)
-        // extract the description from the
-        // returned landmark annotation
         .then(({description}) =>
             transformApplyCaption(
-                file, 
+                file,
                 Object.assign(
-                    parameters, 
+                    parameters,
                     {caption: description || 'No landmark found.'})
                 )
         )
         .catch(console.error);
-}
+};
 
 transformApplyLandmarks.parameters = {
     outputPrefix: {

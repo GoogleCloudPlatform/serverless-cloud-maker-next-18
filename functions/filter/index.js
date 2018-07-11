@@ -18,7 +18,6 @@ const helpers = require('../helpers');
 const createImageMagickTransform = require('../decorator');
 
 const applyFilter = (inFile, outFile, {filterName}) => {
-
     const randomHue = Math.random() * 200;
 
     const imageMagickFilters = {

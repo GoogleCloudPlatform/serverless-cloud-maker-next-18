@@ -23,16 +23,19 @@ const detectLogos = (file) => {
     return vision
         .logoDetection(`gs://${file.bucket.name}/${file.name}`)
         .then(([{logoAnnotations}]) => logoAnnotations);
-}
+};
 
 const transformApplyBlurLogos = (file, parameters) => {
     return detectLogos(file)
         .then(helpers.annotationsToPolygons)
-        .then((polygons) => 
-            transformApplyBlurPolygons(file, Object.assign(parameters, {polygons}))
+        .then((polygons) =>
+            transformApplyBlurPolygons(
+                file, 
+                Object.assign(parameters, {polygons})
+            )
         )
         .catch(console.error);
-}
+};
 
 transformApplyBlurLogos.parameters = {
     outputPrefix: {

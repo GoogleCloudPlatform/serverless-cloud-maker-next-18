@@ -19,8 +19,8 @@ const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 
 // relative imports
-const helpers = require('../helpers')
-const decorator = require('../decorator')
+const helpers = require('../helpers');
+const decorator = require('../decorator');
 
 
 // IMPORTANT: To use emojify you'll need to upload
@@ -33,10 +33,10 @@ const emojis = {
     sorrowLikelihood: 'sorrow.png',
     surpriseLikelihood: 'surprise.png',
     expressionless: 'none.png',
-}
+};
 
 // downloads all apple emojis
-const downloadEmojis = ({ emojiSet }) => {
+const downloadEmojis = ({emojiSet}) => {
     return Promise.all(
         Object
             .keys(emojis)
@@ -46,25 +46,24 @@ const downloadEmojis = ({ emojiSet }) => {
                     .file(emojis[key])
                     .download({destination: `/tmp/${emojis[key]}`})
             )
-    )
-}
+    );
+};
 
 // get the emoji that best matches this face's emotion.
 // If expressionless, return expressionless
 const determineEmoji = (face) => {
-    
     let bestEmoji = Object
         .keys(emojis)
-        .find(emotion =>
+        .find((emotion) =>
             ['VERY_LIKELY', 'LIKELY', 'POSSIBLE'].includes(face[emotion])
-        )
+        );
 
     if (!bestEmoji) {
-        return emojis.expressionless
+        return emojis.expressionless;
     }
 
-    return emojis[bestEmoji]
-}
+    return emojis[bestEmoji];
+};
 const faceAnnotationToEmojiComposite = (faceAnnotation) => {
     return [
         '\(',
@@ -75,18 +74,18 @@ const faceAnnotationToEmojiComposite = (faceAnnotation) => {
         '-geometry',
         helpers.annotationToCoordinate(faceAnnotation),
         '-composite',
-    ]
-}
+    ];
+};
 
 const applyComposites = (inFile, outFile, {composites}) => {
     return helpers.resolveImageMagickConvert([
         inFile,
         ...composites,
         outFile,
-    ])
-}
+    ]);
+};
 
-const transformApplyComposites = decorator(applyComposites)
+const transformApplyComposites = decorator(applyComposites);
 
 const transformApplyEmojify = (file, parameters) => {
     return Promise.all([
@@ -103,10 +102,10 @@ const transformApplyEmojify = (file, parameters) => {
                 .reduce((acc, nextComposite) => acc.concat(nextComposite), [])
         )
         // apply those composites over the image
-        .then((composites) => 
+        .then((composites) =>
             transformApplyComposites(file, Object.assign(parameters, {composites}))
-        )
-}
+        );
+};
 
 transformApplyEmojify.parameters = {
         outputPrefix: {
@@ -119,8 +118,8 @@ transformApplyEmojify.parameters = {
             defaultValue: 'emojis-apple',
             validate: (v) => ['emojis-apple', 'emojis-google'].contains(v),
         },
-    }
+    };
 
-transformApplyEmojify.emojis = emojis
+transformApplyEmojify.emojis = emojis;
 
-module.exports = transformApplyEmojify
+module.exports = transformApplyEmojify;

@@ -11,35 +11,35 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const transformApplyCaption = require('./index.js')
+const transformApplyCaption = require('./index.js');
 
-jest.mock('../helpers.js')
-const helpers = require('../helpers')
+jest.mock('../helpers.js');
+const helpers = require('../helpers');
 
-jest.mock('@google-cloud/vision')
+jest.mock('@google-cloud/vision');
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 
-const inFile = 'inFile'
-const outFile = 'outFile'
-const caption = 'caption'
+const inFile = 'inFile';
+const outFile = 'outFile';
+const caption = 'caption';
 
 describe('when transformApplyCaption is called', () => {
     it('should have default parameters', () => {
-        expect(transformApplyCaption.parameters).not.toBeUndefined()
+        expect(transformApplyCaption.parameters).not.toBeUndefined();
     });
     [false, 'a', null, 0].map((caption) => it(`should accept ${caption}`, () => {
-        expect(transformApplyCaption.parameters.caption.validate(caption)).toBe(true)
+        expect(transformApplyCaption.parameters.caption.validate(caption)).toBe(true);
     }));
 
     [true, {}, 1].map((caption) =>
         it(`should reject ${caption}`, () => {
-            expect(transformApplyCaption.parameters.caption.validate(caption)).toBe(false)
+            expect(transformApplyCaption.parameters.caption.validate(caption)).toBe(false);
         })
-    )
+    );
 
     it.skip('should call resolveImageMagickConvert', () => {
-        transformApplyCaption.applyRotate('a', 'b', {width: 1, height: 1})
-        expect(helpers.resolveImageMagickConvert).toHaveBeenCalled()
+        transformApplyCaption.applyRotate('a', 'b', {width: 1, height: 1});
+        expect(helpers.resolveImageMagickConvert).toHaveBeenCalled();
     });
 });
 
@@ -48,33 +48,33 @@ describe('when generateCaption is called', () => {
         const labelAnnotations = [
             {description: 'bestDescription', score: 1.0},
             {descrption: 'worstDescription', score: -1.0},
-        ]
+        ];
         VisionApi
             .ImageAnnotatorClient
             .prototype
             .labelDetection
-            .mockReturnValue(Promise.resolve([{labelAnnotations}]))
+            .mockReturnValue(Promise.resolve([{labelAnnotations}]));
 
         const file = {
             bucket: {
                 name: 'foo',
             },
             name: 'bar.png',
-        }
+        };
 
         return transformApplyCaption.generateCaption(file).then((caption) =>{
-            expect(VisionApi.ImageAnnotatorClient.prototype.labelDetection).toHaveBeenCalledWith(`gs://foo/bar.png`)
-            expect(caption).toEqual('bestDescription')
-        })
+            expect(VisionApi.ImageAnnotatorClient.prototype.labelDetection).toHaveBeenCalledWith(`gs://foo/bar.png`);
+            expect(caption).toEqual('bestDescription');
+        });
     });
 });
 
 describe('when applyCaption is called', () => {
     it('should identify and then convert', () => {
-        helpers.resolveImageMagickIdentify.mockReturnValue(Promise.resolve({width: 1, height: 1}))
-        helpers.resolveImageMagickConvert.mockReturnValue(Promise.resolve())
+        helpers.resolveImageMagickIdentify.mockReturnValue(Promise.resolve({width: 1, height: 1}));
+        helpers.resolveImageMagickConvert.mockReturnValue(Promise.resolve());
         return transformApplyCaption.applyCaption(inFile, outFile, {caption}).then(() => {
-            expect(helpers.resolveImageMagickIdentify).toHaveBeenCalledWith(inFile)
+            expect(helpers.resolveImageMagickIdentify).toHaveBeenCalledWith(inFile);
             expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([
                 '-background',
                      '#0008',
@@ -91,7 +91,7 @@ describe('when applyCaption is called', () => {
                      'south',
                      '-composite',
                      outFile,
-                ])
-        })
+                ]);
+        });
     });
 });
