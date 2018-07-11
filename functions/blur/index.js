@@ -15,7 +15,7 @@
 const helpers = require('../helpers');
 const decorator = require('../decorator');
 
-// use ImageMagick to apply a simple blur effect to the image
+// Use ImageMagick to apply a simple blur effect to the image
 const applyBlur = (inFile, outFile, parameters) => {
     return helpers.resolveImageMagickConvert([
         inFile,

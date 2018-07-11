@@ -23,26 +23,23 @@ const storage = new StorageApi();
 const helpers = require('../helpers');
 
 /*
-Create a copy of an image and upload the result to an
-output bucket
+ * Create a copy of an image and upload the result to an
+ * output bucket
  */
 const copyImage = (file, parameters) => {
-    // extract the output bucket from the paramters
     const outputBucketName = parameters.outputBucketName;
-    // use the output prefix to create eh name of the output file
     const outputFileName = helpers.createOutputFileName(
         parameters.outputPrefix,
         file.name
     );
-    //  construct the output file using the GCS client library
-    const outputFile = storage.bucket(outputBucketName).file(outputFileName);
 
-    // use the GCS client library's "copy" method to
-    // upload to the output bucket.
+    const outputFile = storage
+        .bucket(outputBucketName)
+        .file(outputFileName);
+
     return file
         .copy(outputFile)
         .catch(console.error)
-        // resolve with the outputfile
         .then(() => outputFile);
 };
 

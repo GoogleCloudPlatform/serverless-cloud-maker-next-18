@@ -28,10 +28,12 @@ const detectCropHints = (file) => {
         .then(([{cropHintsAnnotation}]) => cropHintsAnnotation.cropHints[0]);
 };
 
-// taking a shape and the correct geometry string for that shape
-// (rectangles wxh+x+y)
-// (cricles centerX,centerY pointX,pointY)
-// run ImageMagick's crop method to generate that shape
+/*
+ * Taking a shape and the correct geometry string for that shape
+ * (rectangles wxh+x+y)
+ * (cricles centerX,centerY pointX,pointY)
+ * run ImageMagick's crop method to generate that shape
+ */
 const applyCropGeometry = (inFile, outFile, {geometry, shape}) => {
     if (shape == 'circle') {
         return helpers.resolveImageMagickConvert([
@@ -86,10 +88,10 @@ transformApplyCropShape.parameters = {
         defaultValue: 'suggested',
         validate: (s) => ['suggested', 'square', 'circle'].includes(s),
     },
-    // we have to output a png here because cropping
-    // to a cricle requires a transparent background
+    // Circles must be pngs to have transparent backgrounds
     extension: {
         defaultValue: '.png',
+        // Always return a png
         validate: (s) => s == '.png',
     },
 };

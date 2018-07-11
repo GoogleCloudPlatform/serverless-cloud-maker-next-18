@@ -23,10 +23,12 @@ const helpers = require('../helpers');
 const decorator = require('../decorator');
 
 
-// IMPORTANT: To use emojify you'll need to upload
-// correctly named png files to a GCS bucket in accordance with
-// this mapping, which you can do by running the
-// upload emojis file
+/*
+ * IMPORTANT: To use emojify you'll need to upload
+ * correctly named png files to a GCS bucket in accordance with
+ * this mapping, which you can do by running
+ * `node uploadEmojis.js`
+ */ 
 const emojis = {
     joyLikelihood: 'joy.png',
     angerLikelihood: 'anger.png',
@@ -35,7 +37,6 @@ const emojis = {
     expressionless: 'none.png',
 };
 
-// downloads all apple emojis
 const downloadEmojis = ({emojiSet}) => {
     return Promise.all(
         Object

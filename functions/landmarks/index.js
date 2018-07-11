@@ -17,8 +17,10 @@ const vision = new VisionApi.ImageAnnotatorClient();
 
 const transformApplyCaption = require('../caption');
 
-// resolves with the best lamndmark annotation that the vision api
-// finds inside the image
+/*
+ * Query the Vision API's landmark detection and resolve with
+ * the best annotation
+ */
 const detectLandmark = (file) => {
     return vision
         .landmarkDetection(`gs://${file.bucket.name}/${file.name}`)
