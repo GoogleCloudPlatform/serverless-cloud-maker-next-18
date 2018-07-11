@@ -23,9 +23,6 @@ const VisionApi = require('@google-cloud/vision').v1p2beta1
 jest.mock('../blur')
 const transformApplyBlur = require('../blur')
 
-VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([]))
-
 const adultAnnotation = {
         adult: 'VERY_LIKELY',
 }
@@ -40,6 +37,8 @@ const file = {
         bucket: {name: 'foo'},
         name: 'bar.png',
 }
+VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
+VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([{ safeSearchAnnotation:controlAnnotation }]))
 
 describe('when transformApplySafeSearch is called', () => {
     it('should have default parameters', () => {
@@ -49,7 +48,7 @@ describe('when transformApplySafeSearch is called', () => {
 
     it('should call safeSearchDetection', () => {
             VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockClear()
-            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([]))
+            VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection.mockReturnValue(Promise.resolve([ {safeSearchAnnotation: controlAnnotation }]))
             transformApplySafeSearch(file)
             expect(VisionApi.ImageAnnotatorClient.prototype.safeSearchDetection).toHaveBeenCalledWith('gs://foo/bar.png')
     });
