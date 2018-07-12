@@ -60,16 +60,16 @@ const applyCropGeometry = (inFile, outFile, {geometry, shape}) => {
     ]);
 };
 
-const transformApplyCropGeometry = decorator(applyCropGeometry);
+const cropGeometryTransform = decorator(applyCropGeometry);
 
 
-const transformApplyCropShape = (file, parameters) => {
+const cropShapeTransform = (file, parameters) => {
     return detectCropHints(file)
         .then((annotation) =>
             helpers.annotationToShape(annotation, parameters.shape)
         )
         .then((geometry) =>
-            transformApplyCropGeometry(
+            cropGeometryTransform(
                 file,
                 Object.assign(parameters, {geometry})
             )
@@ -77,7 +77,7 @@ const transformApplyCropShape = (file, parameters) => {
 };
 
 
-transformApplyCropShape.parameters = {
+cropShapeTransform.parameters = {
     outputBucketName: {
         defaultValue: 'cloud-maker-outputs-cropped',
     },
@@ -96,8 +96,8 @@ transformApplyCropShape.parameters = {
     },
 };
 
-transformApplyCropShape.applyCropGeometry = applyCropGeometry;
-transformApplyCropShape.detectCropHints = detectCropHints;
+cropShapeTransform.applyCropGeometry = applyCropGeometry;
+cropShapeTransform.detectCropHints = detectCropHints;
 
 
-module.exports = transformApplyCropShape;
+module.exports = cropShapeTransform;

@@ -17,32 +17,32 @@ Converts the image to the desired image format (jpg, png, or gif)
 - Options: [".png", ".jpg", ".gif"]
 
 
-## transformApplyBlur
+## blurTransform
 Blurs the image.
 
-## transformApplySafeSearch
+## safeSearchTransform
 Blurs the image if it is marked as unsafe by the Cloud Vision `safeSearchDetection` method.
 
-## transformApplyBlurFaces
+## blurFacesTransform
 Detects all faces in the image using the Cloud Vision API and blurs them.
 
-## transformApplyEmojify
+## emojiTransform
 Detects all faces and their emotions in the image using the Cloud Vision API and replaces each face with its corresponding emoji.
 
-###emojiSet
+### emojiSet
 - Determines the set of emojis that are used in the transformation
 - Options: ['emojis-apple', 'emojis-google']
 - Default: ['emojis-apple']
 
 
-## transformApplyBlurLogos
+## blurLogosTransform
 Detects all logos using the Cloud Vision API and blurs them.
 
-## transformApplyLandmarks
+## landmarkTransform
 Detects all landmarks in the image using the Cloud Vision API and applies a caption with the name of the landmark.
 
 
-## transformApplyBorder
+## borderTransform
 Adds a border of the desired color and width to the image.
 
 ### `color`
@@ -56,7 +56,7 @@ Adds a border of the desired color and width to the image.
 - Default: 1
 
 
-## transformApplyCaption
+## captionTransform
 Adds a caption to the image, either the one specified by the user or the one suggested by the Cloud Vision API.
 
 ### `custom`
@@ -64,7 +64,7 @@ Adds a caption to the image, either the one specified by the user or the one sug
 - Default: false 
 - Options: [false, any string]
 
-## transformApplyFilter
+## filterTransform
 Applies a filter to the image, either sepia, grayscale, or a random tint (colorize)
 
 ### `filterName`
@@ -73,7 +73,7 @@ Applies a filter to the image, either sepia, grayscale, or a random tint (colori
 - Options: ['sepia', 'grayscale', 'colorize']
 
 
-## transformApplyResize
+## resizeTransform
 Resizes the image to the desired size.
 
 ### `width`
@@ -85,7 +85,7 @@ Resizes the image to the desired size.
 - Options: Any integer
 
 
-## transformApplyRotate
+## rotateTransform
 Rotates the image any number of degrees.
 
 ### `degrees`
@@ -93,7 +93,7 @@ Rotates the image any number of degrees.
 - Accepts: Any integers
 
 
-## transformApplyReflect
+## reflectTransform
 Reflects the image vertically or horizontally.
 
 ### `axis`
@@ -102,7 +102,7 @@ Reflects the image vertically or horizontally.
 - Accepts: [x, y]
 
 
-## transformApplyCropShape
+## cropShapeTransform
 
 Crops the image into a circle, a square, or into the rectangle suggested by the Cloud Vision API.
 

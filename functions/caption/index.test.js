@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const transformApplyCaption = require('./index.js');
+const captionTransform = require('./index.js');
 
 jest.mock('../helpers.js');
 const helpers = require('../helpers');
@@ -23,15 +23,15 @@ const inFile = 'inFile';
 const outFile = 'outFile';
 const caption = 'caption';
 
-describe('when transformApplyCaption is called', () => {
+describe('when captionTransform is called', () => {
     it('should have default parameters', () => {
-        expect(transformApplyCaption.parameters).not.toBeUndefined();
+        expect(captionTransform.parameters).not.toBeUndefined();
     });
 
     [false, 'a', null, 0].map((caption) =>
         it(`should accept ${caption}`, () => {
             expect(
-                transformApplyCaption
+                captionTransform
                     .parameters
                     .caption
                     .validate(caption)
@@ -42,7 +42,7 @@ describe('when transformApplyCaption is called', () => {
     [true, {}, 1].map((caption) =>
         it(`should reject ${caption}`, () => {
             expect(
-                transformApplyCaption
+                captionTransform
                     .parameters
                     .caption
                     .validate(caption)
@@ -52,7 +52,7 @@ describe('when transformApplyCaption is called', () => {
     );
 
     it.skip('should call resolveImageMagickConvert', () => {
-        transformApplyCaption.applyRotate('a', 'b', {width: 1, height: 1});
+        captionTransform.applyRotate('a', 'b', {width: 1, height: 1});
         expect(helpers.resolveImageMagickConvert).toHaveBeenCalled();
     });
 });
@@ -76,7 +76,7 @@ describe('when generateCaption is called', () => {
             name: 'bar.png',
         };
 
-        return transformApplyCaption.generateCaption(file).then((caption) =>{
+        return captionTransform.generateCaption(file).then((caption) =>{
             expect(VisionApi.ImageAnnotatorClient.prototype.labelDetection).toHaveBeenCalledWith(`gs://foo/bar.png`);
             expect(caption).toEqual('bestDescription');
         });
@@ -91,7 +91,7 @@ describe('when applyCaption is called', () => {
         helpers
             .resolveImageMagickConvert
             .mockReturnValue(Promise.resolve());
-        return transformApplyCaption
+        return captionTransform
             .applyCaption(inFile, outFile, {caption})
             .then(() => {
                 expect(helpers.resolveImageMagickIdentify)

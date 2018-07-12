@@ -17,7 +17,7 @@ const spy = jest.fn(() => Promise.resolve());
 decorator.mockReturnValue(spy);
 
 
-const transformApplyBlurLogos = require('./index.js');
+const blurLogosTransform = require('./index.js');
 
 
 jest.mock('../helpers.js');
@@ -34,9 +34,9 @@ const file = {
     name: 'bar.png',
 };
 
-describe('when transformApplyBlurLogos is called', () => {
+describe('when blurLogosTransform is called', () => {
   it('should have default parameters', () => {
-    expect(transformApplyBlurLogos.parameters).not.toBeUndefined();
+    expect(blurLogosTransform.parameters).not.toBeUndefined();
   });
 
 
@@ -49,7 +49,7 @@ describe('when transformApplyBlurLogos is called', () => {
         helpers.annotationsToPolygons.mockClear();
         helpers.annotationsToPolygons.mockReturnValue('polygons');
         const parameters = {};
-        transformApplyBlurLogos(file, parameters).then(() => {
+        blurLogosTransform(file, parameters).then(() => {
             expect(helpers.annotationsToPolygons)
                 .toHaveBeenCalledWith('result');
             expect(spy)
@@ -64,7 +64,7 @@ describe('when detectLogos is called', () => {
         mockDetection.mockReturnValue(
             Promise.resolve([{logoAnnotations: 'result'}])
         );
-        transformApplyBlurLogos.detectLogos(file).then((result) => {
+        blurLogosTransform.detectLogos(file).then((result) => {
             expect(mockDetection)
                 .toHaveBeenCalledWith(`gs://foo/bar.png`);
             expect(result)

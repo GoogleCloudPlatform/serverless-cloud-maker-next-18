@@ -28,7 +28,7 @@ const decorator = require('../decorator');
  * correctly named png files to a GCS bucket in accordance with
  * this mapping, which you can do by running
  * `node uploadEmojis.js`
- */ 
+ */
 const emojis = {
     joyLikelihood: 'joy.png',
     angerLikelihood: 'anger.png',
@@ -86,9 +86,9 @@ const applyComposites = (inFile, outFile, {composites}) => {
     ]);
 };
 
-const transformApplyComposites = decorator(applyComposites);
+const compositesTransform = decorator(applyComposites);
 
-const transformApplyEmojify = (file, parameters) => {
+const emojiTransform = (file, parameters) => {
     return Promise.all([
             // send a remote url to the Vision API
             vision.faceDetection(`gs://${file.bucket.name}/${file.name}`),
@@ -104,14 +104,14 @@ const transformApplyEmojify = (file, parameters) => {
         )
         // apply those composites over the image
         .then((composites) =>
-            transformApplyComposites(
+            compositesTransform(
                 file,
                 Object.assign(parameters, {composites})
             )
         );
 };
 
-transformApplyEmojify.parameters = {
+emojiTransform.parameters = {
         outputPrefix: {
             defaultValue: 'emojis',
         },
@@ -124,6 +124,6 @@ transformApplyEmojify.parameters = {
         },
     };
 
-transformApplyEmojify.emojis = emojis;
+emojiTransform.emojis = emojis;
 
-module.exports = transformApplyEmojify;
+module.exports = emojiTransform;

@@ -11,10 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const transformApplyLandmarks = require('./index.js');
+const landmarkTransform = require('./index.js');
 
 jest.mock('../caption');
-const transformApplyCaption = require('../caption');
+const captionTransform = require('../caption');
 
 
 jest.mock('@google-cloud/vision');
@@ -30,14 +30,14 @@ const mockDetection = VisionApi
     .prototype
     .landmarkDetection;
 
-describe('when transformApplyLandmarks is called', () => {
+describe('when landmarkTransform is called', () => {
   it('should have default parameters', () => {
-    expect(transformApplyLandmarks.parameters).not.toBeUndefined();
+    expect(landmarkTransform.parameters).not.toBeUndefined();
   });
 
   it('should create a caption if a landmark is detected', () => {
-    transformApplyCaption.mockClear();
-    transformApplyCaption.mockReturnValue(Promise.resolve());
+    captionTransform.mockClear();
+    captionTransform.mockReturnValue(Promise.resolve());
         mockDetection
             .mockClear();
 
@@ -50,16 +50,16 @@ describe('when transformApplyLandmarks is called', () => {
                     ],
                 }]
             ));
-        return transformApplyLandmarks(file, {})
+        return landmarkTransform(file, {})
             .then(() =>
-                expect(transformApplyCaption)
+                expect(captionTransform)
                     .toHaveBeenCalledWith(file, {caption: 'bestAnnotation'})
             );
   });
 
   it('should not create a caption if none are detected', () => {
-    transformApplyCaption.mockClear();
-    transformApplyCaption.mockReturnValue(Promise.resolve());
+    captionTransform.mockClear();
+    captionTransform.mockReturnValue(Promise.resolve());
         mockDetection
             .mockClear();
 
@@ -69,9 +69,9 @@ describe('when transformApplyLandmarks is called', () => {
                     landmarkAnnotations: [],
                 }]
             ));
-        return transformApplyLandmarks(file, {})
+        return landmarkTransform(file, {})
             .then(() =>
-                expect(transformApplyCaption)
+                expect(captionTransform)
                     .toHaveBeenCalledWith(file, {caption: 'No landmark found.'})
             );
   });
@@ -92,7 +92,7 @@ describe('detectLandmark', () => {
                     ],
                 }]
             ));
-        return transformApplyLandmarks
+        return landmarkTransform
             .detectLandmark(file)
             .then(({description}) => {
                 expect(mockDetection)
