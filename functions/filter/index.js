@@ -33,9 +33,9 @@ const applyFilter = (inFile, outFile, {filterName}) => {
     ]);
 };
 
-const transformApplyFilter = createImageMagickTransform(applyFilter);
+const filterTransform = createImageMagickTransform(applyFilter);
 
-transformApplyFilter.parameters = {
+filterTransform.parameters = {
         outputPrefix: {
             defaultValue: 'filtered',
         },
@@ -49,6 +49,6 @@ transformApplyFilter.parameters = {
         },
     };
 
-transformApplyFilter.applyFilter = applyFilter;
+filterTransform.applyFilter = applyFilter;
 
-module.exports = transformApplyFilter;
+module.exports = filterTransform;

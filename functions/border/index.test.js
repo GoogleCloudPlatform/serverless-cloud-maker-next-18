@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const transformApplyBorder = require('./index.js');
+const borderTransform = require('./index.js');
 
 jest.mock('../helpers.js');
 const helpers = require('../helpers');
@@ -22,12 +22,12 @@ const outFile = 'outFile';
 const color = 'blue';
 const width = 10;
 
-describe('when transformApplyBorder is called', () => {
+describe('when borderTransform is called', () => {
   // it should accept google colors
   ['blue', 'green', 'yellow', 'red'].map((color) =>
 
     it(`it should accept ${color}`, () => {
-      expect(transformApplyBorder.parameters.color.validate(color)).toBe(true);
+      expect(borderTransform.parameters.color.validate(color)).toBe(true);
         })
   );
 
@@ -35,24 +35,24 @@ describe('when transformApplyBorder is called', () => {
   ['magenta', 'false', 'goldenrod', '0'].map((color) =>
 
     it(`it should not accept ${color}`, () => {
-      expect(transformApplyBorder.parameters.color.validate(color)).toBe(false);
+      expect(borderTransform.parameters.color.validate(color)).toBe(false);
         })
   );
 
   [10, '20', 30.0].map((width) =>
     it(`should accept ${width}`, () => {
-      expect(transformApplyBorder.parameters.width.validate(width)).toBe(true);
+      expect(borderTransform.parameters.width.validate(width)).toBe(true);
     })
   );
 
   [200, 'foo', 30.01].map((width) =>
     it(`should not accept ${width}`, () => {
-      expect(transformApplyBorder.parameters.width.validate(width)).toBe(false);
+      expect(borderTransform.parameters.width.validate(width)).toBe(false);
     })
   );
 
   it('should call resolveImageMagickConvert', () => {
-    transformApplyBorder.applyBorder(inFile, outFile, {width, color});
+    borderTransform.applyBorder(inFile, outFile, {width, color});
     expect(helpers.resolveImageMagickConvert)
       .toHaveBeenCalledWith([
         inFile,

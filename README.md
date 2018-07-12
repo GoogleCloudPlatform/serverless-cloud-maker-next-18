@@ -47,8 +47,5 @@ __DISCLAIMER__: This is not an official Google product.
 - Call the handler: `gcloud functions call handler --data=$(cat request.json)`
 - Read the logs: `gcloud functions logs read --limit=10`
 
-## Creating buckets
-- Run `node createBuckets.js` to create all of the buckets that functions will upload results to by default.
-
 ## Upload emojis
 - Run `node uploadEmojis.js` to create the emoji buckets and upload the asset files to the correct location within them.

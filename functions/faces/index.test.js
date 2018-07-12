@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const transformApplyBlurFaces = require('./index.js');
+const blurFacesTransform = require('./index.js');
 
 jest.mock('../helpers.js');
 const helpers = require('../helpers');
@@ -19,9 +19,9 @@ const helpers = require('../helpers');
 jest.mock('@google-cloud/vision');
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 
-describe('when transformApplyBlurFaces is called', () => {
+describe('when blurFacesTransform is called', () => {
     it('should have default parameters', () => {
-        expect(transformApplyBlurFaces.parameters).not.toBeUndefined();
+        expect(blurFacesTransform.parameters).not.toBeUndefined();
     });
 
     it('should call the vision api', () => {
@@ -43,7 +43,7 @@ describe('when transformApplyBlurFaces is called', () => {
             .mockReturnValue(Promise.resolve([{faceAnnotations}]));
 
 
-        return transformApplyBlurFaces
+        return blurFacesTransform
             .detectFaces(file)
             .then((annotations) => {
                 expect(
