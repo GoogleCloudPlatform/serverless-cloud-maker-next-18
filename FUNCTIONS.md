@@ -131,7 +131,6 @@ These parameters are accepted by all functions.
 ```
 {
   "data": {
-    "gcsSourceUri": "gs://inputs/image1.jpg",
     "bucket": "inputs",
     "name": "image1.jpg"
   },

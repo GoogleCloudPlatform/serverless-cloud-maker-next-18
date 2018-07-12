@@ -26,7 +26,6 @@ const functions = require('./functions');
  * Confirms that the "data" parameter of a request that specifies the input
  * file contains the required information. Should be of the form
  * {
- *      gcsSourceUri,
  *      name,
  *      bucket
  *  }
@@ -34,9 +33,6 @@ const functions = require('./functions');
 const validateData = (data) => {
     if (data.constructor == Array) {
         throw 'Data should be a single object, not an array';
-    }
-    if (!data.gcsSourceUri) {
-        throw 'No gcsSourceUri specified';
     }
 
     if (!data.bucket) {
