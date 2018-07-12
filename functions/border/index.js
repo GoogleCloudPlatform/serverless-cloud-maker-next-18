@@ -39,7 +39,7 @@ transformApplyBorder.parameters = {
         defaultValue: 'bordered',
     },
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-bordered',
+        defaultValue: null,
     },
     color: {
         defaultValue: 'blue',

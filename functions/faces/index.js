@@ -27,7 +27,7 @@ const detectFaces = (file) => {
     return vision
         .faceDetection(`gs://${file.bucket.name}/${file.name}`)
         .then(([{faceAnnotations}]) => faceAnnotations);
-}
+};
 
 const transformApplyBlurFaces = (file, parameters) => {
     return detectFaces(file)
@@ -41,14 +41,14 @@ const transformApplyBlurFaces = (file, parameters) => {
                     Object.assign(parameters, {polygons})
                 )
             );
-}
+};
 
 transformApplyBlurFaces.parameters = {
     outputPrefix: {
         defaultValue: 'faces',
     },
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-faces',
+        defaultValue: null,
     },
 };
 

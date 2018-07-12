@@ -28,7 +28,7 @@ const transformApplyResize = decorator(applyResize);
 
 transformApplyResize.parameters = {
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-resized',
+        defaultValue: null,
     },
     outputPrefix: {
         defaultValue: 'resized',

@@ -33,7 +33,7 @@ transformApplyRotate.parameters = {
         defaultValue: 'rotated',
     },
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-rotated',
+        defaultValue: null,
     },
     degrees: {
         defaultValue: 90,

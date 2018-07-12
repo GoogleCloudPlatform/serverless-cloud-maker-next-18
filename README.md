@@ -15,13 +15,13 @@ __DISCLAIMER__: This is not an official Google product.
 ### Install Google Cloud SDK
 - Install the `gcloud` command [here](https://cloud.google.com/sdk/install)
 - Install the functions local emulator [here](https://cloud.google.com/functions/docs/emulator) to enable local testing
+- Make sure your project is set correctly `gcloud config get-value project`.
 
 ### Install global requirements
 - Install ImageMagick: `brew install imagemagick`
 
 ### Install npm dependencies
 - `cd serverless-cloud-maker-next-18 && npm install`
-
 
 ## Organization
 - `index.js` implements the main handler function
@@ -35,7 +35,6 @@ __DISCLAIMER__: This is not an official Google product.
 - Call the function with a test request stored in request.json: `functions call handler --data="$(cat request.json)"`
 - Read the logs `functions logs read --limit=10`
 
-
 ## Running tests
 - Run Jest: `jest` (or `npm run test`)
 - Run Jest in watch mode: `jest --watch`
@@ -46,9 +45,6 @@ __DISCLAIMER__: This is not an official Google product.
 - Deploy the handler (1-2m): `gcloud functions deploy handler --trigger-http`
 - Call the handler: `gcloud functions call handler --data=$(cat request.json)`
 - Read the logs: `gcloud functions logs read --limit=10`
-
-## Creating buckets
-- Run `node createBuckets.js` to create all of the buckets that functions will upload results to by default.
 
 ## Upload emojis
 - Run `node uploadEmojis.js` to create the emoji buckets and upload the asset files to the correct location within them.

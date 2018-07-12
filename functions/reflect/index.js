@@ -29,7 +29,7 @@ transformApplyReflect.parameters = {
             defaultValue: 'reflected',
         },
         outputBucketName: {
-            defaultValue: 'cloud-maker-outputs-reflected',
+            defaultValue: null,
         },
         axis: {
             defaultValue: 'y',

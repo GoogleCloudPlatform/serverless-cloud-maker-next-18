@@ -18,6 +18,7 @@
  * can be deployed as a service for the backend of the
  * showcase demo.
  */
+require('dotenv').config();
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 const functions = require('./functions');
@@ -174,7 +175,7 @@ const handler = (request, response) => {
         return;
     }
 
-    const outputBucketName = request.body.outputBucketName || 'cloud-maker-outputs-final';
+    const outputBucketName = request.body.outputBucketName;
 
     /*
      * Convert the json in the request to the objects
@@ -220,12 +221,14 @@ const handler = (request, response) => {
         )
         // Copy the final result to the output bucket
         .then(
-            (resultFile) =>
-                resultFile.copy(
-                    storage
-                        .bucket(outputBucketName)
-                        .file(resultFile.name)
-                )
+            (resultFile) => {
+                return storage
+                    .bucket(outputBucketName)
+                    .upload(
+                        functions.helpers.createTempFileName(resultFile.name),
+                        {destination: resultFile.name}
+                    );
+            }
         )
         .then(([outputFile]) => response.send(outputFile))
         .catch((err) => response.send(err));

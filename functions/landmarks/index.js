@@ -53,7 +53,7 @@ transformApplyLandmarks.parameters = {
         defaultValue: 'landmark',
     },
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-landmarks',
+        defaultValue: null,
     },
 };
 

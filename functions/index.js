@@ -32,6 +32,8 @@ const transformApplySafeSearch = require('./safeSearch');
 const transformApplyEmojify = require('./emojify');
 const transformApplyBlurLogos = require('./logo');
 const transformApplyLandmarks = require('./landmarks');
+// helpers
+const helpers = require('./helpers');
 
 module.exports = {
     // basic functions
@@ -52,4 +54,6 @@ module.exports = {
     transformApplyCropShape,
     transformApplySafeSearch,
     transformApplyEmojify,
+    // helpers
+    helpers,
 };

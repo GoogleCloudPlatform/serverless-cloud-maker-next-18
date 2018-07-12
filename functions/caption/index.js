@@ -85,7 +85,7 @@ transformApplyCaption.parameters = {
         defaultValue: 'caption',
     },
     outputBucketName: {
-        defaultValue: 'cloud-maker-outputs-captions',
+        defaultValue: null,
     },
     caption: {
         defaultValue: false,

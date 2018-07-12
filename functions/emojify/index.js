@@ -28,7 +28,7 @@ const decorator = require('../decorator');
  * correctly named png files to a GCS bucket in accordance with
  * this mapping, which you can do by running
  * `node uploadEmojis.js`
- */ 
+ */
 const emojis = {
     joyLikelihood: 'joy.png',
     angerLikelihood: 'anger.png',
@@ -116,7 +116,7 @@ transformApplyEmojify.parameters = {
             defaultValue: 'emojis',
         },
         outputBucketName: {
-            defaultValue: 'cloud-maker-outputs-emojis',
+            defaultValue: null,
         },
         emojiSet: {
             defaultValue: 'emojis-apple',
