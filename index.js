@@ -26,8 +26,8 @@ const functions = require('./functions');
  * Confirms that the "data" parameter of a request that specifies the input
  * file contains the required information. Should be of the form
  * {
- *       gcsSourceUri,
- *       name,
+ *      gcsSourceUri,
+ *      name,
  *      bucket
  *  }
  */
@@ -91,13 +91,11 @@ const validateFunction = (func) => {
     if (!func.name) {
         throw 'No function name specified';
     }
-
     if (!functions[func.name]) {
         throw `No function exists with name ${func.name}`;
     }
 
     validateParameters(func.name, func.parameters);
-
     return true;
 };
 
@@ -109,17 +107,14 @@ const validateRequest = (request) => {
     if (!request.body) {
         throw 'Invalid request: Missing body parameter.';
     }
-
     if (!request.body.data) {
         throw 'Invalid request: Missing input data.';
     }
-
     if (!request.body.functions) {
         throw 'Invalid request: Missing functions list.';
     }
 
     validateData(request.body.data);
-
     request.body.functions.map(validateFunction);
 
     return true;
@@ -174,7 +169,8 @@ const handler = (request, response) => {
         return;
     }
 
-    const outputBucketName = request.body.outputBucketName || 'cloud-maker-outputs-final';
+    const outputBucketName = request.body.outputBucketName ||
+        'cloud-maker-outputs-final';
 
     /*
      * Convert the json in the request to the objects
