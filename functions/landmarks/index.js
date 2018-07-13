@@ -15,7 +15,7 @@
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
-const transformApplyCaption = require('../caption');
+const captionTransform = require('../caption');
 
 /*
  * Query the Vision API's landmark detection and resolve with
@@ -34,11 +34,11 @@ const detectLandmark = (file) => {
         );
 };
 
-const transformApplyLandmarks = (file, parameters) => {
+const landmarkTransform = (file, parameters) => {
     return detectLandmark(file)
         .catch(console.error)
         .then(({description}) =>
-            transformApplyCaption(
+            captionTransform(
                 file,
                 Object.assign(
                     parameters,
@@ -48,7 +48,7 @@ const transformApplyLandmarks = (file, parameters) => {
         .catch(console.error);
 };
 
-transformApplyLandmarks.parameters = {
+landmarkTransform.parameters = {
     outputPrefix: {
         defaultValue: 'landmark',
     },
@@ -57,6 +57,6 @@ transformApplyLandmarks.parameters = {
     },
 };
 
-transformApplyLandmarks.detectLandmark = detectLandmark;
+landmarkTransform.detectLandmark = detectLandmark;
 
-module.exports = transformApplyLandmarks;
+module.exports = landmarkTransform;

@@ -48,7 +48,7 @@ const applyCaption = (inFile, outFile, {caption}) => {
             );
 };
 
-const transformApplyAnnotationAsCaption = decorator(applyCaption);
+const annotationAsCaptionTransform = decorator(applyCaption);
 
 const generateCaption = (file) => {
     return vision
@@ -63,9 +63,9 @@ const generateCaption = (file) => {
 };
 
 
-const transformApplyCaption = (file, parameters) => {
+const captionTransform = (file, parameters) => {
     if (parameters.caption) {
-        return transformApplyAnnotationAsCaption(
+        return annotationAsCaptionTransform(
             file,
             parameters
         );
@@ -73,14 +73,14 @@ const transformApplyCaption = (file, parameters) => {
     return generateCaption(file)
         .then(
             (caption) =>
-                transformApplyAnnotationAsCaption(
+                annotationAsCaptionTransform(
                     file,
                     Object.assign(parameters, {caption})
                 )
         );
 };
 
-transformApplyCaption.parameters = {
+captionTransform.parameters = {
     outputPrefix: {
         defaultValue: 'caption',
     },
@@ -98,10 +98,10 @@ transformApplyCaption.parameters = {
     },
 };
 
-Object.assign(transformApplyCaption, {
+Object.assign(captionTransform, {
     applyCaption,
-    transformApplyAnnotationAsCaption,
+    annotationAsCaptionTransform,
     generateCaption,
 });
 
-module.exports = transformApplyCaption;
+module.exports = captionTransform;

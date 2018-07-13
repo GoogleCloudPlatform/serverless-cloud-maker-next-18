@@ -45,7 +45,6 @@ describe.skip('request.json', () => {
 });
 
 const validData = {
-    gcsSourceUri: 'foo',
     name: 'bar',
     bucket: 'baz',
 };
@@ -78,16 +77,13 @@ describe('validateRequest', () => {
 
 
 describe('validateData', () => {
-    it('should throw when there is no gcsUri', () => {
-        expect(() => validateData({})).toThrow('No gcsSourceUri specified');
-    });
     it('should throw when there is no bucket', () => {
-        expect(() => validateData({gcsSourceUri: 'asdf'}))
+        expect(() => validateData({}))
             .toThrow('No bucket specified');
     });
 
     it('should throw when there is no name', () => {
-        expect(() => validateData({gcsSourceUri: 'asdf', bucket: 'asdf'}))
+        expect(() => validateData({bucket: 'asdf'}))
             .toThrow('No name specified');
     });
 });

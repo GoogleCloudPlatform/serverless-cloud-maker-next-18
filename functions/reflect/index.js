@@ -22,9 +22,9 @@ const applyReflect = (inFile, outFile, {axis}) => {
     ]);
 };
 
-const transformApplyReflect = decorator(applyReflect);
+const reflectTransform = decorator(applyReflect);
 
-transformApplyReflect.parameters = {
+reflectTransform.parameters = {
         outputPrefix: {
             defaultValue: 'reflected',
         },
@@ -36,6 +36,6 @@ transformApplyReflect.parameters = {
             validate: (a) => ['x', 'y'].includes(a),
         },
     };
-transformApplyReflect.applyReflect = applyReflect;
+reflectTransform.applyReflect = applyReflect;
 
-module.exports = transformApplyReflect;
+module.exports = reflectTransform;

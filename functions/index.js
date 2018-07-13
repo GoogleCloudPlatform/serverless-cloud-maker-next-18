@@ -18,42 +18,43 @@
 const copyImage = require('./copy');
 const convertRasterFormat = require('./convertRasterFormat');
 // basic transformations
-const transformApplyResize = require('./resize');
-const transformApplyRotate = require('./rotate');
-const transformApplyReflect = require('./reflect');
-const transformApplyFilter = require('./filter');
-const transformApplyBorder = require('./border');
-const transformApplyBlur = require('./blur');
+const resizeTransform = require('./resize');
+const rotateTransform = require('./rotate');
+const reflectTransform = require('./reflect');
+const filterTransform = require('./filter');
+const borderTransform = require('./border');
+const blurTransform = require('./blur');
 // vision transformations
-const transformApplyCaption = require('./caption');
-const transformApplyBlurFaces = require('./faces');
-const transformApplyCropShape = require('./shape');
-const transformApplySafeSearch = require('./safeSearch');
-const transformApplyEmojify = require('./emojify');
-const transformApplyBlurLogos = require('./logo');
-const transformApplyLandmarks = require('./landmarks');
+const captionTransform = require('./caption');
+const blurFacesTransform = require('./faces');
+const cropShapeTransform = require('./shape');
+const safeSearchTransform = require('./safeSearch');
+const emojiTransform = require('./emojify');
+const blurLogosTransform = require('./logo');
+const landmarkTransform = require('./landmarks');
 // helpers
 const helpers = require('./helpers');
+
 
 module.exports = {
     // basic functions
     copyImage,
     convertRasterFormat,
     // basic transformations
-    transformApplyResize,
-    transformApplyRotate,
-    transformApplyReflect,
-    transformApplyFilter,
-    transformApplyBorder,
-    transformApplyBlur,
+    resizeTransform,
+    rotateTransform,
+    reflectTransform,
+    filterTransform,
+    borderTransform,
+    blurTransform,
     // vision transformations
-    transformApplyCaption,
-    transformApplyLandmarks,
-    transformApplyBlurFaces,
-    transformApplyBlurLogos,
-    transformApplyCropShape,
-    transformApplySafeSearch,
-    transformApplyEmojify,
+    captionTransform,
+    landmarkTransform,
+    blurFacesTransform,
+    blurLogosTransform,
+    cropShapeTransform,
+    safeSearchTransform,
+    emojiTransform,
     // helpers
     helpers,
 };
