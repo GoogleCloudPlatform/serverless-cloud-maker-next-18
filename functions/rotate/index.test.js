@@ -14,22 +14,22 @@
 jest.mock('../helpers.js');
 const helpers = require('../helpers');
 
-const transformApplyRotate = require('./index.js');
+const rotateTransform = require('./index.js');
 
 const inFile = 'inFile';
 const outFile = 'outFile';
 const degrees = 180;
 
 
-describe('transformApplyRotate', () => {
+describe('rotateTransform', () => {
   it('should have default parameters', () => {
-    expect(transformApplyRotate.parameters).not.toBeUndefined();
+    expect(rotateTransform.parameters).not.toBeUndefined();
   });
 
   it('should accept numeric integer inputs', () => {
     const numericDegrees = [90, 180, 0, '10', '20', null];
     numericDegrees.map((deg) =>
-        expect(transformApplyRotate.parameters.degrees.validate(deg))
+        expect(rotateTransform.parameters.degrees.validate(deg))
           .toBe(true)
       );
   });
@@ -37,14 +37,14 @@ describe('transformApplyRotate', () => {
   it('should reject non-numeric inputs', () => {
     const nonnumericDegrees = ['foo', NaN, '1.1', {}];
     nonnumericDegrees.map((deg) =>
-        expect(transformApplyRotate.parameters.degrees.validate(deg))
+        expect(rotateTransform.parameters.degrees.validate(deg))
           .toBe(false)
         );
   });
 
   it('should call resolveImageMagickConvert with the degrees', () => {
     helpers.resolveImageMagickConvert.mockClear();
-    transformApplyRotate.applyRotate(inFile, outFile, {degrees});
+    rotateTransform.applyRotate(inFile, outFile, {degrees});
     expect(helpers.resolveImageMagickConvert)
       .toHaveBeenCalledWith([inFile, '-rotate', degrees, outFile]);
   });

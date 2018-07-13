@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const transformApplyResize = require('./index.js');
+const resizeTransform = require('./index.js');
 
 jest.mock('../helpers.js');
 const helpers = require('../helpers');
@@ -19,9 +19,9 @@ const helpers = require('../helpers');
 const inFile = 'inFile';
 const outFile = 'outFile';
 
-describe('when transformApplyResize is called', () => {
+describe('when resizeTransform is called', () => {
     it('should call resolveImageMagickConvert', () => {
-        transformApplyResize.applyResize(
+        resizeTransform.applyResize(
             inFile,
             outFile,
             {width: 1, height: 1}
@@ -35,20 +35,20 @@ describe('when transformApplyResize is called', () => {
     });
 
     it('should have default parameters', () => {
-        expect(transformApplyResize.parameters).not.toBeUndefined();
+        expect(resizeTransform.parameters).not.toBeUndefined();
     });
     it('should reject non-numeric inputs', () => {
-        expect(transformApplyResize.parameters.width.validate('1234'))
+        expect(resizeTransform.parameters.width.validate('1234'))
             .toBe(true);
-        expect(transformApplyResize.parameters.height.validate('1234'))
+        expect(resizeTransform.parameters.height.validate('1234'))
             .toBe(true);
-        expect(transformApplyResize.parameters.width.validate(1234))
+        expect(resizeTransform.parameters.width.validate(1234))
             .toBe(true);
-        expect(transformApplyResize.parameters.height.validate(4321))
+        expect(resizeTransform.parameters.height.validate(4321))
             .toBe(true);
-        expect(transformApplyResize.parameters.width.validate('asdf'))
+        expect(resizeTransform.parameters.width.validate('asdf'))
             .toBe(false);
-        expect(transformApplyResize.parameters.width.validate('fdsa'))
+        expect(resizeTransform.parameters.width.validate('fdsa'))
             .toBe(false);
     });
 });

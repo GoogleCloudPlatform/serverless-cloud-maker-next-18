@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const transformApplyFilter = require('./index.js');
+const filterTransform = require('./index.js');
 
 // create mock of the helper functions
 jest.mock('../helpers.js');
@@ -20,12 +20,12 @@ const helpers = require('../helpers');
 const inFile = 'inFile';
 const outFile = 'outFile';
 
-describe('when transformApplyFilter is called', () => {
+describe('when filterTransform is called', () => {
     it('should accept, sepia, grayscale, or colorize parameters', () => {
-        expect(transformApplyFilter.parameters).not.toBeUndefined();
+        expect(filterTransform.parameters).not.toBeUndefined();
         ['sepia', 'grayscale', 'colorize'].map((filter) =>
             expect(
-                transformApplyFilter
+                filterTransform
                     .parameters
                     .filterName
                     .validate(filter)
@@ -35,7 +35,7 @@ describe('when transformApplyFilter is called', () => {
     });
 
     it('should call resolveImageMagickConvert', () => {
-        transformApplyFilter.applyFilter(
+        filterTransform.applyFilter(
             inFile,
             outFile,
             {filterName: 'grayscale'}

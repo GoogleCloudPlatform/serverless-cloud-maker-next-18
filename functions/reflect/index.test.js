@@ -15,32 +15,32 @@
 
 jest.mock('../helpers.js');
 const helpers = require('../helpers');
-const transformApplyReflect = require('./index.js');
+const reflectTransform = require('./index.js');
 
 const inFile = 'inFile';
 const outFile = 'outFile';
-describe('when transformApplyReflect is called', () => {
+describe('when reflectTransform is called', () => {
     it('should accept x or y', () => {
-        expect(transformApplyReflect.parameters.axis.validate)
+        expect(reflectTransform.parameters.axis.validate)
             .not
             .toBeUndefined();
 
         ['x', 'y'].map((axis) =>
-            expect(transformApplyReflect.parameters.axis.validate(axis))
+            expect(reflectTransform.parameters.axis.validate(axis))
                 .toBe(true)
         );
 
         ['a', 'z', null, false].map((axis) =>
-            expect(transformApplyReflect.parameters.axis.validate(axis))
+            expect(reflectTransform.parameters.axis.validate(axis))
                 .toBe(false)
         );
     });
 
     it('should call resolveImageMagickConvert', () => {
-        transformApplyReflect.applyReflect(inFile, outFile, {axis: 'x'} );
+        reflectTransform.applyReflect(inFile, outFile, {axis: 'x'} );
         expect(helpers.resolveImageMagickConvert)
             .toHaveBeenCalledWith([inFile, '-flip', outFile]);
-        transformApplyReflect.applyReflect(inFile, outFile, {axis: 'y'} );
+        reflectTransform.applyReflect(inFile, outFile, {axis: 'y'} );
         expect(helpers.resolveImageMagickConvert)
             .toHaveBeenCalledWith([inFile, '-flop', outFile]);
     });

@@ -32,9 +32,9 @@ const applyBorder = (inFile, outFile, {color='blue', width='1'}) => {
     ]);
 };
 
-const transformApplyBorder = decorator(applyBorder);
+const borderTransform = decorator(applyBorder);
 
-transformApplyBorder.parameters = {
+borderTransform.parameters = {
     outputPrefix: {
         defaultValue: 'bordered',
     },
@@ -56,6 +56,6 @@ transformApplyBorder.parameters = {
     },
 };
 
-transformApplyBorder.applyBorder = applyBorder;
+borderTransform.applyBorder = applyBorder;
 
-module.exports = transformApplyBorder;
+module.exports = borderTransform;

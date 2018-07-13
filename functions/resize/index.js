@@ -24,9 +24,9 @@ const applyResize = (inFile, outFile, {width, height}) => {
     ]);
 };
 
-const transformApplyResize = decorator(applyResize);
+const resizeTransform = decorator(applyResize);
 
-transformApplyResize.parameters = {
+resizeTransform.parameters = {
     outputBucketName: {
         defaultValue: null,
     },
@@ -43,6 +43,6 @@ transformApplyResize.parameters = {
     },
 };
 
-transformApplyResize.applyResize = applyResize;
+resizeTransform.applyResize = applyResize;
 
-module.exports = transformApplyResize;
+module.exports = resizeTransform;

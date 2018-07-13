@@ -14,7 +14,7 @@
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
-const transformApplyBlur = require('../blur');
+const blurTransform = require('../blur');
 
 /*
  *Given the safe search annotation returned by the cloud vision api,
@@ -31,18 +31,18 @@ const isUnsafe = ([{safeSearchAnnotation}]) =>
  * and if it returns unsafe, apply a blur effect
  * to the image.
  */
-const transformApplySafeSearch = (file, parameters) => {
+const safeSearchTransform = (file, parameters) => {
     return vision
         .safeSearchDetection(`gs://${file.bucket.name}/${file.name}`)
         .catch(console.err)
         .then((result) =>
             isUnsafe(result)
-            ? transformApplyBlur(file, parameters)
+            ? blurTransform(file, parameters)
             : file
         );
 };
 
-transformApplySafeSearch.parameters = {
+safeSearchTransform.parameters = {
     outputPrefix: {
         defaultValue: 'safe',
     },
@@ -51,4 +51,4 @@ transformApplySafeSearch.parameters = {
     },
 };
 
-module.exports = transformApplySafeSearch;
+module.exports = safeSearchTransform;

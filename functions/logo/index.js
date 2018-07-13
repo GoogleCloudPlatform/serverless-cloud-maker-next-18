@@ -17,7 +17,7 @@ const decorator = require('../decorator');
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
 
-const transformApplyBlurPolygons = decorator(helpers.blurPolygons);
+const blurPolygonsTransform = decorator(helpers.blurPolygons);
 
 const detectLogos = (file) => {
     return vision
@@ -25,11 +25,11 @@ const detectLogos = (file) => {
         .then(([{logoAnnotations}]) => logoAnnotations);
 };
 
-const transformApplyBlurLogos = (file, parameters) => {
+const blurLogosTransform = (file, parameters) => {
     return detectLogos(file)
         .then(helpers.annotationsToPolygons)
         .then((polygons) =>
-            transformApplyBlurPolygons(
+            blurPolygonsTransform(
                 file,
                 Object.assign(parameters, {polygons})
             )
@@ -37,7 +37,7 @@ const transformApplyBlurLogos = (file, parameters) => {
         .catch(console.error);
 };
 
-transformApplyBlurLogos.parameters = {
+blurLogosTransform.parameters = {
     outputPrefix: {
         defaultValue: 'logo',
     },
@@ -46,7 +46,7 @@ transformApplyBlurLogos.parameters = {
     },
 };
 
-transformApplyBlurLogos.detectLogos = detectLogos;
+blurLogosTransform.detectLogos = detectLogos;
 
 
-module.exports = transformApplyBlurLogos;
+module.exports = blurLogosTransform;
