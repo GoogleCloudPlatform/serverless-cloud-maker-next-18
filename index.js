@@ -18,7 +18,6 @@
  * can be deployed as a service for the backend of the
  * showcase demo.
  */
-require('dotenv').config();
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 const functions = require('./functions');
