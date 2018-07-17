@@ -52,6 +52,13 @@ const createImageMagickTransform = (transform) => {
             // write errors in the transform to the console
             .catch(console.error)
             .then(() => {
+                /*
+                 * Use the global output bucket as the default
+                 * place to store outputs. This file won't actually
+                 * be uploaded unless this is the last function
+                 * or the user specifies an output bucket for
+                 * this function.
+                 */
                 const resultFile = storage
                     .bucket(process.env.OUTPUT_BUCKET)
                     .file(outputFileName);
