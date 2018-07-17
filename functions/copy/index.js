@@ -27,20 +27,56 @@ const helpers = require('../helpers');
  * output bucket
  */
 const copyImage = (file, parameters) => {
-    const outputBucketName = parameters.outputBucketName;
+    /*
+     * If no output bucket was specified, use the default
+     * one for the entire pipeline.
+     */
+    const outputBucketName = parameters.outputBucketName ||
+        process.env.OUTPUT_BUCKET;
+
     const outputFileName = helpers.createOutputFileName(
-        parameters.outputPrefix,
+        file.name,
+        parameters
+    );
+
+    const tempLocalInputFileName = helpers.createTempFileName(
         file.name
+    );
+
+    const tempLocalOutputFileName = helpers.createTempFileName(
+        outputFileName
     );
 
     const outputFile = storage
         .bucket(outputBucketName)
         .file(outputFileName);
 
+    /*
+     * There is a case where this file object has
+     * been constructed by a previous function but the
+     * aata does not exist in GCS. Because of this we should
+     * start by checking whether the file exists in storage, and
+     * if it does we want to just copy it to the new bucket, but
+     * if it doesn't we need to upload it. Either way we need
+     * to guarantee that it exists in /tmp/ for the next function
+     * to execute.
+     */
     return file
-        .copy(outputFile)
-        .catch(console.error)
-        .then(() => outputFile);
+        .exists()
+        .then(([exists]) => {
+            if (!exists) {
+                return storage
+                    .bucket(outputBucketName)
+                    .upload(
+                        tempLocalInputFileName,
+                        {destination: outputFileName}
+                    );
+            }
+            return file.copy(outputFile);
+        })
+        .then(() => outputFile.download({destination: tempLocalOutputFileName}))
+        .then(() => outputFile)
+        .catch(console.error);
 };
 
 copyImage.parameters = {
