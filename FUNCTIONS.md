@@ -31,7 +31,7 @@ Detects all faces and their emotions in the image using the Cloud Vision API and
 
 ### emojiSet
 - Determines the set of emojis that are used in the transformation
-- Options: ['emojis-apple', 'emojis-google']
+- Options: ['emojis-apple', 'emojis-g']
 - Default: ['emojis-apple']
 
 

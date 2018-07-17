@@ -16,11 +16,11 @@
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 
-const emojis = require('./emojify').emojis;
+const emojis = require('./functions/emojify').emojis;
 
 // Uploads all of the emojis contains in the assets folder to the relevant
 // GCS bucket
-['emojis-apple', 'emojis-google'].map((emojiSet) =>
+['emojis-apple', 'emojis-g'].map((emojiSet) =>
     storage
         .bucket(emojiSet)
         .exists()

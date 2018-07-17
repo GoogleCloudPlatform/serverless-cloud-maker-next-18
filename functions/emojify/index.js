@@ -120,7 +120,7 @@ emojiTransform.parameters = {
         },
         emojiSet: {
             defaultValue: 'emojis-apple',
-            validate: (v) => ['emojis-apple', 'emojis-google'].contains(v),
+            validate: (v) => ['emojis-apple', 'emojis-g'].contains(v),
         },
     };
 
