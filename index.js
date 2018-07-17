@@ -165,7 +165,13 @@ const handler = (request, response) => {
         return;
     }
 
-    const outputBucketName = request.body.outputBucketName
+    const outputBucketName = request.body.outputBucketName;
+
+    /*
+     * Attach to the process so that all functions can access
+     * the eventual output bucket to use as a default
+     */
+    process.env.OUTPUT_BUCKET = outputBucketName;
 
     /*
      * Convert the json in the request to the objects
