@@ -34,7 +34,6 @@ const isUnsafe = ([{safeSearchAnnotation}]) =>
 const safeSearchTransform = (file, parameters) => {
     return vision
         .safeSearchDetection(`gs://${file.bucket.name}/${file.name}`)
-        .catch(console.err)
         .then((result) =>
             isUnsafe(result)
             ? blurTransform(file, parameters)

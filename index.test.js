@@ -116,6 +116,7 @@ describe('when the handler is called', () => {
 
     const mockResponse = {
         send: jest.fn(),
+        status: jest.fn(() => mockResponse),
     };
 
     const callFunction = () => handler(mockRequest, mockResponse);

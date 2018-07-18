@@ -21,6 +21,7 @@
 const StorageApi = require('@google-cloud/storage');
 const storage = new StorageApi();
 const functions = require('./functions');
+const fs = require('fs');
 
 /*
  * Confirms that the "data" parameter of a request that specifies the input
@@ -32,15 +33,15 @@ const functions = require('./functions');
  */
 const validateData = (data) => {
     if (data.constructor == Array) {
-        throw 'Data should be a single object, not an array';
+        throw new Error('Data should be a single object, not an array');
     }
 
     if (!data.bucket) {
-        throw 'No bucket specified';
+        throw new Error('No bucket specified');
     }
 
     if (!data.name) {
-        throw 'No name specified';
+        throw new Error('No name specified');
     }
 
     return true;
@@ -68,10 +69,10 @@ const validateParameters = (name, parameters={}) => {
                 if (validate(value)) {
                     return;
                 } else {
-                    throw `Parameter ${key} with value ${value} was rejected by ${name}`;
+                    throw new Error(`Parameter ${key} with value ${value} was rejected by ${name}`);
                 }
             } else {
-                throw `Parameter ${key} not expected for function ${name}. Expected one of ${defaultKeys}`;
+                throw new Error(`Parameter ${key} not expected for function ${name}. Expected one of ${defaultKeys}`);
             }
         }
     );
@@ -85,10 +86,10 @@ const validateParameters = (name, parameters={}) => {
  */
 const validateFunction = (func) => {
     if (!func.name) {
-        throw 'No function name specified';
+        throw new Error('No function name specified');
     }
     if (!functions[func.name]) {
-        throw `No function exists with name ${func.name}`;
+        throw new Error(`No function exists with name ${func.name}`);
     }
 
     validateParameters(func.name, func.parameters);
@@ -100,14 +101,15 @@ const validateFunction = (func) => {
  */
 
 const validateRequest = (request) => {
+    console.log('Request', request.body);
     if (!request.body) {
-        throw 'Invalid request: Missing body parameter.';
+        throw new Error('Invalid request: Missing body parameter.');
     }
     if (!request.body.data) {
-        throw 'Invalid request: Missing input data.';
+        throw new Error('Invalid request: Missing input data.');
     }
     if (!request.body.functions) {
-        throw 'Invalid request: Missing functions list.';
+        throw new Error('Invalid request: Missing functions list.');
     }
 
     validateData(request.body.data);
@@ -160,7 +162,7 @@ const handler = (request, response) => {
         // if the request is bad
         console.error(err);
         // send the error as the response
-        response.send(err);
+        response.status(400).send(err.message);
         // stop execution of the function
         return;
     }
@@ -208,7 +210,6 @@ const handler = (request, response) => {
                                 )
                             )
                     )
-                    .catch(console.error)
             /*
              * To guarantee our assumption is correct,
              * convert the initial value to a promise resolution.
@@ -218,6 +219,20 @@ const handler = (request, response) => {
         // Copy the final result to the output bucket
         .then(
             (resultFile) => {
+                console.log('Uploading result to storage');
+                const tempFile = functions.helpers
+                    .createTempFileName(resultFile.name);
+
+                if (!fs.existsSync(tempFile)) {
+                    /*
+                     * In the case where the result of the last function
+                     * is a file object from the storage api client library
+                     * but has not been download into memory, just copy that
+                     * object into the result bucket
+                     * (the only case of this currently is safeSearch)
+                     */
+                    return resultFile.copy(storage.bucket(outputBucketName).file(resultFile.name));
+                }
                 return storage
                     .bucket(outputBucketName)
                     .upload(
@@ -227,7 +242,13 @@ const handler = (request, response) => {
             }
         )
         .then(([outputFile]) => response.send(outputFile))
-        .catch((err) => response.send(err));
+        .catch((err) => {
+            console.error(err);
+            response
+                .status(500)
+                .send(err.message);
+            return;
+        });
 };
 
 

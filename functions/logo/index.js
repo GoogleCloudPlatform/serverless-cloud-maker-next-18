@@ -33,8 +33,7 @@ const blurLogosTransform = (file, parameters) => {
                 file,
                 Object.assign(parameters, {polygons})
             )
-        )
-        .catch(console.error);
+        );
 };
 
 blurLogosTransform.parameters = {

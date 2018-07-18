@@ -75,8 +75,7 @@ const copyImage = (file, parameters) => {
             return file.copy(outputFile);
         })
         .then(() => outputFile.download({destination: tempLocalOutputFileName}))
-        .then(() => outputFile)
-        .catch(console.error);
+        .then(() => outputFile);
 };
 
 copyImage.parameters = {

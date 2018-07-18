@@ -39,6 +39,7 @@ const createImageMagickTransform = (transform) => {
         );
         let download = Promise.resolve();
         if (!fs.existsSync(tempLocalFileName)) {
+            console.log("Downloading file to /tmp/...")
             download = file.download({destination: tempLocalFileName});
         }
         return download
@@ -49,8 +50,6 @@ const createImageMagickTransform = (transform) => {
                     tempLocalOutputFileName,
                     parameters)
             )
-            // write errors in the transform to the console
-            .catch(console.error)
             .then(() => {
                 /*
                  * Use the global output bucket as the default

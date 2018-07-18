@@ -53,11 +53,15 @@ const annotationAsCaptionTransform = decorator(applyCaption);
 const generateCaption = (file) => {
     return vision
         .labelDetection(`gs://${file.bucket.name}/${file.name}`)
+        .then(result => {console.log("RECEIVED", result); return result})
+        .catch(console.error)
         .then(([{labelAnnotations}]) =>{
             // find the maximum score among the annotations
             const maxScore = Math.max(...labelAnnotations.map((l) => l.score));
             // return the annotation with that score
-            return labelAnnotations.find((l) => l.score === maxScore);
+            return labelAnnotations.find((l) => l.score === maxScore) ||
+                // if there are no annotations, return a default caption
+                {description: 'No caption found.'};
         })
         .then(({description}) => description);
 };
