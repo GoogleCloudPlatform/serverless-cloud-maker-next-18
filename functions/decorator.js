@@ -39,7 +39,6 @@ const createImageMagickTransform = (transform) => {
         );
         let download = Promise.resolve();
         if (!fs.existsSync(tempLocalFileName)) {
-            console.log("Downloading file to /tmp/...")
             download = file.download({destination: tempLocalFileName});
         }
         return download

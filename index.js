@@ -219,7 +219,6 @@ const handler = (request, response) => {
         // Copy the final result to the output bucket
         .then(
             (resultFile) => {
-                console.log('Uploading result to storage');
                 const tempFile = functions.helpers
                     .createTempFileName(resultFile.name);
 
