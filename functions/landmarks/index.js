@@ -36,7 +36,6 @@ const detectLandmark = (file) => {
 
 const landmarkTransform = (file, parameters) => {
     return detectLandmark(file)
-        .catch(console.error)
         .then(({description}) =>
             captionTransform(
                 file,
@@ -44,8 +43,7 @@ const landmarkTransform = (file, parameters) => {
                     parameters,
                     {caption: description || 'No landmark found.'})
                 )
-        )
-        .catch(console.error);
+        );
 };
 
 landmarkTransform.parameters = {

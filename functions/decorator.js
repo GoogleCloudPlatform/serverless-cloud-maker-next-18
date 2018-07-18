@@ -49,8 +49,6 @@ const createImageMagickTransform = (transform) => {
                     tempLocalOutputFileName,
                     parameters)
             )
-            // write errors in the transform to the console
-            .catch(console.error)
             .then(() => {
                 /*
                  * Use the global output bucket as the default
