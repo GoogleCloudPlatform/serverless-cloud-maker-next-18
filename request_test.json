@@ -1,0 +1,15 @@
+{
+  "data": {
+    "bucket": "serverless-cloud-maker-inputs",
+    "name": "unnamed-5.png"
+  },
+  "outputBucketName": "serverless-cloud-maker-outputs",
+  "functions": [
+    {
+      "name": "copyImage",
+      "parameters": {
+        "outputBucketName": "copyimage-outputs"
+      }
+    }
+  ]
+}
