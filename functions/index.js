@@ -32,6 +32,7 @@ const safeSearchTransform = require('./safeSearch');
 const emojiTransform = require('./emojify');
 const blurLogosTransform = require('./logo');
 const landmarkTransform = require('./landmarks');
+const dogeTransform = require("./doge");
 // helpers
 const helpers = require('./helpers');
 
@@ -55,6 +56,7 @@ module.exports = {
     cropShapeTransform,
     safeSearchTransform,
     emojiTransform,
+    dogeTransform,
     // helpers
     helpers,
 };

@@ -212,6 +212,12 @@ const randomGoogleColor = () => {
     return googleColors[randomKey];
 };
 
+const nextGoogleColor = (idx) => {
+    const colorKeys = Object.keys(googleColors);
+    const nextKey = colorKeys[idx % colorKeys.length];
+    return googleColors[nextKey];
+};
+
 module.exports = {
     // ImageMagick helpers
     resolveImageMagickConvert,
@@ -225,6 +231,7 @@ module.exports = {
     // constant containin the four google colors
     googleColors,
     randomGoogleColor,
+    nextGoogleColor,
 
     // helpers to manipulate file names
     createOutputFileName,
