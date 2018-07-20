@@ -17,36 +17,57 @@ const decorator = require('../decorator');
 
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
+const gm = require("gm").subClass({ imageMagick: true });
 
 /*
  * Add a caption to the image by identifying its dimensions and then
  * adding a section at the bottom with a black background
  * and white centered text on top of it.
  */
-const applyCaption = (inFile, outFile, {caption}) => {
-    return helpers
-        .resolveImageMagickIdentify(inFile)
-        .then(({format, width, height}) =>
-            helpers
-                .resolveImageMagickConvert([
-                     '-background',
-                     '#0008',
-                     '-fill',
-                     'white',
-                     '-gravity',
-                     'center',
-                     '-size',
-                     `${width}x30`,
-                     `caption: ${caption}`,
-                     inFile,
-                     '+swap',
-                     '-gravity',
-                     'south',
-                     '-composite',
-                     outFile,
-                    ])
-            );
-};
+// const applyCaption = (inFile, outFile, {caption}) => {
+//     return helpers
+//         .resolveImageMagickIdentify(inFile)
+//         .then(({format, width, height}) =>
+//             helpers
+//                 .resolveImageMagickConvert([
+//                      '-background',
+//                      '#0008',
+//                      '-fill',
+//                      'white',
+//                      '-gravity',
+//                      'center',
+//                      '-size',
+//                      `${width}x30`,
+//                      `caption: ${caption}`,
+//                      inFile,
+//                      '+swap',
+//                      '-gravity',
+//                      'south',
+//                      '-composite',
+//                      outFile,
+//                     ])
+//             );
+// };
+
+
+const applyCaption = (inFile, outFile, { caption, color }) => {
+    const textColor = color || helpers.randomGoogleColor()
+    return new Promise((resolve, reject) =>{
+        gm(inFile)
+            .fill(textColor)
+            .stroke(textColor)
+            .fontSize(36)
+            .font('DejaVu-Sans')
+            .drawText(0, 0, caption, "South")
+            .write(outFile, (err) => {
+                if (err){
+                    reject(err)
+                    return
+                }
+                resolve()
+            })
+    })
+}
 
 const annotationAsCaptionTransform = decorator(applyCaption);
 
@@ -100,6 +121,9 @@ captionTransform.parameters = {
             // otherwise return that is is valid
             : true,
     },
+    color: {
+        defaultValue: null,
+    }
 };
 
 Object.assign(captionTransform, {
