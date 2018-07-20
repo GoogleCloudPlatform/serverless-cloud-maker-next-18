@@ -32,7 +32,7 @@ const safeSearchTransform = require('./safeSearch');
 const emojiTransform = require('./emojify');
 const blurLogosTransform = require('./logo');
 const landmarkTransform = require('./landmarks');
-const dogeTransform = require("./doge");
+const dogeTransform = require('./doge');
 // helpers
 const helpers = require('./helpers');
 
