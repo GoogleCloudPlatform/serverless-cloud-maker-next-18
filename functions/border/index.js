@@ -14,18 +14,15 @@
 const helpers = require('../helpers');
 const decorator = require('../decorator');
 
-const googleColors = {
-    blue: '#4285F4',
-    green: '#34A853',
-    yellow: '#fbbc04',
-    red: '#EA4335',
-};
 
-const applyBorder = (inFile, outFile, {color='blue', width='1'}) => {
+const applyBorder = (inFile, outFile, {color, width}) => {
+    const borderColor = helpers.googleColors[color] ||
+        // if they didn't select a color, use a random one
+        helpers.randomGoogleColor();
     return helpers.resolveImageMagickConvert([
         inFile,
         '-bordercolor',
-        googleColors[color.toLowerCase()],
+        borderColor,
         '-border',
         `${width}%x${width}%`,
         outFile,
@@ -42,9 +39,9 @@ borderTransform.parameters = {
         defaultValue: null,
     },
     color: {
-        defaultValue: 'blue',
+        defaultValue: null,
         validate: (v) =>
-            ['blue', 'green', 'yellow', 'red'].includes(v.toLowerCase()),
+            Object.keys(helpers.googleColors).includes(v),
     },
     width: {
         defaultValue: '1',

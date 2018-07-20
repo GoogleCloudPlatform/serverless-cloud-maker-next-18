@@ -198,6 +198,20 @@ const changeExtension = (fileName, extension) => {
     }
 };
 
+
+const googleColors = {
+    blue: '#4285F4',
+    green: '#34A853',
+    yellow: '#fbbc04',
+    red: '#EA4335',
+};
+
+const randomGoogleColor = () => {
+    const colorKeys = Object.keys(googleColors);
+    const randomKey = colorKeys[Math.floor(Math.random() * colorKeys.length)];
+    return googleColors[randomKey];
+};
+
 module.exports = {
     // ImageMagick helpers
     resolveImageMagickConvert,
@@ -207,6 +221,10 @@ module.exports = {
     // ImageMagick commands to maniupulate polygons
     blurPolygons,
     softBlurPolygons,
+
+    // constant containin the four google colors
+    googleColors,
+    randomGoogleColor,
 
     // helpers to manipulate file names
     createOutputFileName,

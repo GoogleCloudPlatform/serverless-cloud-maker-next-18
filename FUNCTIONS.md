@@ -46,9 +46,9 @@ Detects all landmarks in the image using the Cloud Vision API and applies a capt
 Adds a border of the desired color and width to the image.
 
 ### `color`
-- Determines the color of the border that is added to the image
+- Determines the color of the border that is added to the image. If not set will choose a random Google color.
 - Options: ['blue', 'green', 'yellow', 'red'] (Google colors)
-- Default: "blue" 
+- Default: null (random)
 
 ### `width`
 - Determines the width of the border added to the image as a percent of the image's dimensions.
@@ -59,10 +59,15 @@ Adds a border of the desired color and width to the image.
 ## captionTransform
 Adds a caption to the image, either the one specified by the user or the one suggested by the Cloud Vision API.
 
-### `custom`
+### `caption`
 - If set, determines the caption that is applied to the image. If not set, uses suggestions from the cloud vision api.
 - Default: false 
 - Options: [false, any string]
+
+### `color`
+- If set, determines the color of the caption applied to the image. If not set, the function will choose a random Google color.
+- Default: null (random)
+- Options: ['blue', 'green', 'yellow', 'red'] (Google Colors)
 
 ## filterTransform
 Applies a filter to the image, either sepia, grayscale, or a random tint (colorize)

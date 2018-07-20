@@ -17,35 +17,31 @@ const decorator = require('../decorator');
 
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
+const gm = require('gm').subClass({imageMagick: true});
 
 /*
- * Add a caption to the image by identifying its dimensions and then
- * adding a section at the bottom with a black background
- * and white centered text on top of it.
+ * Add a caption at the bottom of the image in the color specified
+ * by the user, defaulting to a random google color if none is
+ * specified.
  */
-const applyCaption = (inFile, outFile, {caption}) => {
-    return helpers
-        .resolveImageMagickIdentify(inFile)
-        .then(({format, width, height}) =>
-            helpers
-                .resolveImageMagickConvert([
-                     '-background',
-                     '#0008',
-                     '-fill',
-                     'white',
-                     '-gravity',
-                     'center',
-                     '-size',
-                     `${width}x30`,
-                     `caption: ${caption}`,
-                     inFile,
-                     '+swap',
-                     '-gravity',
-                     'south',
-                     '-composite',
-                     outFile,
-                    ])
-            );
+const applyCaption = (inFile, outFile, {caption, color}) => {
+    const textColor = helpers.googleColors[color] || 
+        helpers.randomGoogleColor();
+    return new Promise((resolve, reject) =>{
+        gm(inFile)
+            .fill(textColor)
+            .stroke(textColor)
+            .fontSize(36)
+            .font('DejaVu-Sans')
+            .drawText(0, 0, caption, 'South')
+            .write(outFile, (err) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(outFile);
+            });
+    });
 };
 
 const annotationAsCaptionTransform = decorator(applyCaption);
@@ -53,8 +49,6 @@ const annotationAsCaptionTransform = decorator(applyCaption);
 const generateCaption = (file) => {
     return vision
         .labelDetection(`gs://${file.bucket.name}/${file.name}`)
-        .then(result => {console.log("RECEIVED", result); return result})
-        .catch(console.error)
         .then(([{labelAnnotations}]) =>{
             // find the maximum score among the annotations
             const maxScore = Math.max(...labelAnnotations.map((l) => l.score));
@@ -99,6 +93,11 @@ captionTransform.parameters = {
             ? v.constructor == String && v.length > 0
             // otherwise return that is is valid
             : true,
+    },
+    color: {
+        defaultValue: null,
+        validate:(v) =>
+            Object.keys(helpers.googleColors).includes(v)
     },
 };
 
