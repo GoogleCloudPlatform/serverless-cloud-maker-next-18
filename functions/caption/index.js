@@ -17,7 +17,7 @@ const decorator = require('../decorator');
 
 const VisionApi = require('@google-cloud/vision').v1p2beta1;
 const vision = new VisionApi.ImageAnnotatorClient();
-const gm = require("gm").subClass({ imageMagick: true });
+const gm = require('gm').subClass({imageMagick: true});
 
 /*
  * Add a caption to the image by identifying its dimensions and then
@@ -50,31 +50,33 @@ const gm = require("gm").subClass({ imageMagick: true });
 // };
 
 
-const applyCaption = (inFile, outFile, { caption, color }) => {
-    const textColor = color || helpers.randomGoogleColor()
+const applyCaption = (inFile, outFile, {caption, color}) => {
+    const textColor = color || helpers.randomGoogleColor();
     return new Promise((resolve, reject) =>{
         gm(inFile)
             .fill(textColor)
             .stroke(textColor)
             .fontSize(36)
             .font('DejaVu-Sans')
-            .drawText(0, 0, caption, "South")
+            .drawText(0, 0, caption, 'South')
             .write(outFile, (err) => {
-                if (err){
-                    reject(err)
-                    return
+                if (err) {
+                    reject(err);
+                    return;
                 }
-                resolve()
-            })
-    })
-}
+                resolve();
+            });
+    });
+};
 
 const annotationAsCaptionTransform = decorator(applyCaption);
 
 const generateCaption = (file) => {
     return vision
         .labelDetection(`gs://${file.bucket.name}/${file.name}`)
-        .then(result => {console.log("RECEIVED", result); return result})
+        .then((result) => {
+console.log('RECEIVED', result); return result;
+})
         .catch(console.error)
         .then(([{labelAnnotations}]) =>{
             // find the maximum score among the annotations
@@ -123,7 +125,7 @@ captionTransform.parameters = {
     },
     color: {
         defaultValue: null,
-    }
+    },
 };
 
 Object.assign(captionTransform, {
