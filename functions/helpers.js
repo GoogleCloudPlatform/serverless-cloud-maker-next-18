@@ -34,7 +34,6 @@ const annotationToShape = (annotation, shape) => {
     const height = yMax - yMin;
 
     if (['square', 'circle'].includes(shape)) {
-        console.log("asdfasdfasdf", shape)
         const difference = Math.abs(width - height);
         const delta = Math.round(difference / 2);
 
