@@ -51,36 +51,13 @@ const createImageMagickTransform = (transform) => {
             )
             .then(() => {
                 // upload all intermediary files to the output bucket
-                // HOTFIX for issue with cropHints
                 return storage
                     .bucket(process.env.OUTPUT_BUCKET)
                     .upload(
                         tempLocalOutputFileName,
-                        { destination: outputFileName }
+                        {destination: outputFileName}
                     )
-                    .then(() => storage.bucket(process.env.OUTPUT_BUCKET).file(outputFileName))
-                /*
-                 * Use the global output bucket as the default
-                 * place to store outputs. This file won't actually
-                 * be uploaded unless this is the last function
-                 * or the user specifies an output bucket for
-                 * this function.
-                 */
-                // const resultFile = storage
-                //     .bucket(process.env.OUTPUT_BUCKET)
-                //     .file(outputFileName);
-
-                // if (parameters.outputBucketName) {
-                //     // upload to the bucket specific to this function
-                //     return storage
-                //         .bucket(parameters.outputBucketName)
-                //         .upload(
-                //             tempLocalOutputFileName,
-                //             {destination: outputFileName}
-                //         )
-                //         .then(() => resultFile);
-                // }
-                // return resultFile;
+                    .then(() => storage.bucket(process.env.OUTPUT_BUCKET).file(outputFileName));
             }
             );
     };

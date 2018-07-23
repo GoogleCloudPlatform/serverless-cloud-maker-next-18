@@ -25,7 +25,7 @@ const gm = require('gm').subClass({imageMagick: true});
  * specified.
  */
 const applyCaption = (inFile, outFile, {caption, color}) => {
-    const textColor = helpers.googleColors[color] || 
+    const textColor = helpers.googleColors[color] ||
         helpers.randomGoogleColor();
     return new Promise((resolve, reject) =>{
         gm(inFile)
@@ -96,8 +96,8 @@ captionTransform.parameters = {
     },
     color: {
         defaultValue: null,
-        validate:(v) =>
-            Object.keys(helpers.googleColors).includes(v)
+        validate: (v) =>
+            Object.keys(helpers.googleColors).includes(v),
     },
 };
 

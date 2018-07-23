@@ -99,7 +99,6 @@ const validateFunction = (func) => {
 /*
  * Confirms that the request is correctly structured
  */
-
 const validateRequest = (request) => {
     console.log('Request', request.body);
     if (!request.body) {
@@ -151,15 +150,6 @@ const assignParameters = (name, parameters = {}) => {
 
     return result;
 };
-
-const checkSafety = (request, response) => {
-    const data = request.body.data;
-    const file = storage.bucket(data.bucket).file(data.name);
-    return functions
-        .safeSearchTransform
-        .checkSafety(file)
-        .then(result => response.send(result))
-}
 
 const handler = (request, response) => {
     // first, make sure that
@@ -259,6 +249,19 @@ const handler = (request, response) => {
         });
 };
 
+/*
+ * Additional endpoint to check that a 
+ * an image is safe to be sent through the showcase.
+ * Returns true if the image is unsafe.
+ */
+const checkSafety = (request, response) => {
+    const data = request.body.data;
+    const file = storage.bucket(data.bucket).file(data.name);
+    return functions
+        .safeSearchTransform
+        .checkSafety(file)
+        .then((result) => response.send(result));
+};
 
 module.exports = {
     handler,

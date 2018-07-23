@@ -25,11 +25,11 @@ const isUnsafe = ([{safeSearchAnnotation}]) =>
     Boolean([
         safeSearchAnnotation.adult,
         safeSearchAnnotation.violence,
-        safeSearchAnnotation.racy
+        safeSearchAnnotation.racy,
     ]
         .filter(Boolean)
-        .find(item => item.indexOf('LIKELY') != -1)
-    )
+        .find((item) => item.indexOf('LIKELY') != -1)
+    );
 
 /*
  * Query the SafeSearch endpoint of the Vision API
@@ -47,16 +47,16 @@ const safeSearchTransform = (file, parameters) => {
 };
 
 /*
- * Return true if an image is safe and false if it
- * is unsafe
+ * Return false if an image is safe and true if it
+ * is unsafe.
  */
 const checkSafety = (file, parameters) => {
     return vision
         .safeSearchDetection(`gs://${file.bucket.name}/${file.name}`)
-        .then((result) => isUnsafe(result))
-}
+        .then((result) => isUnsafe(result));
+};
 
-safeSearchTransform.checkSafety = checkSafety
+safeSearchTransform.checkSafety = checkSafety;
 
 safeSearchTransform.parameters = {
     outputPrefix: {

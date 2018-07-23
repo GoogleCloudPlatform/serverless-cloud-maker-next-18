@@ -25,7 +25,6 @@ const detectCropHints = (file) => {
         // apply the crophints annotation on the input image
         .cropHints(`gs://${file.bucket.name}/${file.name}`)
         // extract the results of the api call
-        .then(result => {console.warn("These are the crop hints", result); return result})
         .then(([{cropHintsAnnotation}]) => cropHintsAnnotation.cropHints[0]);
 };
 
