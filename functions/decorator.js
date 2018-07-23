@@ -57,21 +57,29 @@ const createImageMagickTransform = (transform) => {
                  * or the user specifies an output bucket for
                  * this function.
                  */
-                const resultFile = storage
-                    .bucket(process.env.OUTPUT_BUCKET)
-                    .file(outputFileName);
 
-                if (parameters.outputBucketName) {
-                    // upload to the bucket specific to this function
-                    return storage
-                        .bucket(parameters.outputBucketName)
-                        .upload(
-                            tempLocalOutputFileName,
-                            {destination: outputFileName}
-                        )
-                        .then(() => resultFile);
-                }
-                return resultFile;
+                return storage
+                    .bucket(process.env.OUTPUT_BUCKET)
+                    .upload(
+                        tempLocalOutputFileName,
+                        { destination: outputFileName }
+                    )
+                    .then(() => storage.bucket(process.env.OUTPUT_BUCKET).file(outputFileName))
+                // const resultFile = storage
+                //     .bucket(process.env.OUTPUT_BUCKET)
+                //     .file(outputFileName);
+
+                // if (parameters.outputBucketName) {
+                //     // upload to the bucket specific to this function
+                //     return storage
+                //         .bucket(parameters.outputBucketName)
+                //         .upload(
+                //             tempLocalOutputFileName,
+                //             {destination: outputFileName}
+                //         )
+                //         .then(() => resultFile);
+                // }
+                // return resultFile;
             }
             );
     };
