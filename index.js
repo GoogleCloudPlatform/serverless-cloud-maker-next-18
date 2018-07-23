@@ -152,6 +152,15 @@ const assignParameters = (name, parameters = {}) => {
     return result;
 };
 
+const checkSafety = (request, response) => {
+    const data = request.body.data;
+    const file = storage.bucket(data.bucket).file(data.name);
+    return functions
+        .safeSearchTransform
+        .checkSafety(file)
+        .then(result => response.send(result))
+}
+
 const handler = (request, response) => {
     // first, make sure that
     // the request is valid
@@ -253,6 +262,7 @@ const handler = (request, response) => {
 
 module.exports = {
     handler,
+    checkSafety,
     functions,
     validateFunction,
     validateRequest,

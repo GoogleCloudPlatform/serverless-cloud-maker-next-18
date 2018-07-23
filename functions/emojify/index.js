@@ -119,8 +119,7 @@ emojiTransform.parameters = {
             defaultValue: null,
         },
         emojiSet: {
-            defaultValue: 'emojis-apple',
-            validate: (v) => ['emojis-apple', 'emojis-g'].contains(v),
+            defaultValue: 'emojis-apple'
         },
     };
 

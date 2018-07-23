@@ -22,9 +22,14 @@ const blurTransform = require('../blur');
  * and "violence"features
  */
 const isUnsafe = ([{safeSearchAnnotation}]) =>
-    safeSearchAnnotation.adult === 'VERY_LIKELY' ||
-    safeSearchAnnotation.violence === 'VERY_LIKELY';
-
+    Boolean([
+        safeSearchAnnotation.adult,
+        safeSearchAnnotation.violence,
+        safeSearchAnnotation.racy
+    ]
+        .filter(Boolean)
+        .find(item => item.indexOf('LIKELY') != -1)
+    )
 
 /*
  * Query the SafeSearch endpoint of the Vision API
@@ -40,6 +45,18 @@ const safeSearchTransform = (file, parameters) => {
             : file
         );
 };
+
+/*
+ * Return true if an image is safe and false if it
+ * is unsafe
+ */
+const checkSafety = (file, parameters) => {
+    return vision
+        .safeSearchDetection(`gs://${file.bucket.name}/${file.name}`)
+        .then((result) => isUnsafe(result))
+}
+
+safeSearchTransform.checkSafety = checkSafety
 
 safeSearchTransform.parameters = {
     outputPrefix: {
