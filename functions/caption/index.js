@@ -57,6 +57,7 @@ const generateCaption = (file) => {
                 // if there are no annotations, return a default caption
                 {description: 'No caption found.'};
         })
+        .then(result => {console.log("CAption", result); return result})
         .then(({description}) => description);
 };
 

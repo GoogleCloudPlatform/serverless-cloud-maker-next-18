@@ -19,7 +19,7 @@ const applyResize = (inFile, outFile, {width, height}) => {
     return helpers.resolveImageMagickConvert([
         inFile,
         '-resize',
-        `${width}x${height}`,
+        `${width}x${height}!`,
         outFile,
     ]);
 };
