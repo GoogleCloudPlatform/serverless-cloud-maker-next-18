@@ -16,10 +16,12 @@ const helpers = require('../helpers');
 const decorator = require('../decorator');
 
 const applyResize = (inFile, outFile, {width, height}) => {
+    const actualWidth = width == "X1" ? 200 : width
+    const actualHeight = height == "Y1" ? 200 : height
     return helpers.resolveImageMagickConvert([
         inFile,
         '-resize',
-        `${width}x${height}!`,
+        `${actualWidth}x${actualHeight}!`,
         outFile,
     ]);
 };
@@ -35,11 +37,11 @@ resizeTransform.parameters = {
     },
     width: {
         defaultValue: 200,
-        validate: (w) => !isNaN(w) && Number.isInteger(Number(w)),
+        validate: (w) => (!isNaN(w) && Number.isInteger(Number(w))) || w == "X1",
     },
     height: {
         defaultValue: 200,
-        validate: (h) => !isNaN(h) && Number.isInteger(Number(h)),
+        validate: (h) => (!isNaN(h) && Number.isInteger(Number(h))) || h == "Y1",
     },
 };
 
