@@ -97,6 +97,32 @@ const validateFunction = (func) => {
 };
 
 /*
+ * HOTFIX: Hard coding one edge case for Sparks.
+ */
+
+const checkForBubblify = (request) => {
+    if (request.body.functions.length != 3) {
+        return;
+    }
+    if (request.body.functions[0].name != 'resizeTransform') {
+        return;
+    }
+    if (request.body.functions[1].name != 'borderTransform') {
+        return;
+    }
+    if (request.body.functions[2].name != 'cropShapeTransform') {
+        return;
+    }
+    request.body.functions = [
+        request.body.functions[0],
+        request.body.functions[2],
+        request.body.functions[1],
+        request.body.functions[2],
+    ];
+    return;
+};
+
+/*
  * Confirms that the request is correctly structured
  */
 const validateRequest = (request) => {
@@ -113,6 +139,7 @@ const validateRequest = (request) => {
 
     validateData(request.body.data);
     request.body.functions.map(validateFunction);
+    checkForBubblify(request);
 
     return true;
 };
@@ -250,7 +277,7 @@ const handler = (request, response) => {
 };
 
 /*
- * Additional endpoint to check that a 
+ * Additional endpoint to check that a
  * an image is safe to be sent through the showcase.
  * Returns true if the image is unsafe.
  */

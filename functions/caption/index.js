@@ -50,7 +50,7 @@ const generateCaption = (file) => {
     return vision
         .labelDetection(`gs://${file.bucket.name}/${file.name}`)
         .then((result) => {
-            console.log('Label Detection Results:', results);
+            console.log('Label Detection Results:', result);
             return result;
         })
         .then(([{labelAnnotations}]) =>{
