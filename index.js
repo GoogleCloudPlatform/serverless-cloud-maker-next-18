@@ -98,6 +98,7 @@ const validateFunction = (func) => {
 
 /*
  * HOTFIX: Hard coding one edge case for Sparks.
+ * For the bubblify pipeline, insert one additional transformation.
  */
 
 const checkForBubblify = (request) => {
@@ -111,6 +112,12 @@ const checkForBubblify = (request) => {
         return;
     }
     if (request.body.functions[2].name != 'cropShapeTransform') {
+        return;
+    }
+    if (!request.body.functions[2].parameters) {
+        return;
+    }
+    if (request.body.functions[2].parameters.shape != 'circle') {
         return;
     }
     request.body.functions = [
