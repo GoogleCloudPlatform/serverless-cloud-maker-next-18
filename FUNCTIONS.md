@@ -34,6 +34,8 @@ Detects all faces and their emotions in the image using the Cloud Vision API and
 - Options: ['emojis-apple', 'emojis-g']
 - Default: 'emojis-g'
 
+## dogeTransform
+Uses the labelDetection api to generate a set of labels and scatter them as Google-colored doge-ified captions.
 
 ## blurLogosTransform
 Detects all logos using the Cloud Vision API and blurs them.
