@@ -49,7 +49,7 @@ module.exports = {
     borderTransform,
     blurTransform,
     // vision transformations
-    captionTransform,
+    captionTransform: dogeTransform,
     landmarkTransform,
     blurFacesTransform,
     blurLogosTransform,
