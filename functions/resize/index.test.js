@@ -29,7 +29,7 @@ describe('when resizeTransform is called', () => {
         expect(helpers.resolveImageMagickConvert).toHaveBeenCalledWith([
             inFile,
             '-resize',
-            '1x1',
+            '1x1!',
             outFile,
         ]);
     });

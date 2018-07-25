@@ -44,7 +44,7 @@ const annotationToShape = (annotation, shape) => {
         }
 
         if (shape == 'circle') {
-            if (width > height) {
+            if (width >= height) {
                 const newWidth = width - difference;
                 const newXMin = xMin + delta;
 

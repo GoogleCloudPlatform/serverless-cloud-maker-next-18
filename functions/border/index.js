@@ -44,13 +44,13 @@ borderTransform.parameters = {
             Object.keys(helpers.googleColors).includes(v),
     },
     width: {
-        defaultValue: '1',
+        defaultValue: '2',
         validate: (v) =>
             !isNaN(v) &&
             Number.isInteger(Number(v)) &&
             Number(v) >= 1 &&
             Number(v) <= 100,
-    },
+    }
 };
 
 borderTransform.applyBorder = applyBorder;

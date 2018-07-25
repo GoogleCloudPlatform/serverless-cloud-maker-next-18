@@ -97,9 +97,41 @@ const validateFunction = (func) => {
 };
 
 /*
- * Confirms that the request is correctly structured
+ * HOTFIX: Hard coding one edge case for Sparks.
+ * For the bubblify pipeline, insert one additional transformation.
  */
 
+const checkForBubblify = (request) => {
+    if (request.body.functions.length != 3) {
+        return;
+    }
+    if (request.body.functions[0].name != 'resizeTransform') {
+        return;
+    }
+    if (request.body.functions[1].name != 'borderTransform') {
+        return;
+    }
+    if (request.body.functions[2].name != 'cropShapeTransform') {
+        return;
+    }
+    if (!request.body.functions[2].parameters) {
+        return;
+    }
+    if (request.body.functions[2].parameters.shape != 'circle') {
+        return;
+    }
+    request.body.functions = [
+        request.body.functions[0],
+        request.body.functions[2],
+        request.body.functions[1],
+        request.body.functions[2],
+    ];
+    return;
+};
+
+/*
+ * Confirms that the request is correctly structured
+ */
 const validateRequest = (request) => {
     console.log('Request', request.body);
     if (!request.body) {
@@ -114,6 +146,7 @@ const validateRequest = (request) => {
 
     validateData(request.body.data);
     request.body.functions.map(validateFunction);
+    checkForBubblify(request);
 
     return true;
 };
@@ -151,15 +184,6 @@ const assignParameters = (name, parameters = {}) => {
 
     return result;
 };
-
-const checkSafety = (request, response) => {
-    const data = request.body.data;
-    const file = storage.bucket(data.bucket).file(data.name);
-    return functions
-        .safeSearchTransform
-        .checkSafety(file)
-        .then(result => response.send(result))
-}
 
 const handler = (request, response) => {
     // first, make sure that
@@ -259,6 +283,19 @@ const handler = (request, response) => {
         });
 };
 
+/*
+ * Additional endpoint to check that a
+ * an image is safe to be sent through the showcase.
+ * Returns true if the image is unsafe.
+ */
+const checkSafety = (request, response) => {
+    const data = request.body.data;
+    const file = storage.bucket(data.bucket).file(data.name);
+    return functions
+        .safeSearchTransform
+        .checkSafety(file)
+        .then((result) => response.send(result));
+};
 
 module.exports = {
     handler,

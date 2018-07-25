@@ -119,7 +119,7 @@ emojiTransform.parameters = {
             defaultValue: null,
         },
         emojiSet: {
-            defaultValue: 'emojis-apple'
+            defaultValue: 'emojis-g',
         },
     };
 
