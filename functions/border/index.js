@@ -50,7 +50,7 @@ borderTransform.parameters = {
             Number.isInteger(Number(v)) &&
             Number(v) >= 1 &&
             Number(v) <= 100,
-    }
+    },
 };
 
 borderTransform.applyBorder = applyBorder;
